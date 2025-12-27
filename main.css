@@ -1,0 +1,37 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+body {
+  background:
+    linear-gradient(
+      to top right,
+      color-mix(in srgb, var(--bg) 90%, white 10%) 0%,
+      transparent 100%
+    ),
+    radial-gradient(var(--bgDot) 0.25px, transparent 1px);
+  background-size: auto, 22px 22px;
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  color: var(--text);
+  line-height: 1.6;
+}
+button:not(.nostyle) {
+  background: linear-gradient(to top right, var(--accent), var(--accentGrey));
+  padding: 0.35rem;
+  border: 2.5px solid var(--accentBlack);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+a {
+  color: var(--linkColor);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
