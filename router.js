@@ -2,6 +2,8 @@
 const $ = (s,r=document) => r.querySelector(s);
 const $$ = (s,r=document) => [...r.querySelectorAll(s)];
 const create = e => document.createElement(e);
+// normalize the URL
+const normalize = url => url.replace(/\/(?:index(?:\.html)?)?(?=[?#]|$)/, '/');
 
 /* Router MPA & SPA */
 let activePageStyles = [];
@@ -13,6 +15,11 @@ document.addEventListener('click', e => {
 
   const url = new URL(a.href);
   if (url.origin !== location.origin) return;
+
+  const to = normalize(url.href);
+  const fromPage = normalize(location.href);
+
+  if (to === fromPage) return;
 
   e.preventDefault();
   navigate(url.pathname);
