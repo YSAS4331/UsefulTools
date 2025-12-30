@@ -71,7 +71,7 @@ class Header extends HTMLElement {
       border: none;
       background: none;
       cursor: pointer;
-      transition: background .5s ease;
+      transition: all .5s ease;
       font-size: clamp(1.3rem, 2vw, 1.5rem);
     }
     #buttons > button:hover {
@@ -104,6 +104,9 @@ class Header extends HTMLElement {
         </button>
         <button id="settings" title="設定を開く" class="nostyle">
           <i class="fa-solid fa-user-gear"></i>
+        </button>
+        <button id="colorTheme" title="カラーテーマを変更">
+          <i class="fa-solid fa-palette"></i>
         </button>
       </div>
     </header>
