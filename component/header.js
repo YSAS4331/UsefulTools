@@ -102,6 +102,9 @@ class Header extends HTMLElement {
         <button id="favoriteTools" title="お気に入りのツール" class="nostyle">
           <i class="fa-solid fa-heart" style="color: #FFD761;"></i>
         </button>
+        <button id="settings" title="設定を開く" class="nostyle">
+          <i class="fa-solid fa-user-gear"></i>
+        </button>
       </div>
     </header>
   `;
