@@ -2,6 +2,7 @@ class Header extends HTMLElement {
   #Style = `
     header {
       max-width: 1100px;
+      width: 80%;
       margin: 1rem auto;
       padding: 0.35rem 1.2rem;
     
