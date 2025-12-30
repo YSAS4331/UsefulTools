@@ -89,7 +89,7 @@ class Header extends HTMLElement {
 
   #HTML = `
     <header>
-      <a href="#" target="_blank"><span>Useful Tools</span></a>
+      <a href="#"><span>Useful Tools</span></a>
       <div id="searchBar">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="ツールを検索する..." id="searchContent">
