@@ -75,7 +75,7 @@ class Header extends HTMLElement {
       font-size: clamp(1.3rem, 2vw, 1.5rem);
     }
     #buttons > button:hover {
-      background: color-mix(in srgb, var(--accent) 75%, transparent 25%);
+      background: color-mix(in srgb, var(--accentGrey) 75%, transparent 25%);
     }
     @media(max-width:768px) {
       #searchBtn > span {
@@ -106,7 +106,7 @@ class Header extends HTMLElement {
           <i class="fa-solid fa-user-gear"></i>
         </button>
         <button id="colorTheme" title="カラーテーマを変更" style="color: #f0f0f0;">
-          <i class="fa-solid fa-palette" style="border: 2px solid var(--accent);"></i>
+          <i class="fa-solid fa-palette"></i>
         </button>
       </div>
     </header>
