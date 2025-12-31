@@ -105,8 +105,8 @@ class Header extends HTMLElement {
         <button id="settings" title="設定を開く" class="nostyle">
           <i class="fa-solid fa-user-gear"></i>
         </button>
-        <button id="colorTheme" title="カラーテーマを変更" style="color: #f0f0f0; border: 2px solid var(--accent);">
-          <i class="fa-solid fa-palette"></i>
+        <button id="colorTheme" title="カラーテーマを変更" style="color: #f0f0f0;">
+          <i class="fa-solid fa-palette" style="border: 2px solid var(--accent);"></i>
         </button>
       </div>
     </header>
