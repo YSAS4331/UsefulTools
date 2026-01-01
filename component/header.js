@@ -77,10 +77,10 @@ class Header extends HTMLElement {
     #buttons > button:hover {
       background: color-mix(in srgb, var(--accentGrey) 75%, transparent 25%);
     }
-    #colorTheme {
+    #buttons > .themeBtn {
       color: color-mix(in srgb, var(--accentGrey) 90%, white 10%);
     }
-    #colorTheme:hover {
+    #buttons > .themeBtn:hover {
       color: #f0f0f0;
     }
     @media(max-width:768px) {
@@ -108,10 +108,10 @@ class Header extends HTMLElement {
         <button id="favoriteTools" title="お気に入りのツール" class="nostyle">
           <i class="fa-solid fa-heart" style="color: #FFD761;"></i>
         </button>
-        <button id="settings" title="設定を開く" class="nostyle">
+        <button id="settings" title="設定を開く" class="nostyle themeBtn">
           <i class="fa-solid fa-user-gear"></i>
         </button>
-        <button id="colorTheme" title="カラーテーマを変更">
+        <button id="colorTheme" title="カラーテーマを変更" class="nostyle themeBtn">
           <i class="fa-solid fa-palette"></i>
         </button>
       </div>
