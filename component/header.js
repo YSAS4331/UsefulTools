@@ -118,38 +118,41 @@ class Header extends HTMLElement {
     </header>
   `;
 
-  #theme = [
-    "blue", "green", "yellow", "orange", "red", "purple", "grey"
-  ];
+  #theme = ['blue', 'green', 'yellow', 'orange', 'red', 'purple', 'grey'];
   #themeNum = 0;
 
   connectedCallback() {
     this.render();
     this.#attachEvents();
-    this.#applyTheme(0);
+    this.#applyTheme(0, true); // 初期テーマを確定
   }
 
   render() {
     this.innerHTML = `<style>${this.#Style}</style>${this.#HTML}`;
+
+    // Light DOM では querySelector を使う
     this.$favorite = this.querySelector('#favoriteTools');
     this.$settings = this.querySelector('#settings');
     this.$theme = this.querySelector('#colorTheme');
   }
 
-  #applyTheme(n=1) {
+  #applyTheme(n = 1, absolute = false) {
     const themes = this.#theme;
 
-    this.#themeNum = (this.#themeNum + n) % themes.length;
+    if (absolute) {
+      this.#themeNum = n;
+    } else {
+      this.#themeNum = (this.#themeNum + n) % themes.length;
+    }
 
     const next = themes[this.#themeNum];
     const html = document.documentElement.classList;
 
     html.remove(...themes);
-
     html.add(next);
   }
 
- #attachEvents() {
+  #attachEvents() {
     this.$theme.addEventListener('click', () => this.#applyTheme());
   }
 }
