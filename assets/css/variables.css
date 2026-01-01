@@ -9,6 +9,11 @@
   /* マジックナンバーを避けるための変数 */
   --radius: 16px;
   --borderSize: 2px;
+
+  /* デフォルトテーマ */
+  --accent: #B7DAFF;
+  --accentGrey: #7DD0F5;
+  --accentBlack: #A6D1FF;
 }
 
 /* 各テーマ用 */
