@@ -81,7 +81,7 @@ class Header extends HTMLElement {
       color: color-mix(in srgb, var(--accentGrey) 90%, white 10%);
     }
     #colorTheme:hover {
-      color: color-mix(in srgb, var(--accentGrey) 75%, white 25%);
+      color: #f0f0f0;
     }
     @media(max-width:768px) {
       #searchBtn > span {
