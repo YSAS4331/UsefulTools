@@ -131,9 +131,9 @@ class Header extends HTMLElement {
 
   render() {
     this.innerHTML = `<style>${this.#Style}</style>${this.#HTML}`;
-    this.$favorite = this.getElementById('favoriteTools');
-    this.$settings = this.getElementById('settings');
-    this.$theme = this.getElementById('colorTheme');
+    this.$favorite = this.querySelector('#favoriteTools');
+    this.$settings = this.querySelector('#settings');
+    this.$theme = this.querySelector('#colorTheme');
   }
 
   #applyTheme(n=1) {
