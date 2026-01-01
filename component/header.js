@@ -150,6 +150,8 @@ class Header extends HTMLElement {
 
     html.remove(...themes);
     html.add(next);
+
+    localStorage.setItem('USEFUL-theme', next);
   }
 
   #attachEvents() {
