@@ -22,3 +22,9 @@ html.blue {
   --accentGrey: #7DD0F5;
   --accentBlack: #A6D1FF;
 }
+
+html.green {
+  --accent: #B7DAFF;
+  --accentGrey: #7DD0F5;
+  --accentBlack: #A6D1FF;
+}
