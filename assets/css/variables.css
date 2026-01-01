@@ -28,3 +28,33 @@ html.green {
   --accentGrey: #7DEFB0;
   --accentBlack: #A6F5C8;
 }
+
+html.yellow {
+  --accent: #FFF3B7;
+  --accentGrey: #F5E97D;
+  --accentBlack: #FFF0A6;
+}
+
+html.orange {
+  --accent: #FFD4B7;
+  --accentGrey: #F5B97D;
+  --accentBlack: #FFC6A6;
+}
+
+html.red {
+  --accent: #FFB7C4;
+  --accentGrey: #F57D8E;
+  --accentBlack: #FFA6B3;
+}
+
+html.purple {
+  --accent: #D9B7FF;
+  --accentGrey: #C47DF5;
+  --accentBlack: #D1A6FF;
+}
+
+html.grey {
+  --accent: #D0D0D0;
+  --accentGrey: #B5B5B5;
+  --accentBlack: #C8C8C8;
+}
