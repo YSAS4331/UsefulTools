@@ -122,6 +122,7 @@ class Header extends HTMLElement {
   #themeNum = 0;
 
   connectedCallback() {
+    localStorage.removeItem('USEFUL-theme');
     this.render();
     this.#attachEvents();
     this.#applyTheme(localStorage.getItem('USEFUL-theme') || 0, true); // 初期テーマを確定
