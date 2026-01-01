@@ -78,10 +78,10 @@ class Header extends HTMLElement {
       background: color-mix(in srgb, var(--accentGrey) 75%, transparent 25%);
     }
     #buttons > .themeBtn {
-      color: color-mix(in srgb, var(--accentGrey) 90%, white 10%);
+      color: color-mix(in srgb, var(--accentGrey) 90%, var(--bg) 10%);
     }
     #buttons > .themeBtn:hover {
-      color: #f0f0f0;
+      color: var(--bg);
     }
     @media(max-width:768px) {
       #searchBtn > span {
