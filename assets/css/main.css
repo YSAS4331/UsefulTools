@@ -52,3 +52,6 @@ a[target="_blank"]::after {
   top: 50%;
   transform: translateY(-50%);
 }
+.accent {
+  color: var(--accent);
+}
