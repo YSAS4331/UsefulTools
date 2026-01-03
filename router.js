@@ -1,14 +1,15 @@
 /* shortcut utility function */
-const $ = (s,r=document) => r.querySelector(s);
-const $$ = (s,r=document) => [...r.querySelectorAll(s)];
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const create = e => document.createElement(e);
 // normalize the URL
 const normalize = url => url.replace(/\/(?:index(?:\.html)?)?(?=[?#]|$)/, '/');
 
 /* Router MPA & SPA */
 let activePageStyles = [];
+let activePageScripts = [];
 
-// override default link behavior
+/* override default link behavior */
 document.addEventListener('click', e => {
   const a = e.target.closest('a');
   if (!a) return;
@@ -17,24 +18,22 @@ document.addEventListener('click', e => {
   if (url.origin !== location.origin) return;
 
   const to = normalize(url.href);
-  const fromPage = normalize(location.href);
-
-  if (to === fromPage) return;
+  const from = normalize(location.href);
+  if (to === from) return;
 
   e.preventDefault();
   navigate(url.pathname);
 });
 
-// main transition handler
+/* main transition handler */
 async function navigate(path, push = true) {
   if (!path) return;
 
   const res = await fetch(path);
   const html = await res.text();
-
   const doc = new DOMParser().parseFromString(html, 'text/html');
 
-  cleanupPageStyles();
+  cleanupPageAssets();
   swapMain(doc);
   syncTitle(doc);
   runPageStyles(doc);
@@ -43,49 +42,59 @@ async function navigate(path, push = true) {
   if (push) history.pushState(null, '', path);
 }
 
-// replace the <main> element
+/* replace the <main> element */
 function swapMain(doc) {
   const next = $('main', doc);
   const cur = $('main');
-
   cur.replaceWith(next);
 }
 
-// sync document title
+/* sync document title */
 function syncTitle(doc) {
   document.title = doc.title;
 }
 
-// load page-style resources
+/* load page-style resources */
 function runPageStyles(doc) {
-  const styles = $$('page-style[href]', doc);
+  const links = $$('link[data-page]', doc);
 
-  styles.forEach(ps => {
+  links.forEach(l => {
     const link = create('link');
     link.rel = 'stylesheet';
-    link.href = ps.getAttribute('href');
-    link.dataset.pageStyle = '';
+    link.href = l.href;
+    link.dataset.page = '';
 
     document.head.appendChild(link);
     activePageStyles.push(link);
   });
 }
 
-// clean up styles from the previous page
-function cleanupPageStyles() {
-  activePageStyles.forEach(l => l.remove());
-  activePageStyles = [];
-}
-
-// load page-script resources
+/* load page-script resources */
 async function runPageScripts(doc) {
-  const scripts = $$('page-script[src]', doc);
-  for (const ps of scripts) {
-    await import(ps.getAttribute('src'));
+  const scripts = $$('script[data-page][src]', doc);
+
+  for (const s of scripts) {
+    const mod = await import(s.src);
+    activePageScripts.push(mod);
   }
 }
 
-// handle browser back/forward navigation
+/* clean up page-specific assets */
+function cleanupPageAssets() {
+  activePageStyles.forEach(l => l.remove());
+  activePageStyles = [];
+
+  // scripts are ES modules; cleanup is optional per module design
+  activePageScripts = [];
+}
+
+/* handle browser back/forward navigation */
 window.addEventListener('popstate', () => {
-  navigate(location.pathname, false)
-})
+  navigate(location.pathname, false);
+});
+
+/* initial load: apply page assets */
+window.addEventListener('DOMContentLoaded', () => {
+  runPageStyles(document);
+  runPageScripts(document);
+});
