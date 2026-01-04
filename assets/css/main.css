@@ -55,3 +55,6 @@ a[target="_blank"]::after {
 .accent {
   color: color-mix(in srgb, var(--accentBlack) 90%, black 10%);
 }
+.under {
+  text-decoration: underline wavy color-mix(in srgb, var(--accentBlack) 90%, black 10%);
+}
