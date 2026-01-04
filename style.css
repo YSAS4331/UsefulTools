@@ -12,6 +12,9 @@
   font-size: 0.8rem;
   color: color-mix(in srgb, var(--text) 90%, white 10%);
 }
+#cta {
+  margin-top: 1rem;
+}
 #cta > button {
   border-radius: var(--radius);
   padding: 0.5rem 1rem;
