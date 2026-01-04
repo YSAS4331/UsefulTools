@@ -28,6 +28,12 @@ button:not(.nostyle) {
   cursor: pointer;
   font-size: 0.8rem;
 }
+button:has(i.fa-solid.fa-arrow-right) i.fa-solid.fa-arrow-right {
+  transition: transform .5s ease;
+}
+button:hover:has(i.fa-solid.fa-arrow-right) i.fa-solid.fa-arrow-right {
+  transform: translateX(2.5px);
+}
 a {
   color: var(--linkColor);
   text-decoration: none;
