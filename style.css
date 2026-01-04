@@ -4,6 +4,7 @@
   overflow-x: hidden;
 
   display: flex;
+  flex-direction: center;
   align-items: center;
   justify-content: center;
 }
