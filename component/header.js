@@ -111,7 +111,7 @@ class Header extends HTMLElement {
         <button id="settings" title="設定を開く" class="nostyle themeBtn">
           <i class="fa-solid fa-user-gear"></i>
         </button>
-        <button id="colorTheme" title="カラーテーマを変更" class="nostyle themeBtn">
+        <button id="colorTheme" title="テーマカラーを変更" class="nostyle themeBtn">
           <i class="fa-solid fa-palette"></i>
         </button>
       </div>
