@@ -20,9 +20,3 @@
   padding: 0.5rem 1rem;
   overflow: hidden;
 }
-#cta-search i {
-  transition: all .5s ease;
-}
-#cta-search:hover i {
-  transform: translateX(2.5px);
-}
