@@ -13,3 +13,7 @@
   font-size: 0.8rem;
   color: color-mix(in srgb, var(--text) 90%, white 10%);
 }
+
+#cta > button {
+  border-radius: var(--radius);
+}
