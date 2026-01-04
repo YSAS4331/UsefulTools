@@ -53,5 +53,5 @@ a[target="_blank"]::after {
   transform: translateY(-50%);
 }
 .accent {
-  color: var(--accentBlack);
+  color: color-mix(in srgb, var(--accentBlack) 90%, black 10%);
 }
