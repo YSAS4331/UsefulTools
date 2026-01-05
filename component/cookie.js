@@ -27,7 +27,7 @@
 
     background: 'color-mix(in srgb, var(--bg) 92%, white 8%)',
     border: '2.5px solid var(--accentBlack)',
-    borderRadius: '6px',
+    borderRadius: 'var(--radius)',
 
     color: 'var(--text)',
     fontFamily: `'Inter', 'Noto Sans JP', sans-serif`,
@@ -100,7 +100,8 @@
     Object.assign(acceptBtn.style, {
       // ここでは最小限だけ。見た目はグローバル CSS に任せる
       paddingInline: '0.75rem',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      borderRadius: 'var(--radius)'
     });
   }
 
