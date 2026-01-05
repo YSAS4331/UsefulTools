@@ -16,7 +16,7 @@ article {
   margin: 0 auto;
   padding: 2rem 1.5rem;
   line-height: 1.8;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 /* セクション間の余白 */
@@ -30,7 +30,7 @@ article h2,
 article h3 {
   font-weight: 600;
   line-height: 1.4;
-  color: var(--text-strong);
+  color: var(--text);
 }
 
 article h1 {
@@ -61,14 +61,4 @@ article ul {
 
 article li {
   margin: 0.4rem 0;
-}
-
-/* リンク（必要なら） */
-article a {
-  color: var(--accent-color);
-  text-decoration: underline;
-}
-
-article a:hover {
-  opacity: 0.8;
 }
