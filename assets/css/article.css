@@ -9,3 +9,66 @@ main {
 main > h1:first-child {
   margin-top: 7.5rem;
 }
+
+/* 記事全体 */
+article {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  line-height: 1.8;
+  color: var(--text-color);
+}
+
+/* セクション間の余白 */
+article section {
+  margin-bottom: 2.5rem;
+}
+
+/* 見出し */
+article h1,
+article h2,
+article h3 {
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+article h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+article h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+article h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+/* 本文 */
+article p {
+  margin: 0.75rem 0;
+}
+
+/* 箇条書き */
+article ul {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+article li {
+  margin: 0.4rem 0;
+}
+
+/* リンク（必要なら） */
+article a {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+article a:hover {
+  opacity: 0.8;
+}
