@@ -44,7 +44,7 @@ class Acc extends HTMLElement {
     style.textContent = `
       .panel {
         border: 1px solid var(--accent);
-        border-radius: 8px;
+        border-radius: var(--radius);
         margin-bottom: 10px;
       }
       .panel-header {
