@@ -1,9 +1,16 @@
 (() => {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  function enableCookie() {gtag('js', new Date());gtag('config', 'G-416K6GDFJP');}
+  
   const STORAGE_KEY = 'USEFUL_cookie';
 
-  // すでに同意ずみなら何もしない
+  // すでに同意ずみなら読み込む
   const state = localStorage.getItem(STORAGE_KEY);
-  if (state !== null) return;
+  if (state !== null) {
+    enableCookie();
+    return;
+  };
 
   const c = tag => document.createElement(tag);
 
@@ -133,6 +140,7 @@
   if (acceptBtn) {
     acceptBtn.addEventListener('click', () => {
       localStorage.setItem(STORAGE_KEY, 'accepted');
+      enableCookie()
       closeBanner();
     });
   }
