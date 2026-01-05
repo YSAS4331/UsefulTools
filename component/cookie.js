@@ -141,7 +141,7 @@
   if (moreBtn) {
     moreBtn.addEventListener('click', () => {
       // ここ、主のサイトのポリシーページに差し替え推奨
-      window.open('/privacy', '_blank', 'noopener');
+      window.open('/UsefulTools/privacy', '_blank', 'noopener');
     });
   }
 
