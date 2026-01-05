@@ -55,6 +55,7 @@ class Acc extends HTMLElement {
         align-items: center;
         background: #fff;
         border: none;
+        border-radius: var(--radius);
         cursor: pointer;
         font-size: 16px;
         text-align: left;
