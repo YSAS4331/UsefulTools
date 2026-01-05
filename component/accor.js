@@ -29,15 +29,9 @@ class Acc extends HTMLElement {
     const body = document.createElement('div');
     body.className = 'panel-body';
 
-    // 改行ごとに <p> に変換
-    raw.innerHTML
-      .trim()
-      .split(/\n+/)
-      .forEach(line => {
-        const p = document.createElement('p');
-        p.textContent = line.trim();
-        body.appendChild(p);
-      });
+    // ① Light DOM の HTML をそのまま移植（ここが変更点）
+    const clonedBody = raw.cloneNode(true);
+    body.appendChild(clonedBody);
 
     content.appendChild(body);
 
