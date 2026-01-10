@@ -35,8 +35,8 @@ $.dialog = (display='flex') => {
 
   bg.appendChild(dialogDiv);
   document.body.appendChild(bg);
+  dialogDiv.style.transition = 'transform opacity .5s ease';
   requestAnimationFrame(() => {
-    dialogDiv.style.transition = 'transform opacity .5s ease';
     dialogDiv.style.opacity = '1';
     dialogDiv.style.transform = 'translate(-50%,-50%) scale(1)';
   });
