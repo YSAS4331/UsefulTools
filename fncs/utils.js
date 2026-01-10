@@ -45,6 +45,10 @@ $.dialog = (display='flex') => {
     bg.remove();
   }
   
+  bg.addEventListener('click', e => {
+    if (e.target === bg) remove();
+  });
+  
   return { dialogDiv, remove };
 }
 
