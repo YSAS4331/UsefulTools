@@ -29,7 +29,7 @@ $.dialog = (display='flex') => {
     position: 'fixed',
     left: '50%',
     top: '50%',
-    transform: 'translate(-50%,-50%) scale(0.9)',
+    transform: 'translate(-50%,-50%) scale(0.5)',
     opacity: '0'
   });
 
