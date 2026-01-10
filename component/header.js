@@ -179,7 +179,7 @@ class Header extends HTMLElement {
       const tab = li.dataset.tab;
 
       $.$('*', main).forEach(el => el.style.display = 'none');
-      $(`[data-tab=${tab}]`, main)?.style.display = 'block';
+      $(`[data-tab=${tab}]`, main).style.display = 'block';
     });
   }
 
