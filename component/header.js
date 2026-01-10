@@ -232,6 +232,8 @@ class Header extends HTMLElement {
             <div style="height: 500px;"></div>
             <h3>テーマ設定</h3>
             <div style="height: 500px;"></div>
+            <h3>テーマ設定</h3>
+            <div style="height: 500px;"></div>
           </div>
           <div data-tab="accessibility">
             <h3>アクセシビリティ設定</h3>
