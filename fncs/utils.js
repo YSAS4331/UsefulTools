@@ -38,7 +38,10 @@ $.dialog = () => {
     flexDirection: 'column',
     padding: '16px',
     width: 'min(40vh, 40vw)',
-    height: 'min(40vh, 40vw)',   // ★ 高さ固定
+    height: 'auto',
+    aspectRatio: '1/1',
+    minWidth: '50vw',
+    minHeight: '50vh',
     borderRadius: 'var(--radius)',
     border: '4px var(--accent) solid',
     transform: 'scale(.75)',
