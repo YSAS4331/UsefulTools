@@ -80,14 +80,14 @@ window.addEventListener('open-settings', async () => {
       }
       .setting-section {
         position: relative;
-        margin-top:1rem;
+        margin-top:.45rem;
       }
       .setting-section h3:first-child {
         position: sticky;
         top: 0;
       }
       .setting-section p:first-child {
-        margin-top: 0.55rem;
+        margin-top: .55rem;
       }
 
       .setting-item {
@@ -130,9 +130,9 @@ window.addEventListener('open-settings', async () => {
           <section class="setting-section">
             <h3>保存されているデータ一覧</h3>
             <p>保存されているデータを確認し、削除可能なものは削除できます</p>
-            <p class="indexedSize">読み込み中です...</p>
           </section>
           <section class="setting-section">
+            <p class="indexedSize">読み込み中です...</p>
             <p class="localStorageSize">読み込み中です...</p>
             <table class="localTable"></table>
           </section>
