@@ -197,6 +197,8 @@ class Header extends HTMLElement {
         .main > div {
           display: none;
           position: relative;
+          overflow-x: hidden;
+          overflow-y: auto;
         }
         .main > div.active {
           display: block;
@@ -237,6 +239,11 @@ class Header extends HTMLElement {
 
     const sidebar = $('.sidebar', content);
     const main = $('.main', content);
+
+    main.querySelectorAll('h3').forEach(el => {
+      el.style.position = 'sticky';
+      el.style.top = '0';
+    });
 
     sidebar.addEventListener('click', e => {
       const li = e.target.closest('li');
