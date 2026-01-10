@@ -36,3 +36,5 @@ $.dialog = (display='flex') => {
   
   return { dialogDiv, remove };
 }
+
+export default $;
