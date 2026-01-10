@@ -30,7 +30,7 @@ $.dialog = (display='flex') => {
     borderRadius: 'var(--radius)',
     border: '4px var(--accent) solid',
     zIndex: '10000',
-    transform: 'scale(0.5)',
+    transform: 'scale(.75)',
     transition: 'transform .5s ease, opacity .5s ease',
     opacity: '0'
   });
@@ -45,7 +45,7 @@ $.dialog = (display='flex') => {
   function remove() {
     requestAnimationFrame(() => {
       dialogDiv.style.opacity = '0';
-      dialogDiv.style.transform = 'scale(0.5)';
+      dialogDiv.style.transform = 'scale(.75)';
     });
     dialogDiv.addEventListener('transitionend', () => bg.remove(), { once: true });
   }
