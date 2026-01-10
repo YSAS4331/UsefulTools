@@ -161,6 +161,7 @@ class Header extends HTMLElement {
 
   #attachEvents() {
     this.$theme.addEventListener('click', () => this.#applyTheme());
+    this.$settings.addEventListener('click', () => this.#showSetting());
   }
 }
 
