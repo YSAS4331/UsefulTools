@@ -197,7 +197,6 @@ class Header extends HTMLElement {
         .main > div {
           display: none;
           position: relative;
-          overflow-x: hidden;
           overflow-y: auto;
         }
         .main > div.active {
@@ -220,7 +219,6 @@ class Header extends HTMLElement {
         <ul class="sidebar" role="tab">
           <li data-tab="theme" class="active">
             <button class="nostyle">テーマ</button>
-            <div style="height: 2000px;"></div>
           </li>
           <li data-tab="accessibility">
             <button class="nostyle">アクセシビリティ</button>
@@ -230,6 +228,7 @@ class Header extends HTMLElement {
         <div class="main" style="flex:1;height:100%;padding-left:1rem;">
           <div data-tab="theme" class="active">
             <h3>テーマ設定</h3>
+            <div style="height: 2000px;"></div>
           </div>
           <div data-tab="accessibility">
             <h3>アクセシビリティ設定</h3>
