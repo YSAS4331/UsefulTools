@@ -150,5 +150,5 @@ window.addEventListener('open-settings', async () => {
   const { local, indexed, localSize, indexedSize } = await getAllUsefulData();
 
   $('.localStorageSize', main).textContent = `localStorage: ${(localSize / 1024).toFixed(2)} KB / ${local.length} items`;
-  $('.indexed', main).textContent = `indexedDB: ${(indexedSize / 1024).toFixed(2)} KB / ${indexed.length} DBs`;
+  $('.indexedSize', main).textContent = `indexedDB: ${(indexedSize / 1024).toFixed(2)} KB / ${indexed.length} DBs`;
 });
