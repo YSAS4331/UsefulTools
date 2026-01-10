@@ -203,6 +203,13 @@ class Header extends HTMLElement {
           display: block;
           height: 100%;
         }
+        .setting-section {
+          position: relative;
+        }
+        .main h3 {
+          position: sticky;
+          top: 0;
+        }
 
         .setting-item {
           margin-bottom: 1rem;
@@ -229,11 +236,10 @@ class Header extends HTMLElement {
         <div class="main" style="flex:1;height:100%;padding-left:1rem;overflow:hidden;">
           <div data-tab="theme" class="active">
             <h3>テーマ設定</h3>
-            <div style="height: 500px;"></div>
-            <h3>テーマ設定</h3>
-            <div style="height: 500px;"></div>
-            <h3>テーマ設定</h3>
-            <div style="height: 500px;"></div>
+            <section class="setting-section">
+              <h3>テーマカラー選択</h3>
+              <div style="height:2000px"></div>
+            </section>
           </div>
           <div data-tab="accessibility">
             <h3>アクセシビリティ設定</h3>
@@ -244,11 +250,6 @@ class Header extends HTMLElement {
 
     const sidebar = $('.sidebar', content);
     const main = $('.main', content);
-
-    main.querySelectorAll('h3').forEach(el => {
-      el.style.position = 'sticky';
-      el.style.top = '0';
-    });
 
     sidebar.addEventListener('click', e => {
       const li = e.target.closest('li');
