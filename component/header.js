@@ -1,3 +1,5 @@
+import $ from 'https://ysas4331.github.io/UsefulTools/fncs/utils.js';
+
 class Header extends HTMLElement {
   #Style = `
     header {
@@ -152,6 +154,9 @@ class Header extends HTMLElement {
     html.add(next);
 
     localStorage.setItem('USEFUL-theme', this.#themeNum);
+  }
+  #showSetting() {
+    const { dialogDiv, remove } = $.dialog();
   }
 
   #attachEvents() {
