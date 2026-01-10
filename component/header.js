@@ -7,12 +7,12 @@ class Header extends HTMLElement {
       width: 80%;
       margin: 1rem auto;
       padding: 0.35rem 1.2rem;
-    
+
       background: color-mix(in srgb, var(--glassBg) 85%, transparent 15%);
       backdrop-filter: blur(var(--glassBlur));
       border: var(--borderSize) solid var(--accent);
       border-radius: var(--radius);
-    
+
       display: flex;
       align-items: center;
       gap: 8px;
@@ -23,6 +23,7 @@ class Header extends HTMLElement {
       transform: translateX(-50%);
       z-index: 1000;
     }
+
     #searchBar {
       border-radius: var(--radius);
       border: var(--borderSize) dashed var(--accent);
@@ -45,6 +46,7 @@ class Header extends HTMLElement {
     #searchBar > input:focus::placeholder {
       opacity: 0.4;
     }
+
     #searchBtn {
       border-radius: var(--radius);
       overflow: hidden;
@@ -56,6 +58,7 @@ class Header extends HTMLElement {
     #searchBtn:hover i {
       transform: translateX(2.5px);
     }
+
     #buttons {
       flex: 1;
       display: flex;
@@ -85,12 +88,13 @@ class Header extends HTMLElement {
     #buttons > .themeBtn:hover {
       color: var(--bg);
     }
+
     @media(max-width:768px) {
       #searchBtn > span {
         display: none;
       }
       header {
-        width: 85%; 
+        width: 85%;
       }
     }
   `;
@@ -98,6 +102,7 @@ class Header extends HTMLElement {
   #HTML = `
     <header>
       <a href="/UsefulTools/"><span>Useful Tools</span></a>
+
       <div id="searchBar">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="ツールを検索する..." id="searchContent">
@@ -106,9 +111,10 @@ class Header extends HTMLElement {
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
+
       <div id="buttons">
-        <button id="favoriteTools" title="お気に入りのツール" class="nostyle">
-          <i class="fa-solid fa-heart" style="color: #FFD761;"></i>
+        <button id="favoriteTools" title="お気に入りのツール">
+          <i class="fa-solid fa-heart" style="color: #FFD761;" class="nostyle"></i>
         </button>
         <button id="settings" title="設定を開く" class="nostyle themeBtn">
           <i class="fa-solid fa-user-gear"></i>
@@ -126,13 +132,12 @@ class Header extends HTMLElement {
   connectedCallback() {
     this.render();
     this.#attachEvents();
-    this.#applyTheme(localStorage.getItem('USEFUL-theme') || 0, true); // 初期テーマを確定
+    this.#applyTheme(localStorage.getItem('USEFUL-theme') || 0, true);
   }
 
   render() {
     this.innerHTML = `<style>${this.#Style}</style>${this.#HTML}`;
 
-    // Light DOM では querySelector を使う
     this.$favorite = this.querySelector('#favoriteTools');
     this.$settings = this.querySelector('#settings');
     this.$theme = this.querySelector('#colorTheme');
@@ -142,7 +147,7 @@ class Header extends HTMLElement {
     const themes = this.#theme;
 
     if (absolute) {
-      this.#themeNum = n;
+      this.#themeNum = Number(n);
     } else {
       this.#themeNum = (this.#themeNum + n) % themes.length;
     }
@@ -155,31 +160,117 @@ class Header extends HTMLElement {
 
     localStorage.setItem('USEFUL-theme', this.#themeNum);
   }
+
   #showSetting() {
-    const { content, remove } = $.dialog();
+    const { content } = $.dialog();
+
     content.innerHTML = `
+      <style>
+        .sidebar {
+          width: 160px;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+          border-right: 2px solid var(--accent);
+        }
+        .sidebar li {
+          width: 100%;
+        }
+        .sidebar button.nostyle {
+          width: 100%;
+          padding: .6rem .8rem;
+          text-align: left;
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background .25s ease;
+        }
+        .sidebar li.active button {
+          background: color-mix(in srgb, var(--accent) 25%, transparent 75%);
+          font-weight: bold;
+        }
+        .sidebar button:hover {
+          background: color-mix(in srgb, var(--accentGrey) 40%, transparent 60%);
+        }
+
+        .main > div {
+          display: none;
+        }
+        .main > div.active {
+          display: block;
+        }
+
+        .setting-item {
+          margin-bottom: 1rem;
+        }
+        .setting-item label {
+          display: block;
+          margin-bottom: .3rem;
+        }
+        .setting-item input[type="range"] {
+          width: 100%;
+        }
+      </style>
+
       <div style="display:flex;width:100%;height:100%;">
-        <ul class="sidebar" role="tab" style="height:100%; border: 2px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;">
-          <li data-tab="accessibility"><button>アクセシビリティ</button></li>
+        <ul class="sidebar" role="tab">
+          <li data-tab="accessibility" class="active">
+            <button class="nostyle">アクセシビリティ</button>
+          </li>
         </ul>
-        <div class="main" style="flex:1;height:100%;margin-left:1rem;">
-          <div data-tab="accessibility">
-            <!-- アクセシビリティタブの内容 -->
-            <h3>アクセシビリティ</h3>
+
+        <div class="main" style="flex:1;height:100%;padding-left:1rem;">
+          <div data-tab="accessibility" class="active">
+            <h3>アクセシビリティ設定</h3>
+
+            <div class="setting-item">
+              <label>文字サイズ</label>
+              <input type="range" min="80" max="140" value="100" id="fontSizeRange">
+            </div>
+
+            <div class="setting-item">
+              <label>行間</label>
+              <input type="range" min="1" max="2" step="0.1" value="1.4" id="lineHeightRange">
+            </div>
+
+            <div class="setting-item">
+              <label>
+                <input type="checkbox" id="highContrast">
+                コントラストを強化する
+              </label>
+            </div>
           </div>
         </div>
       </div>
     `;
 
+    const sidebar = $('.sidebar', content);
     const main = $('.main', content);
-    $('.sidebar', content).addEventListener('click', e => {
+
+    sidebar.addEventListener('click', e => {
       const li = e.target.closest('li');
       if (!li) return;
 
       const tab = li.dataset.tab;
 
-      $.$('*', main).forEach(el => el.style.display = 'none');
-      $(`[data-tab="${tab}"]`, main).style.display = 'block';
+      sidebar.querySelectorAll('li').forEach(el => el.classList.remove('active'));
+      li.classList.add('active');
+
+      main.querySelectorAll('div[data-tab]').forEach(el => el.classList.remove('active'));
+      main.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    });
+
+    $('#fontSizeRange', content).addEventListener('input', e => {
+      document.documentElement.style.fontSize = `${e.target.value}%`;
+    });
+
+    $('#lineHeightRange', content).addEventListener('input', e => {
+      document.documentElement.style.lineHeight = e.target.value;
+    });
+
+    $('#highContrast', content).addEventListener('change', e => {
+      document.documentElement.classList.toggle('high-contrast', e.target.checked);
     });
   }
 
