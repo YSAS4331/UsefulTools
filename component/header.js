@@ -285,9 +285,9 @@ class Header extends HTMLElement {
           </div>
           <div data-tab="data">
             <h2>データ管理</h2>
-            <span>保存されているデータの一覧です</span>
-            <span class="localStorageSize">読み込み中です...</span>
-            <span class="indexedSize">読み込み中です...</span>
+            <p>保存されているデータの一覧です</p>
+            <p class="localStorageSize">読み込み中です...</p>
+            <p class="indexedSize">読み込み中です...</p>
           </div>
         </div>
       </div>
