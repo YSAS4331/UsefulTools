@@ -206,7 +206,7 @@ class Header extends HTMLElement {
         .setting-section {
           position: relative;
         }
-        .setting-section h3 {
+        .setting-section h3:first-child {
           position: sticky;
           top: 0;
         }
@@ -237,12 +237,7 @@ class Header extends HTMLElement {
           <div data-tab="theme" class="active">
             <h3>テーマ設定</h3>
             <section class="setting-section">
-              <h3>テーマカラー選択</h3>
-              <div style="height:1000px"></div>
-            </section>
-            <section class="setting-section">
-              <h3>テーマカラー選択</h3>
-              <div style="height:1000px"></div>
+              <h3>テーマ選択</h3>
             </section>
           </div>
           <div data-tab="accessibility">
