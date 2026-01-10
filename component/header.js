@@ -239,6 +239,8 @@ class Header extends HTMLElement {
             <section class="setting-section">
               <h3>テーマカラー選択</h3>
               <div style="height:1000px"></div>
+            </section>
+            <section class="setting-section">
               <h3>テーマカラー選択</h3>
               <div style="height:1000px"></div>
             </section>
