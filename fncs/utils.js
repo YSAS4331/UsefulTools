@@ -18,6 +18,11 @@ $.dialog = (display='flex') => {
   });
   Object.assign(dialogDiv.style, {
     display: display,
+    maxWidth: '50%',
+    maxHeight: '50%',
+    width: '50%',
+    height: 'auto',
+    aspectRatio: '1/1',
     borderRadius: 'var(--radius)',
     border: '2px var(--accent) solid',
     zIndex: '10000',
