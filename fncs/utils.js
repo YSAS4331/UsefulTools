@@ -24,7 +24,7 @@ $.dialog = (display='flex') => {
     display: display,
     minWidth: '50%',
     minHeight: '50%',
-    width: 'min(50vh, 50vw)',
+    width: 'min(40vh, 40vw)',
     height: 'auto',
     aspectRatio: '1/1',
     borderRadius: 'var(--radius)',
