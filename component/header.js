@@ -232,7 +232,7 @@ class Header extends HTMLElement {
             <button class="nostyle">アクセシビリティ</button>
           </li>
           <li data-tab="data">
-            <button class="nostyle">データ管理</button>
+            <button class="nostyle">ストレージ</button>
           </li>
         </ul>
 
