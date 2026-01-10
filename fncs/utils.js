@@ -24,11 +24,17 @@ $.dialog = (display='flex') => {
     position: 'fixed',
     left: '50%',
     top: '50%',
-    transform: 'translate(-50%,-50%)'
+    transform: 'translate(-50%,-50%) scale(0.9)',
+    opacity: '0'
   });
 
   bg.appendChild(dialogDiv);
   document.body.appendChild(bg);
+  requestAnimationFrame(() => {
+    dialogDiv.style.transition = 'transform opacity .5s ease';
+    dialogDiv.style.opacity = '1';
+    dialogDiv.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
 
   function remove() {
     bg.remove();
