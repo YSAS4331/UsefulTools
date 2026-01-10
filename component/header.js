@@ -220,6 +220,7 @@ class Header extends HTMLElement {
         <ul class="sidebar" role="tab">
           <li data-tab="theme" class="active">
             <button class="nostyle">テーマ</button>
+            <div style="height: 2000px;"></div>
           </li>
           <li data-tab="accessibility">
             <button class="nostyle">アクセシビリティ</button>
