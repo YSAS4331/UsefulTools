@@ -20,7 +20,7 @@ $.dialog = (display='flex') => {
     justifyContent: 'center'
   });
   Object.assign(dialogDiv.style, {
-    background: 'radial-gradient(var(--bgDot) 0.25px, transparent 1px)',
+    background: 'radial-gradient(var(--bgDot) 0.25px, var(--bg) 1px)',
     backgroundSize: '22px 22px',
     display: display,
     minWidth: '50%',
