@@ -156,7 +156,31 @@ class Header extends HTMLElement {
     localStorage.setItem('USEFUL-theme', this.#themeNum);
   }
   #showSetting() {
-    const { dialogDiv, remove } = $.dialog();
+    const { content, remove } = $.dialog();
+    content.innerHTML = `
+      <div style="display:flex;">
+        <ul class="sidebar" role="tab" style="height:100%;">
+          <li data-tab="accessibility"><button>アクセシビリティ</button></li>
+        </ul>
+        <div class="main" style="flex:1;height:100%;">
+          <div data-tab="accessibility">
+            <!-- アクセシビリティタブの内容 -->
+            <h3>アクセシビリティ</h3>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const main = $('.main', content);
+    $('.sidebar', content).addEventListener('click', e => {
+      const li = e.target.closest('li');
+      if (!li) return;
+
+      const tab = li.dataset.tab;
+
+      $.$('*', main).forEach(el => el.style.display = 'none');
+      $(`[data-tab=${tab}]`, main)?.style.display = 'block';
+    });
   }
 
   #attachEvents() {
