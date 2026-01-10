@@ -235,13 +235,13 @@ class Header extends HTMLElement {
 
         <div class="main" style="flex:1;height:100%;padding-left:1rem;overflow:hidden;">
           <div data-tab="theme" class="active">
-            <h3>テーマ設定</h3>
+            <h5>テーマ設定</h5>
             <section class="setting-section">
               <h3>テーマ選択</h3>
             </section>
           </div>
           <div data-tab="accessibility">
-            <h3>アクセシビリティ設定</h3>
+            <h5>アクセシビリティ設定</h5>
           </div>
         </div>
       </div>
