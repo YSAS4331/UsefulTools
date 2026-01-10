@@ -123,7 +123,7 @@ window.addEventListener('open-settings', async () => {
         </div>
         <div data-tab="data">
           <h2>データ管理</h2>
-          <p>保存されているデータの一覧です</p>
+          <h3>保存されているデータ一覧</h3>
           <p class="localStorageSize">読み込み中です...</p>
           <p class="indexedSize">読み込み中です...</p>
         </div>
