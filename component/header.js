@@ -223,23 +223,6 @@ class Header extends HTMLElement {
         <div class="main" style="flex:1;height:100%;padding-left:1rem;">
           <div data-tab="accessibility" class="active">
             <h3>アクセシビリティ設定</h3>
-
-            <div class="setting-item">
-              <label>文字サイズ</label>
-              <input type="range" min="80" max="140" value="100" id="fontSizeRange">
-            </div>
-
-            <div class="setting-item">
-              <label>行間</label>
-              <input type="range" min="1" max="2" step="0.1" value="1.4" id="lineHeightRange">
-            </div>
-
-            <div class="setting-item">
-              <label>
-                <input type="checkbox" id="highContrast">
-                コントラストを強化する
-              </label>
-            </div>
           </div>
         </div>
       </div>
@@ -259,18 +242,6 @@ class Header extends HTMLElement {
 
       main.querySelectorAll('div[data-tab]').forEach(el => el.classList.remove('active'));
       main.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-    });
-
-    $('#fontSizeRange', content).addEventListener('input', e => {
-      document.documentElement.style.fontSize = `${e.target.value}%`;
-    });
-
-    $('#lineHeightRange', content).addEventListener('input', e => {
-      document.documentElement.style.lineHeight = e.target.value;
-    });
-
-    $('#highContrast', content).addEventListener('change', e => {
-      document.documentElement.classList.toggle('high-contrast', e.target.checked);
     });
   }
 
