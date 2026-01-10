@@ -158,7 +158,7 @@ class Header extends HTMLElement {
   #showSetting() {
     const { content, remove } = $.dialog();
     content.innerHTML = `
-      <div style="display:flex;">
+      <div style="display:flex;width:100%;height:100%;">
         <ul class="sidebar" role="tab" style="height:100%; border: 2px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;">
           <li data-tab="accessibility"><button>アクセシビリティ</button></li>
         </ul>
