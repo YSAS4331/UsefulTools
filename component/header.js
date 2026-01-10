@@ -201,6 +201,7 @@ class Header extends HTMLElement {
         }
         .main > div.active {
           display: block;
+          height: 100%;
         }
 
         .setting-item {
