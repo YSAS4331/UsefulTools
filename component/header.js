@@ -1,5 +1,42 @@
 import $ from 'https://ysas4331.github.io/UsefulTools/fncs/utils.js';
 
+async function getAllUsefulData() {
+  // --- localStorage ---
+  const local = Object.keys(localStorage)
+    .filter(k => k.startsWith('USEFUL-'))
+    .map(k => ({
+      key: k,
+      value: localStorage.getItem(k)
+    }));
+
+  // localStorage のサイズ計算（UTF-16 → 2byte換算）
+  const localSize = local.reduce((sum, item) => {
+    const bytes = (item.key.length + item.value.length) * 2;
+    return sum + bytes;
+  }, 0);
+
+  // --- indexedDB ---
+  const dbs = await indexedDB.databases();
+  const indexed = dbs
+    .filter(db => db.name && db.name.startsWith('USEFUL-'))
+    .map(db => ({
+      name: db.name,
+      version: db.version,
+      size: db.estimatedSize || 0
+    }));
+
+  // indexedDB のサイズ合計
+  const indexedSize = indexed.reduce((sum, db) => sum + db.size, 0);
+
+  return {
+    local,
+    indexed,
+    localSize,
+    indexedSize
+  };
+}
+
+
 class Header extends HTMLElement {
   #Style = `
     header {
@@ -161,7 +198,7 @@ class Header extends HTMLElement {
     localStorage.setItem('USEFUL-theme', this.#themeNum);
   }
 
-  #showSetting() {
+  async #showSetting() {
     const { content } = $.dialog();
 
     content.innerHTML = `
@@ -247,8 +284,10 @@ class Header extends HTMLElement {
             <h2>アクセシビリティ設定</h2>
           </div>
           <div data-tab="data">
-            <h2>データ管理</h3>
+            <h2>データ管理</h2>
             <span>保存されているデータの一覧です</span>
+            <span class="localStorageSize">読み込み中です...</span>
+            <span class="indexedSize">読み込み中です...</span>
           </div>
         </div>
       </div>
@@ -269,6 +308,10 @@ class Header extends HTMLElement {
       main.querySelectorAll('div[data-tab]').forEach(el => el.classList.remove('active'));
       main.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     });
+
+    const { local, indexed, localSize, indexedSize } = await getAllUsefulData();
+
+    $('.localStorageSize', main).textContent = `localStorage: ${(localSize / 1024).toFixed(2)} KB / ${local.length} items`;
   }
 
   #attachEvents() {
