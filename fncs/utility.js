@@ -1,5 +1,5 @@
 function $(s,r=document) {
-  return r.querySelectorAll(s);
+  return r.querySelector(s);
 }
 $.$ = (s,r=document) => [...r.querySelectorAll(s)];
 $.create = e => document.createElement(e);
