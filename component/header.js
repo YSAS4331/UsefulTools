@@ -231,6 +231,9 @@ class Header extends HTMLElement {
           <li data-tab="accessibility">
             <button class="nostyle">アクセシビリティ</button>
           </li>
+          <li data-tab="data">
+            <button class="nostyle">データ管理</button>
+          </li>
         </ul>
 
         <div class="main" style="flex:1;height:100%;padding-left:1rem;overflow:hidden;">
@@ -242,6 +245,9 @@ class Header extends HTMLElement {
           </div>
           <div data-tab="accessibility">
             <h2>アクセシビリティ設定</h2>
+          </div>
+          <div data-tab="data">
+            <h2>データ管理</h3>
           </div>
         </div>
       </div>
