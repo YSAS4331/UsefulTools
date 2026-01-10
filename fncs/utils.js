@@ -47,7 +47,7 @@ $.dialog = (display='flex') => {
       dialogDiv.style.opacity = '0';
       dialogDiv.style.transform = 'scale(0.5)';
     });
-    dialogDiv.addEventListener('transitionend', () => bg.remove());
+    dialogDiv.addEventListener('transitionend', () => bg.remove(), { once: true });
   }
   
   bg.addEventListener('click', e => {
