@@ -30,7 +30,7 @@ $.dialog = (display='flex') => {
     border: '2px var(--accent) solid',
     zIndex: '10000',
     transform: 'scale(0.5)',
-    transition: 'transform 1s ease',
+    transition: 'transform 1s ease, opacity 1s ease',
     opacity: '0'
   });
 
@@ -38,7 +38,7 @@ $.dialog = (display='flex') => {
   document.body.appendChild(bg);
   requestAnimationFrame(() => {
     dialogDiv.style.opacity = '1';
-    dialogDiv.style.transform = 'translate(-50%,-50%) scale(1)';
+    dialogDiv.style.transform = 'scale(1)';
   });
 
   function remove() {
