@@ -215,13 +215,19 @@ class Header extends HTMLElement {
 
       <div style="display:flex;width:100%;height:100%;">
         <ul class="sidebar" role="tab">
-          <li data-tab="accessibility" class="active">
+          <li data-tab="theme" class="active">
+            <button class="nostyle">テーマ</button>
+          </li>
+          <li data-tab="accessibility">
             <button class="nostyle">アクセシビリティ</button>
           </li>
         </ul>
 
         <div class="main" style="flex:1;height:100%;padding-left:1rem;">
-          <div data-tab="accessibility" class="active">
+          <div data-tab="theme">
+            <h3>テーマ設定</h3>
+          </div>
+          <div data-tab="accessibility">
             <h3>アクセシビリティ設定</h3>
           </div>
         </div>
