@@ -31,7 +31,7 @@ $.dialog = (display='flex') => {
     border: '4px var(--accent) solid',
     zIndex: '10000',
     transform: 'scale(0.5)',
-    transition: 'transform 1s ease, opacity .5s ease',
+    transition: 'transform .5s ease, opacity .5s ease',
     opacity: '0'
   });
 
