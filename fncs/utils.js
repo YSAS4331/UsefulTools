@@ -20,6 +20,7 @@ $.dialog = (display='flex') => {
     justifyContent: 'center'
   });
   Object.assign(dialogDiv.style, {
+    background: 'var(--bg)',
     display: display,
     minWidth: '50%',
     minHeight: '50%',
