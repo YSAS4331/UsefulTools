@@ -3,7 +3,7 @@
   function gtag(){ dataLayer.push(arguments); }
   function enableCookie() {gtag('js', new Date());gtag('config', 'G-416K6GDFJP');}
   
-  const STORAGE_KEY = 'USEFUL_cookie';
+  const STORAGE_KEY = 'USEFUL-cookie';
 
   // すでに同意ずみなら読み込む
   const state = localStorage.getItem(STORAGE_KEY);
