@@ -43,7 +43,11 @@ $.dialog = (display='flex') => {
   });
 
   function remove() {
-    bg.remove();
+    requestAnimationFrame(() => {
+      dialogDiv.style.opacity = '0';
+      dialogDiv.style.transform = 'scale(0.5)';
+    });
+    dialogDiv.addEventListener('transitionend', () => bg.remove());
   }
   
   bg.addEventListener('click', e => {
