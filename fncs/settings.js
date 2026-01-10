@@ -132,8 +132,8 @@ window.addEventListener('open-settings', async () => {
             <p>保存されているデータを確認し、削除可能なものは削除できます</p>
           </section>
           <section class="setting-section">
-            <p class="indexedSize">読み込み中です...</p>
             <p class="localStorageSize">読み込み中です...</p>
+            <p class="indexedSize">読み込み中です...</p>
             <table class="localTable"></table>
           </section>
         </div>
