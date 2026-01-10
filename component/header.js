@@ -206,7 +206,7 @@ class Header extends HTMLElement {
         .setting-section {
           position: relative;
         }
-        .main h3 {
+        .setting-section h3 {
           position: sticky;
           top: 0;
         }
