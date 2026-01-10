@@ -196,6 +196,7 @@ class Header extends HTMLElement {
 
         .main > div {
           display: none;
+          position: relative;
         }
         .main > div.active {
           display: block;
