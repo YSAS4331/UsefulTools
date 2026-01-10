@@ -224,7 +224,7 @@ class Header extends HTMLElement {
         </ul>
 
         <div class="main" style="flex:1;height:100%;padding-left:1rem;">
-          <div data-tab="theme">
+          <div data-tab="theme" class="active">
             <h3>テーマ設定</h3>
           </div>
           <div data-tab="accessibility">
