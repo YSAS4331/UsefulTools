@@ -14,7 +14,10 @@ $.dialog = (display='flex') => {
     width: '100vw',
     height: '100vh',
     background: 'rgba(0,0,0,0.35)',
-    zIndex: '9999'
+    zIndex: '9999',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   });
   Object.assign(dialogDiv.style, {
     display: display,
@@ -26,16 +29,13 @@ $.dialog = (display='flex') => {
     borderRadius: 'var(--radius)',
     border: '2px var(--accent) solid',
     zIndex: '10000',
-    position: 'fixed',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%,-50%) scale(0.5)',
+    transform: 'scale(0.5)',
+    transition: 'transform 1s ease',
     opacity: '0'
   });
 
   bg.appendChild(dialogDiv);
   document.body.appendChild(bg);
-  dialogDiv.style.transition = 'transform opacity .5s ease';
   requestAnimationFrame(() => {
     dialogDiv.style.opacity = '1';
     dialogDiv.style.transform = 'translate(-50%,-50%) scale(1)';
