@@ -3,7 +3,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const create = e => document.createElement(e);
 // normalize the URL
-const normalize = url => url.replace(/\/(?:index(?:\.html)?)?(?=[?#]|$)/, '/');
+const normalize = url => url.replace(/\/index\.html?$/, '/').replace(/\/$/, '/');
 
 /* Router MPA & SPA */
 let activePageStyles = [];
