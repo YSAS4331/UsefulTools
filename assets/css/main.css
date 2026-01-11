@@ -85,7 +85,7 @@ a[target="_blank"]::after {
   transition: 0.4s;
   box-sizing: border-box;
 }
-.toggle_label:after {
+.toggle_label::after {
   content: "";
   position: absolute;
   width: 32px;
@@ -100,13 +100,13 @@ a[target="_blank"]::after {
 .toggle_input:checked + .toggle_label {
   border: 3px solid #4BD865;
 }
-.toggle_input:checked + .toggle_label:after {
+.toggle_input:checked + .toggle_label::after {
   left: 42px;
   background: #4BD865;
 }
 .toggle_button {
   position: relative;
-  width: 85px;
-  height: 42px;
-  margin: auto;
+  width: auto;
+  height: auto;
+  aspect-ratio: 2/1;
 }
