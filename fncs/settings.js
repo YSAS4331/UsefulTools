@@ -176,6 +176,21 @@ window.addEventListener('open-settings', async () => {
     main.querySelector(`[data-tab="${tab}"]`).classList.add('active');
   });
 
+  main.querySelectorAll('.toggle_button > .toggle_input').forEach(el => {
+    const key = `USEFUL-${el.id}`;
+  
+    // 読み込み時に復元
+    const saved = localStorage.getItem(key);
+    if (saved !== null) {
+      el.checked = saved === '1';
+    }
+  
+    // 変更時に保存
+    el.addEventListener('change', () => {
+      localStorage.setItem(key, el.checked ? '1' : '0');
+    });
+  });
+
   const { local, indexed, localSize, indexedSize } = await getAllUsefulData();
 
   $('.localStorageSize', main).textContent = `localStorage: ${(localSize / 1024).toFixed(2)} KB / ${local.length} items`;
