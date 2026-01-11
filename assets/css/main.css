@@ -98,11 +98,11 @@ a[target="_blank"]::after {
   transition: 0.4s;
 }
 .toggle_input:checked + .toggle_label {
-  border: 3px solid #4BD865;
+  border: 3px solid var(--accentBlack);
 }
 .toggle_input:checked + .toggle_label::after {
   left: 42px;
-  background: var(--accent);
+  background: var(--accentGrey);
 }
 .toggle_button {
   position: relative;
