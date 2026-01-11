@@ -102,7 +102,7 @@ a[target="_blank"]::after {
 }
 .toggle_input:checked + .toggle_label::after {
   left: 42px;
-  background: #4BD865;
+  background: var(--accent);
 }
 .toggle_button {
   position: relative;
