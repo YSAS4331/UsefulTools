@@ -146,8 +146,13 @@ window.addEventListener('open-settings', async () => {
             <h3>入力時の設定</h3>
             <p>入力時の自動検索</p>
             <div class="toggle_button">
-              <input id="toggle" class="toggle_input" type='checkbox'>
-              <label for="toggle" class="toggle_label">
+              <input id="input-toggle" class="toggle_input" type="checkbox">
+              <label for="input-toggle" class="toggle_label">
+            </div>
+            <p>検索履歴の保存</p>
+            <div class="toggle_button">
+              <input id="search-toggle" class="toggle_input" type="checkbox">
+              <label for="search-toggle" class="toggle_label">
             </div>
           </section>
         </div>
