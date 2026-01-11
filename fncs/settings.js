@@ -113,6 +113,9 @@ window.addEventListener('open-settings', async () => {
         <li data-tab="data">
           <button class="nostyle">ストレージ</button>
         </li>
+        <li data-tab="search">
+          <button class="nostyle">検索オプション</button>
+        </li>
       </ul>
 
       <div class="main" style="flex:1;height:100%;padding-left:1rem;overflow:hidden;">
@@ -136,6 +139,9 @@ window.addEventListener('open-settings', async () => {
             <p class="indexedSize">読み込み中です...</p>
             <table class="localTable"></table>
           </section>
+        </div>
+        <div data-tab="search">
+          <h2>検索オプション</h2>
         </div>
       </div>
     </div>
