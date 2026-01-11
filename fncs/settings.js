@@ -142,6 +142,14 @@ window.addEventListener('open-settings', async () => {
         </div>
         <div data-tab="search">
           <h2>検索オプション</h2>
+          <section class="setting-section">
+            <h3>入力時の設定</h3>
+            <p>入力時の自動検索</p>
+            <div class="toggle_button">
+              <input id="toggle" class="toggle_input" type='checkbox'>
+              <label for="toggle" class="toggle_label">
+            </div>
+          </section>
         </div>
       </div>
     </div>
