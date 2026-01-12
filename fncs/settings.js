@@ -206,6 +206,12 @@ window.addEventListener('open-settings', async e => {
     if (saved !== null) {
       el.value = typeof saved === 'number' ? saved : 3;
     }
+
+    el.addEventListener('change', e => {
+      const value = e?.detail?.value;
+
+      localStorage.setItem(key, value);
+    });
   });
 
   ($(`[data-tab="${tab}"]`, sidebar)??$('[data-tab="theme"]', sidebar))?.click();
