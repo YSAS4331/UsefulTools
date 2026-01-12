@@ -143,23 +143,27 @@ window.addEventListener('open-settings', async e => {
           <h2>検索オプション</h2>
           <section class="setting-section">
             <h3>入力時の設定</h3>
-            <p>入力時の自動検索</p>
-            <div class="toggle_button">
-              <input id="input-toggle" class="toggle_input" type="checkbox">
-              <label for="input-toggle" class="toggle_label">
+            <div id="autoSearch-parent">
+              <p>入力時の自動検索</p>
+              <div class="toggle_button">
+                <input id="input-toggle" class="toggle_input" type="checkbox">
+                <label for="input-toggle" class="toggle_label">
+              </div>
+              <div id="autoSearch-menu">
+                <p>検索対象の選択</p>
+                <custom-seg id="for-search" value="3">
+                  <span>タイトル</span>
+                  <span>説明文</span>
+                  <span>タグ</span>
+                  <span>すべて</span>
+                </custom-seg>
+              </div>
             </div>
             <p>検索履歴の保存</p>
             <div class="toggle_button">
               <input id="search-toggle" class="toggle_input" type="checkbox">
               <label for="search-toggle" class="toggle_label">
             </div>
-            <p>検索対象の選択</p>
-            <custom-seg id="for-search" value="3">
-              <span>タイトル</span>
-              <span>説明文</span>
-              <span>タグ</span>
-              <span>すべて</span>
-            </custom-seg>
           </section>
         </div>
       </div>
