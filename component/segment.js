@@ -3,24 +3,28 @@ class CustomSeg extends HTMLElement {
     return ['value']
   }
 
+  get value() {
+    return this.getAttribute('value')
+  }
+
+  set value(v) {
+    this.setAttribute('value', v)
+  }
+
   connectedCallback() {
     this.spans = Array.from(this.querySelectorAll('span'))
     this.count = this.spans.length
 
-    // highlight を追加
     this.highlight = document.createElement('div')
     this.highlight.className = 'highlight'
     this.appendChild(this.highlight)
 
-    // 幅設定
     this.segmentWidth = 100 / this.count
     this.highlight.style.width = `${this.segmentWidth}%`
 
-    // 初期選択（属性 value があれば使う）
     const initial = Number(this.getAttribute('value') ?? 0)
     this.select(initial, false)
 
-    // クリックイベント
     this.spans.forEach((span, index) => {
       span.addEventListener('click', () => this.select(index, true))
     })
