@@ -69,7 +69,6 @@ window.addEventListener('open-settings', async e => {
       .sidebar button:hover {
         background: color-mix(in srgb, var(--accentGrey) 40%, transparent 60%);
       }
-
       .main > div {
         display: none;
         position: relative;
@@ -90,7 +89,6 @@ window.addEventListener('open-settings', async e => {
       .setting-section p:first-child {
         margin-top: .55rem;
       }
-
       .setting-item {
         margin-bottom: 1rem;
       }
@@ -202,9 +200,15 @@ window.addEventListener('open-settings', async e => {
     const key = `USEFUL-${el.id}`;
 
     // 読み込み時に復元
-    const saved = Number(localStorage.getItem(key));
-    if (saved !== null) {
-      el.value = typeof saved === 'number' ? saved : 3;
+    const rawValue = localStorage.getItem(key);
+    
+    if (rawValue !== null) {
+      const parsed = Number(rawValue);
+      /* check if it's a valid number, otherwise fallback to 3 */
+      el.value = !isNaN(parsed) ? parsed : 3;
+    } else {
+      /* default value when no data exists */
+      el.value = 3;
     }
 
     el.addEventListener('change', e => {
