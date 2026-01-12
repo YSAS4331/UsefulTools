@@ -20,3 +20,6 @@
   padding: 0.5rem 1rem;
   overflow: hidden;
 }
+#cta-category {
+  border: 2.5px dashed var(--accentBlack)
+}
