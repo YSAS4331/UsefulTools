@@ -155,6 +155,13 @@ window.addEventListener('open-settings', async e => {
               <input id="search-toggle" class="toggle_input" type="checkbox">
               <label for="search-toggle" class="toggle_label">
             </div>
+            <p>検索対象の選択</p>
+            <custom-seg id="for-search">
+              <span>タイトル</span>
+              <span>説明文</span>
+              <span>タグ</span>
+              <span>すべて</span>
+            </custom-seg>
           </section>
         </div>
       </div>
