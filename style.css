@@ -21,5 +21,7 @@
   overflow: hidden;
 }
 #cta-category {
-  border: 2.5px dashed var(--accentBlack)
+  background: (--bgDot);
+  border: 2.5px dashed var(--accentBlack);
+  cursor: pointer;
 }
