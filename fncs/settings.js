@@ -156,7 +156,7 @@ window.addEventListener('open-settings', async e => {
               <label for="search-toggle" class="toggle_label">
             </div>
             <p>検索対象の選択</p>
-            <custom-seg id="for-search">
+            <custom-seg id="for-search" value="3">
               <span>タイトル</span>
               <span>説明文</span>
               <span>タグ</span>
