@@ -110,3 +110,31 @@ a[target="_blank"]::after {
   height: auto;
   aspect-ratio: 2/1;
 }
+custom-seg {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  background: var(--bgDot);
+  border-radius: 8px;
+  overflow: hidden;
+}
+custom-seg span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  cursor: pointer;
+  user-select: none;
+}
+custom-seg .highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: transform 0.25s ease;
+  z-index: 1;
+  border-radius: 8px;
+}
