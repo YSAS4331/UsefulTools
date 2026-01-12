@@ -36,8 +36,9 @@ async function getAllUsefulData() {
   };
 }
 
-window.addEventListener('open-settings', async () => {
+window.addEventListener('open-settings', async e => {
   const { content } = $.dialog();
+  const { tab } = e.detail;
 
   content.innerHTML = `
     <style>
@@ -104,7 +105,7 @@ window.addEventListener('open-settings', async () => {
 
     <div style="display:flex;width:100%;height:100%;">
       <ul class="sidebar" role="tab">
-        <li data-tab="theme" class="active">
+        <li data-tab="theme">
           <button class="nostyle">テーマ</button>
         </li>
         <li data-tab="accessibility">
@@ -119,7 +120,7 @@ window.addEventListener('open-settings', async () => {
       </ul>
 
       <div class="main" style="flex:1;height:100%;padding-left:1rem;overflow:hidden;">
-        <div data-tab="theme" class="active">
+        <div data-tab="theme">
           <h2>テーマ設定</h2>
           <section class="setting-section">
             <h3>テーマ選択</h3>
@@ -190,6 +191,8 @@ window.addEventListener('open-settings', async () => {
       localStorage.setItem(key, el.checked ? '1' : '0');
     });
   });
+
+  ($(`[data-tab="${tab}"]`, sidebar)??$('[data-tab="theme"]', sidebar))?.click();
 
   const { local, indexed, localSize, indexedSize } = await getAllUsefulData();
 
