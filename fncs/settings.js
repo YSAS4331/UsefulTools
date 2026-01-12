@@ -38,7 +38,7 @@ async function getAllUsefulData() {
 
 window.addEventListener('open-settings', async e => {
   const { content } = $.dialog();
-  const { tab } = e.detail;
+  const tab = e?.detail?.tab ?? 'theme';
 
   content.innerHTML = `
     <style>
