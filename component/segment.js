@@ -1,57 +1,59 @@
 class CustomSeg extends HTMLElement {
-  static get observedAttributes() {
-    return ['value']
-  }
+  static get observedAttributes() { return ['value']; }
 
-  get value() {
-    return this.getAttribute('value')
-  }
-
-  set value(v) {
-    this.setAttribute('value', v)
-  }
+  get value() { return this.getAttribute('value'); }
+  set value(v) { this.setAttribute('value', v); }
 
   connectedCallback() {
-    this.spans = Array.from(this.querySelectorAll('span'))
-    this.count = this.spans.length
+    this.spans = Array.from(this.querySelectorAll('span'));
+    this.count = this.spans.length;
+    if (this.count === 0) return;
 
-    this.highlight = document.createElement('div')
-    this.highlight.className = 'highlight'
-    this.appendChild(this.highlight)
+    /* create highlight element if not exists */
+    if (!this.highlight) {
+      this.highlight = document.createElement('div');
+      this.highlight.className = 'highlight';
+      this.appendChild(this.highlight);
+    }
 
-    this.segmentWidth = 100 / this.count
-    this.highlight.style.width = `${this.segmentWidth}%`
+    this.highlight.style.width = `${100 / this.count}%`;
 
-    const initial = Number(this.getAttribute('value') ?? 0)
-    this.select(initial, false)
+    /* sync initial state */
+    const initial = this.getAttribute('value');
+    this.select(initial !== null ? Number(initial) : 0, false);
 
     this.spans.forEach((span, index) => {
-      span.addEventListener('click', () => this.select(index, true))
-    })
+      span.onclick = () => this.select(index, true);
+    });
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'value' && this.spans) {
-      this.select(Number(newValue), false)
+  attributeChangedCallback(name, oldV, newV) {
+    /* skip if value is same or spans not ready */
+    if (name === 'value' && this.spans && oldV !== newV) {
+      this.select(Number(newV), false);
     }
   }
 
   select(index, emit = true) {
-    if (index < 0 || index >= this.count) return
+    if (index < 0 || index >= this.count) return;
 
-    this.highlight.style.transform = `translateX(${index * 100}%)`
+    /* update visual state */
+    this.highlight.style.transform = `translateX(${index * 100}%)`;
 
-    const value = this.spans[index].textContent.trim()
-
-    // 属性 value を同期
-    this.setAttribute('value', index)
+    /* update attribute only if different to prevent loop */
+    if (Number(this.getAttribute('value')) !== index) {
+      this.setAttribute('value', index);
+    }
 
     if (emit) {
       this.dispatchEvent(new CustomEvent('change', {
-        detail: { value, index }
-      }))
+        detail: { 
+          value: this.spans[index].textContent.trim(), 
+          index 
+        }
+      }));
     }
   }
 }
 
-customElements.define('custom-seg', CustomSeg)
+customElements.define('custom-seg', CustomSeg);
