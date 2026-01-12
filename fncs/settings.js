@@ -198,6 +198,15 @@ window.addEventListener('open-settings', async e => {
       localStorage.setItem(key, el.checked ? '1' : '0');
     });
   });
+  main.querySelectorAll('custom-seg').forEach(el => {
+    const key = `USEFUL-${el.id}`;
+
+    // 読み込み時に復元
+    const saved = Number(localStorage.getItem(key));
+    if (saved !== null) {
+      el.value = typeof saved === 'number' ? saved : 3;
+    }
+  });
 
   ($(`[data-tab="${tab}"]`, sidebar)??$('[data-tab="theme"]', sidebar))?.click();
 
