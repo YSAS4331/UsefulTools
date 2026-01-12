@@ -99,6 +99,11 @@ window.addEventListener('open-settings', async e => {
       .setting-item input[type="range"] {
         width: 100%;
       }
+
+      #autoSearch-menu {
+        margin-top: 0;
+        margin-left: 1.5rem;
+      }
     </style>
 
     <div style="display:flex;width:100%;height:100%;">
@@ -149,7 +154,7 @@ window.addEventListener('open-settings', async e => {
                 <input id="input-toggle" class="toggle_input" type="checkbox">
                 <label for="input-toggle" class="toggle_label">
               </div>
-              <div id="autoSearch-menu">
+              <div id="autoSearch-menu" hidden>
                 <p>検索対象の選択</p>
                 <custom-seg id="for-search" value="3">
                   <span>タイトル</span>
@@ -194,10 +199,17 @@ window.addEventListener('open-settings', async e => {
     if (saved !== null) {
       el.checked = saved === '1';
     }
+
+    if (el.id === 'input-toggle') {
+      $('#autoSearch-parent > #autoSearch-menu', main).hidden = !el.checked;
+    }
   
     // 変更時に保存
     el.addEventListener('change', () => {
       localStorage.setItem(key, el.checked ? '1' : '0');
+      if (el.id === 'input-toggle') {
+        $('#autoSearch-parent > #autoSearch-menu', main).hidden = !el.checked;
+      }
     });
   });
   main.querySelectorAll('custom-seg').forEach(el => {
