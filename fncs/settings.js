@@ -212,7 +212,7 @@ window.addEventListener('open-settings', async e => {
     }
 
     el.addEventListener('change', e => {
-      const value = e?.detail?.value;
+      const value = e?.detail?.index;
 
       localStorage.setItem(key, value);
     });
