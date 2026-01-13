@@ -1,3 +1,5 @@
+簡易にしては十分すぎる: 
+``` Js
 class Editor extends HTMLElement {
   #lang;
   #indent = 2;
@@ -113,17 +115,62 @@ class Editor extends HTMLElement {
     this.$area.addEventListener('keyup', () => this.#updateActiveLine());
     this.$area.addEventListener('paste', () => setTimeout(() => this.#renderAll(), 0));
 
-    // Tab をスペースに（即時）
     this.$area.addEventListener('keydown', e => {
+      const area = this.$area;
+      const start = area.selectionStart;
+      const end = area.selectionEnd;
+      const insert = ' '.repeat(this.#indent);
+      const v = area.value;
+      const map = this.#map?.[this.#lang] ?? {}
       if (e.key === 'Tab') {
         e.preventDefault();
-        const start = this.$area.selectionStart;
-        const end = this.$area.selectionEnd;
-        const insert = ' '.repeat(this.#indent);
-        const v = this.$area.value;
-        this.$area.value = v.slice(0, start) + insert + v.slice(end);
-        this.$area.selectionStart = this.$area.selectionEnd = start + insert.length;
+        area.value = v.slice(0, start) + insert + v.slice(end);
+        area.selectionStart = area.selectionEnd = start + insert.length;
         this.#renderAll();
+      }
+      if (e.key === 'Enter') {
+        if (start !== end) return;
+        e.preventDefault();
+        const beforeText = v[start-1];
+        const currentLine = v.slice(0, start).split('\n').pop();
+        const baseIndent = currentLine.match(/^\s*/)?.[0] ?? '';
+        if (['{', '[', '('].includes(beforeText)) {
+          const indent = ' '.repeat(this.#indent);
+          const insert = '\n' + baseIndent + indent + '\n' + baseIndent;
+          area.value = v.slice(0, start) + insert + v.slice(end);
+          const pos = start + 1 + baseIndent.length + indent.length;
+          area.selectionStart = area.selectionEnd = pos;
+          this.#renderAll();
+          return;
+        } else {
+          const indent = ' '.repeat(this.#indent);
+          const insert = '\n' + baseIndent;
+          area.value = v.slice(0, start) + insert + v.slice(end);
+          const pos = start + 1 + baseIndent.length;
+          area.selectionStart = area.selectionEnd = pos;
+          this.#renderAll();
+          return;
+        }
+      }
+      if (Object.values(map).includes(e.key)) {
+
+        const open = Object.entries(map).find(([k, v]) => v === e.key)?.[0];
+        if (!open) return;
+
+        if (start === end && v[start-1] === open) {
+          e.preventDefault();
+          area.selectionStart = area.selectionEnd = start + 1;
+          this.#renderAll();
+          return;
+        }
+      }
+      if (e.key in map) {
+        e.preventDefault();
+        const pair = map[e.key];
+        area.value = v.slice(0, start) + e.key + pair + v.slice(end);
+        area.selectionStart = area.selectionEnd = start + 1;
+        this.#renderAll();
+        return;
       }
       this.#updateActiveLine();
     });
@@ -166,7 +213,7 @@ class Editor extends HTMLElement {
 
   // ---------- helpers ----------
   #escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return str.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
   }
 
   #renderHighlight(value) {
@@ -188,6 +235,11 @@ class Editor extends HTMLElement {
     'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda',
     'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
   };
+  #map = {
+    plaintext: {},
+    js: {"{":"}","[":"]","(":")","\"":"\"","'":"'","`":"`"},
+    py: {}
+  }
 
   #applyHighlight(code) {
     if (!code) return '';
@@ -262,3 +314,4 @@ class Editor extends HTMLElement {
 }
 
 customElements.define('custom-editor', Editor);
+```
