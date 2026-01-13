@@ -1,5 +1,3 @@
-簡易にしては十分すぎる: 
-``` Js
 class Editor extends HTMLElement {
   #lang;
   #indent = 2;
@@ -314,4 +312,3 @@ class Editor extends HTMLElement {
 }
 
 customElements.define('custom-editor', Editor);
-```
