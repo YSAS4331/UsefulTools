@@ -4,7 +4,8 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const create = e => document.createElement(e);
 
 /* normalize url */
-const normalize = url => url.replace(/\/index\.html?$/, '/').replace(/\/$/, '/');
+const normalize = url =>
+  url.replace(/\/index\.html?$/, '/');
 
 /* state */
 let activeStyles = [];
@@ -29,13 +30,14 @@ document.addEventListener('click', e => {
 /* router core */
 async function navigate(path, push = true) {
   if (!path) return;
+
   const main = $('main');
   main.classList.add('load');
-  
+
   try {
     const res = await fetch(path);
     if (!res.ok) throw new Error(res.status);
-    
+
     const baseUrl = res.url;
     const html = await res.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -49,17 +51,19 @@ async function navigate(path, push = true) {
     if (push) history.pushState(null, '', path);
     window.scrollTo(0, 0);
 
-    main.classList.remove('load');
+    $('main').classList.remove('load');
   } catch (err) {
     console.error('Nav failed:', err);
     if (push) location.href = path;
   }
 }
 
-/* swap content */
+/* swap content — ★バグ修正済み */
 function swapMain(doc) {
-  const next = $('main', doc);
-  if (next && main) cur.replaceWith(next);
+  const cur = $('main');        // 現在の main
+  const next = $('main', doc);  // 新しい main
+
+  if (cur && next) cur.replaceWith(next);
 }
 
 /* sync title */
