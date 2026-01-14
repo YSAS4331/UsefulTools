@@ -37,17 +37,14 @@ $.dialog = () => {
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
-    width: 'min(40vh, 40vw)',
-    height: 'auto',
-    aspectRatio: '1/1',
-    minWidth: '50vw',
-    minHeight: '50vh',
+    width: 'clamp(50vw, 40vw, 40vh)', 
+    aspectRatio:'1/1',
     borderRadius: 'var(--radius)',
     border: '4px var(--accent) solid',
     transform: 'scale(.75)',
     transition: 'transform .5s ease, opacity .5s ease',
     opacity: '0',
-    overflow: 'hidden'           // content がはみ出さないように
+    overflow: 'hidden'
   });
 
   // Content（内部スクロール）
