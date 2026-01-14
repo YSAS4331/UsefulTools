@@ -30,6 +30,7 @@ document.addEventListener('click', e => {
 async function navigate(path, push = true) {
   if (!path) return;
   const main = $('main');
+  main.classList.add('load');
   
   try {
     const res = await fetch(path);
@@ -48,6 +49,7 @@ async function navigate(path, push = true) {
     if (push) history.pushState(null, '', path);
     window.scrollTo(0, 0);
 
+    main.classList.remove('load');
   } catch (err) {
     console.error('Nav failed:', err);
     if (push) location.href = path;
