@@ -29,7 +29,8 @@ document.addEventListener('click', e => {
 /* router core */
 async function navigate(path, push = true) {
   if (!path) return;
-
+  const main = $('main');
+  
   try {
     const res = await fetch(path);
     if (!res.ok) throw new Error(res.status);
@@ -56,8 +57,7 @@ async function navigate(path, push = true) {
 /* swap content */
 function swapMain(doc) {
   const next = $('main', doc);
-  const cur = $('main');
-  if (next && cur) cur.replaceWith(next);
+  if (next && main) cur.replaceWith(next);
 }
 
 /* sync title */
