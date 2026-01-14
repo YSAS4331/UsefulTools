@@ -138,3 +138,20 @@ custom-seg .highlight {
   z-index: 1;
   border-radius: 8px;
 }
+main {
+  position: relative;
+}
+main::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+  transition: opacity .5s ease;
+  pointer-events: none;
+}
+main.load::before {
+  opacity: 1;
+  pointer-events: auto;
+}
