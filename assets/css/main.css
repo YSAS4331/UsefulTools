@@ -148,10 +148,10 @@ main::before {
   inset: 0;
   background: var(--bg);
   opacity: 0;
+  transition: opacity .5s ease;
   pointer-events: none;
 }
 body.load main::before {
-  transition: opacity .5s ease;
   opacity: 1;
   pointer-events: auto;
 }
