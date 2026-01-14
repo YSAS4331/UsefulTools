@@ -162,6 +162,7 @@ window.addEventListener('open-settings', async e => {
                   <span>タグ</span>
                   <span>すべて</span>
                 </custom-seg>
+                <p>デバウンスの遅延時間 (ms)</p>
               </div>
             </div>
             <p>検索履歴の保存</p>
