@@ -11,7 +11,8 @@ class Editor extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: block; --font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Noto Sans Mono", monospace; --font-size: 14px; --line-height: 1.4; }
+        :host { display: block; --font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Noto Sans Mono", monospace; --font-size: 14px; --line-height: 1.4; border: 2px solid #999; border-radius: 6px; position: relative;}
+        .header {position: sticky; top: 0; z-index: 1;}
         h4 {margin: 0;padding: 0; z-index: 1; background: var(--high-header, #fff);}
         .wrapper { position: relative; overflow: auto; }
         .flexWrapper { display:flex; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; background:#fff; }
@@ -70,7 +71,7 @@ class Editor extends HTMLElement {
         }
       </style>
 
-      <h4>${'JS'}</h4>
+      <div class="header"><h4><slot></slot></h4><div style="display: flex;flex-direction: row-reverse;"></div></div>
       <div class="wrapper" part="editor">
         <div class="flexWrapper">
           <div class="gutter" part="gutter" aria-hidden="true"></div>
@@ -211,7 +212,7 @@ class Editor extends HTMLElement {
 
   // ---------- helpers ----------
   #escapeHtml(str) {
-    return str.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   #renderHighlight(value) {
@@ -223,7 +224,7 @@ class Editor extends HTMLElement {
     plaintext: [],
     js: ['await', 'async', 'break', 'case', 'catch', 'class', 'const', 'continue',
     'debugger', 'default', 'delete', 'do', 'else', 'enum', 'export',
-    'extends', 'false', 'finally', 'for', 'function', 'if', 'import',
+    'extends', 'false', 'finally', 'for', 'forEach', 'function', 'if', 'import',
     'in', 'instanceof', 'new', 'null', 'return', 'super', 'switch',
     'this', 'throw', 'true', 'try', 'typeof', 'var', 'void', 'while',
     'with', 'yield', 'let', 'static', 'implements', 'interface',
