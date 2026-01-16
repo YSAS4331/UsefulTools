@@ -2,6 +2,7 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const create = e => document.createElement(e);
+const event = options => window.dispatchEvent(new CustomEvent('spa:router', { detail: options }));
 
 /* normalize url */
 const normalize = url =>
@@ -46,7 +47,9 @@ document.addEventListener('click', e => {
 /* router core */
 async function navigate(path, push = true) {
   if (!path) return;
-
+  
+  event({type: 'before'});
+  
   const main = $('main');
   document.body.classList.add('load');
 
@@ -68,6 +71,8 @@ async function navigate(path, push = true) {
     window.scrollTo(0, 0);
 
     document.body.classList.remove('load');
+
+    event({type: 'after'});
   } catch (err) {
     console.error('Nav failed:', err);
     if (push) location.href = path;
