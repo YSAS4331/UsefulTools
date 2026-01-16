@@ -11,6 +11,22 @@ const normalize = url =>
 let activeStyles = [];
 let activeScripts = [];
 
+/* wait for transition */
+const waitTransition = el =>
+  new Promise(resolve => {
+    el.addEventListener('transitionend', resolve, { once: true });
+  });
+
+/* fetch html */
+async function fetchPage(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(res.status);
+
+  const html = await res.text();
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return { doc, baseUrl: res.url };
+}
+
 /* link interceptor */
 document.addEventListener('click', e => {
   const a = e.target.closest('a');
@@ -34,13 +50,13 @@ async function navigate(path, push = true) {
   const main = $('main');
   document.body.classList.add('load');
 
-  try {
-    const res = await fetch(path);
-    if (!res.ok) throw new Error(res.status);
+  // ★ transition と fetch を同時に開始
+  const pTransition = waitTransition(main);
+  const pFetch = fetchPage(path);
 
-    const baseUrl = res.url;
-    const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
+  try {
+    // ★ 両方が揃うまで絶対に書き換えない
+    const [{ doc, baseUrl }] = await Promise.all([pFetch, pTransition]);
 
     cleanup();
     swapMain(doc);
@@ -58,11 +74,10 @@ async function navigate(path, push = true) {
   }
 }
 
-/* swap content — ★バグ修正済み */
+/* swap content */
 function swapMain(doc) {
-  const cur = $('main');        // 現在の main
-  const next = $('main', doc);  // 新しい main
-
+  const cur = $('main');
+  const next = $('main', doc);
   if (cur && next) cur.replaceWith(next);
 }
 
