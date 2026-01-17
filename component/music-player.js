@@ -1,9 +1,18 @@
 class Player extends HTMLElement {
   #audio
+  #style = ``;
+  #html = ``;
 
   constructor() {
     super()
     this.#audio = new Audio()
+  }
+
+  connectedCallback() {
+    this.innerHTML = `
+      <style>${this.#style}</style>
+      ${this.#html}
+    `;
   }
 
   audio(fn, ...args) {
