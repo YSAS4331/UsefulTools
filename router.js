@@ -135,6 +135,7 @@ window.addEventListener('popstate', () => {
 
 /* init */
 window.addEventListener('DOMContentLoaded', () => {
+  activeStyles = $$('link[data-page]');
   loadStyles(document, location.href);
   loadScripts(document, location.href);
 });
