@@ -2,5 +2,6 @@ main {
   display: flex;
   gap: 1rem;
 
-  padding-top: 3rem;
+  padding-top: 5rem;
+  justify-content: center;
 }
