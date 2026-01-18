@@ -3,3 +3,4 @@ import 'https://ysas4331.github.io/UsefulTools/component/navigation.js';
 import 'https://ysas4331.github.io/UsefulTools/component/accor.js';
 import 'https://ysas4331.github.io/UsefulTools/component/segment.js';
 import 'https://ysas4331.github.io/UsefulTools/fncs/settings.js';
+import 'https://ysas4331.github.io/UsefulTools/router.js';
