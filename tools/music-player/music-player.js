@@ -6,7 +6,8 @@ class Player extends HTMLElement {
       bottom: 16px;
       right: 16px;
       resize: both;
-      
+      display: block;
+      z-index: 9999;
     }
   `;
   #html = ``;
@@ -24,21 +25,33 @@ class Player extends HTMLElement {
     `;
   }
 
-  play() {
-    this.#audio.play();
-  }
+  /* --- Methods --- */
+  play() { this.#audio.play(); }
+  pause() { this.#audio.pause(); }
+  load() { this.#audio.load(); }
 
-  pause() {
-    this.#audio.pause();
-  }
+  /* --- Setter --- */
+  set src(v) { this.#audio.src = v; }
+  set currentTime(v) { this.#audio.currentTime = v; }
+  set volume(v) { this.#audio.volume = v; }
+  set muted(v) { this.#audio.muted = v; }
+  set loop(v) { this.#audio.loop = v; }
+  set playbackRate(v) { this.#audio.playbackRate = v; }
 
-  set src(v) {
-    this.#audio.src = v;
-  }
+  /* --- Getter --- */
+  get src() { return this.#audio.src; }
+  get currentTime() { return this.#audio.currentTime; }
+  get volume() { return this.#audio.volume; }
+  get muted() { return this.#audio.muted; }
+  get loop() { return this.#audio.loop; }
+  get playbackRate() { return this.#audio.playbackRate; }
+  get duration() { return this.#audio.duration; }
+  get paused() { return this.#audio.paused; }
+  get ended() { return this.#audio.ended; }
 
-  get src() {
-    return this.#audio.src;
-  }
+  /* --- Visibility control (PiP用) --- */
+  hide() { this.style.display = 'none'; }
+  show() { this.style.display = ''; }
 }
 
 customElements.define('music-player', Player);
