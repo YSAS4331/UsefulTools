@@ -1,36 +1,43 @@
 class Player extends HTMLElement {
   #audio
-  #style = ``;
+  #style = `
+    :host {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      resize: both;
+      
+    }
+  `;
   #html = ``;
 
   constructor() {
-    super()
-    this.#audio = new Audio()
+    super();
+    this.#audio = new Audio();
+    this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
-    this.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <style>${this.#style}</style>
       ${this.#html}
     `;
   }
 
-  audio(fn, ...args) {
-    const allowed = ['play', 'pause', 'load']
-    if (!allowed.includes(fn)) return
-
-    const func = this.#audio[fn]
-    if (typeof func === 'function') {
-      func.apply(this.#audio, args)
-    }
+  play() {
+    this.#audio.play();
   }
 
-  seek(time) {
-    this.#audio.currentTime = time
+  pause() {
+    this.#audio.pause();
   }
 
-  set volume(v) {
-    this.#audio.volume = v
+  set src(v) {
+    this.#audio.src = v;
+  }
+
+  get src() {
+    return this.#audio.src;
   }
 }
 
