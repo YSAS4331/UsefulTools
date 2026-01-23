@@ -6,6 +6,4 @@ let audio = $('music-player');
 if (!audio) {
   audio = c('music-player');
   document.body.appendChild(audio);
-  alert('追加')
-  s
 }
