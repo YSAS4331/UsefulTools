@@ -6,7 +6,7 @@ const event = options => window.dispatchEvent(new CustomEvent('spa:router', { de
 
 /* normalize url */
 const normalize = url =>
-  url.replace(/\/index\.html?$/, '/');
+  url.replace(/index(\.html)?$/, '');
 
 /* state */
 let activeStyles = [];
