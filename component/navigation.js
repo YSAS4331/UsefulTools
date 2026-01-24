@@ -9,17 +9,14 @@ class ComNav extends HTMLElement {
           width: 220px;
           font-family: system-ui, sans-serif;
         }
-
         nav {
           position: relative;
         }
-
         ul {
           list-style: none;
           margin: 0;
           padding: 0;
         }
-
         a {
           display: block;
           padding: 8px 12px;
@@ -27,16 +24,14 @@ class ComNav extends HTMLElement {
           text-decoration: none;
           outline-offset: 2px;
         }
-
         a[aria-current="location"] {
           font-weight: 600;
         }
-
         .highlight {
           position: absolute;
           left: 0;
           width: 4px;
-          background: #6366f1;
+          background: var(--accent);
           border-radius: 2px;
           transition: transform .25s ease, height .25s ease;
         }
@@ -150,3 +145,4 @@ class ComNav extends HTMLElement {
 }
 
 customElements.define('com-nav', ComNav)
+
