@@ -27,6 +27,7 @@ main > h1:first-child {
   position: relative;
   display: block;
   flex-shrink: 0; /* サイドバーが潰れないように */
+  height: 100%;
 }
 
 /* com-nav を sticky にする */
