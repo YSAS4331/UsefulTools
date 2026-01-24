@@ -31,9 +31,10 @@ class ComNav extends HTMLElement {
           position: absolute;
           left: 0;
           width: 4px;
-          background: var(--accent);
+          background: var(--accent, #6366f1);
           border-radius: 2px;
           transition: transform .25s ease, height .25s ease;
+          will-change: transform, height;
         }
       </style>
 
@@ -53,24 +54,29 @@ class ComNav extends HTMLElement {
 
     this.items = []
 
+    this.assignIds()
     this.build()
     this.observe()
+  }
+
+  assignIds() {
+    let count = 1
+    this.sections.forEach(section => {
+      if (!section.id) {
+        section.id = `section-h2-${count++}`
+      }
+    })
   }
 
   build() {
     this.sections.forEach((section, i) => {
       const h2 = section.querySelector('h2')
 
-      if (!section.id) {
-        section.id = `section-${i}`
-      }
-
       const li = document.createElement('li')
       const a = document.createElement('a')
 
       a.href = `#${section.id}`
       a.textContent = h2.textContent
-      a.setAttribute('role', 'link')
       a.tabIndex = 0
 
       a.addEventListener('click', e => {
@@ -83,11 +89,9 @@ class ComNav extends HTMLElement {
           e.preventDefault()
           a.click()
         }
-
         if (e.key === 'ArrowDown') {
           this.items[i + 1]?.a.focus()
         }
-
         if (e.key === 'ArrowUp') {
           this.items[i - 1]?.a.focus()
         }
@@ -100,49 +104,61 @@ class ComNav extends HTMLElement {
     })
   }
 
-  moveHighlight(a) {
-    const aRect = a.getBoundingClientRect()
+  updateHighlight(activeItems) {
+    if (activeItems.length === 0) return
+
+    const rects = activeItems.map(i =>
+      i.a.getBoundingClientRect()
+    )
+
     const navRect = this.list.getBoundingClientRect()
 
-    this.highlight.style.height = `${aRect.height}px`
+    const top = Math.min(...rects.map(r => r.top))
+    const bottom = Math.max(...rects.map(r => r.bottom))
+
     this.highlight.style.transform =
-      `translateY(${aRect.top - navRect.top}px)`
-  }
+      `translateY(${top - navRect.top}px)`
 
-  setCurrent(target) {
-    this.items.forEach(i => {
-      i.a.removeAttribute('aria-current')
-    })
-
-    target.a.setAttribute('aria-current', 'location')
-    this.moveHighlight(target.a)
+    this.highlight.style.height =
+      `${bottom - top}px`
   }
 
   observe() {
+    const visible = new Set()
+
     const io = new IntersectionObserver(
       entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return
+        let changed = false
 
+        entries.forEach(entry => {
           const item = this.items.find(
             i => i.section === entry.target
           )
+          if (!item) return
 
-          if (item) this.setCurrent(item)
+          if (entry.isIntersecting) {
+            visible.add(item)
+            item.a.setAttribute('aria-current', 'location')
+          } else {
+            visible.delete(item)
+            item.a.removeAttribute('aria-current')
+          }
+
+          changed = true
         })
+
+        if (changed) {
+          this.updateHighlight([...visible])
+        }
       },
       {
-        rootMargin: '-40% 0px -50% 0px'
+        rootMargin: '-20% 0px -20% 0px',
+        threshold: 0
       }
     )
 
     this.items.forEach(i => io.observe(i.section))
-
-    requestAnimationFrame(() => {
-      if (this.items[0]) this.setCurrent(this.items[0])
-    })
   }
 }
 
 customElements.define('com-nav', ComNav)
-
