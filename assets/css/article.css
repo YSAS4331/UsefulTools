@@ -66,6 +66,7 @@ article li {
 }
 
 main > .navigation-sidebar {
+  display: block;
   position: relative;
 }
 
