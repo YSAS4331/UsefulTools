@@ -1,126 +1,152 @@
 class ComNav extends HTMLElement {
   constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
+    super()
+    this.attachShadow({ mode: 'open' })
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          width: 220px;
+          font-family: system-ui, sans-serif;
+        }
+
+        nav {
+          position: relative;
+        }
+
+        ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        a {
+          display: block;
+          padding: 8px 12px;
+          color: inherit;
+          text-decoration: none;
+          outline-offset: 2px;
+        }
+
+        a[aria-current="location"] {
+          font-weight: 600;
+        }
+
+        .highlight {
+          position: absolute;
+          left: 0;
+          width: 4px;
+          background: #6366f1;
+          border-radius: 2px;
+          transition: transform .25s ease, height .25s ease;
+        }
+      </style>
+
+      <nav aria-label="Section navigation">
+        <div class="highlight" aria-hidden="true"></div>
+        <ul role="list"></ul>
+      </nav>
+    `
   }
 
   connectedCallback() {
-    const tgs = document.querySelectorAll('section > h3');
+    this.list = this.shadowRoot.querySelector('ul')
+    this.highlight = this.shadowRoot.querySelector('.highlight')
 
-    const nav = document.createElement('nav');
-    const ul = document.createElement('ul');
+    this.sections = [...document.querySelectorAll('section')]
+      .filter(s => s.querySelector('h2'))
 
-    // ハイライトバー
-    const highlight = document.createElement('div');
-    highlight.className = 'nav-highlight';
-    nav.appendChild(highlight);
+    this.items = []
 
-    const links = [];
+    this.build()
+    this.observe()
+  }
 
-    tgs.forEach(el => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
+  build() {
+    this.sections.forEach((section, i) => {
+      const h2 = section.querySelector('h2')
 
-      if (!el.id) {
-        el.id = el.textContent
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, '-')
-          .replace(/[^\w\-]/g, '');
+      if (!section.id) {
+        section.id = `section-${i}`
       }
 
-      a.textContent = el.textContent;
-      a.href = `#${el.id}`;
+      const li = document.createElement('li')
+      const a = document.createElement('a')
 
-      li.appendChild(a);
-      ul.appendChild(li);
-      links.push(a);
-    });
+      a.href = `#${section.id}`
+      a.textContent = h2.textContent
+      a.setAttribute('role', 'link')
+      a.tabIndex = 0
 
-    nav.appendChild(ul);
+      a.addEventListener('click', e => {
+        e.preventDefault()
+        section.scrollIntoView({ behavior: 'smooth' })
+      })
 
-    // ===== CSS =====
-    const style = document.createElement('style');
-    style.textContent = `
-      :host {
-        display: block;
-      }
-
-      nav {
-        position: relative;
-        font-family: inherit;
-      }
-
-      nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      nav li {
-        position: relative;
-        padding-left: 12px;
-      }
-
-      nav a {
-        display: block;
-        padding: 8px 0;
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .nav-highlight {
-        position: absolute;
-        left: 0;
-        width: 4px;
-        background: var(--accent, #00aaff);
-        border-radius: 2px;
-        transition:
-          top 0.25s ease,
-          height 0.25s ease;
-      }
-    `;
-
-    this.shadowRoot.append(style, nav);
-
-    // ===== IntersectionObserver =====
-    const visible = new Set();
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          visible.add(entry.target);
-        } else {
-          visible.delete(entry.target);
+      a.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          a.click()
         }
-      });
 
-      updateHighlight();
-    }, {
-      root: null,
-      threshold: 0.3
-    });
+        if (e.key === 'ArrowDown') {
+          this.items[i + 1]?.a.focus()
+        }
 
-    tgs.forEach(h3 => observer.observe(h3));
+        if (e.key === 'ArrowUp') {
+          this.items[i - 1]?.a.focus()
+        }
+      })
 
-    // ===== ハイライト更新 =====
-    const updateHighlight = () => {
-      if (visible.size === 0) return;
+      li.append(a)
+      this.list.append(li)
 
-      const topMost = [...visible].sort((a, b) => {
-        return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
-      })[0];
+      this.items.push({ section, a })
+    })
+  }
 
-      const link = links.find(a => a.getAttribute('href') === `#${topMost.id}`);
-      const li = link.parentElement;
+  moveHighlight(a) {
+    const aRect = a.getBoundingClientRect()
+    const navRect = this.list.getBoundingClientRect()
 
-      const rect = li.getBoundingClientRect();
-      const navRect = nav.getBoundingClientRect();
+    this.highlight.style.height = `${aRect.height}px`
+    this.highlight.style.transform =
+      `translateY(${aRect.top - navRect.top}px)`
+  }
 
-      highlight.style.top = `${rect.top - navRect.top}px`;
-      highlight.style.height = `${rect.height}px`;
-    };
+  setCurrent(target) {
+    this.items.forEach(i => {
+      i.a.removeAttribute('aria-current')
+    })
+
+    target.a.setAttribute('aria-current', 'location')
+    this.moveHighlight(target.a)
+  }
+
+  observe() {
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return
+
+          const item = this.items.find(
+            i => i.section === entry.target
+          )
+
+          if (item) this.setCurrent(item)
+        })
+      },
+      {
+        rootMargin: '-40% 0px -50% 0px'
+      }
+    )
+
+    this.items.forEach(i => io.observe(i.section))
+
+    requestAnimationFrame(() => {
+      if (this.items[0]) this.setCurrent(this.items[0])
+    })
   }
 }
 
-customElements.define('com-nav', ComNav);
+customElements.define('com-nav', ComNav)
