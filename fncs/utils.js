@@ -38,6 +38,7 @@ $.dialog = () => {
     flexDirection: 'column',
     padding: '16px',
     width: 'clamp(50vw, 40vw, 40vh)', 
+    maxHeight: 80vh,
     aspectRatio:'1/1',
     borderRadius: 'var(--radius)',
     border: '4px var(--accent) solid',
