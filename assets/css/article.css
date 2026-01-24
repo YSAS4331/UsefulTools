@@ -4,6 +4,7 @@ main {
   display: flex;
   justify-content: center;
   padding-top: 7rem;
+  position: relative;
 }
 
 main > h1:first-child {
@@ -62,4 +63,9 @@ article ul {
 
 article li {
   margin: 0.4rem 0;
+}
+
+com-nav {
+  position: sticky;
+  top: 0;
 }
