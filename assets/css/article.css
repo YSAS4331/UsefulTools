@@ -1,24 +1,51 @@
 main {
   width: 100%;
   min-height: 100%;
-  display: flex;
-  justify-content: center;
-  padding-top: 7rem;
+  padding-top: 7rem; /* 固定ヘッダー分 */
   position: relative;
 }
 
+/* main 直下の h1（記事タイトル） */
 main > h1:first-child {
   margin-top: 7.5rem;
 }
 
-/* 記事全体 */
+/* ===========================
+   layout（横並びの土台）
+=========================== */
+.layout {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 2rem; /* 任意：サイドバーとの余白 */
+}
+
+/* ===========================
+   サイドバー
+=========================== */
+.navigation-sidebar {
+  position: relative;
+  display: block;
+  flex-shrink: 0; /* サイドバーが潰れないように */
+}
+
+/* com-nav を sticky にする */
+com-nav {
+  position: sticky;
+  top: 7rem; /* ← 固定ヘッダーの高さに合わせる */
+  display: block;
+}
+
+/* ===========================
+   記事本体
+=========================== */
 article {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   line-height: 1.8;
   color: var(--text);
-  flex: 1;
+  flex: 1; /* 横幅を広げる */
 }
 
 /* セクション間の余白 */
@@ -63,14 +90,4 @@ article ul {
 
 article li {
   margin: 0.4rem 0;
-}
-
-main > .navigation-sidebar {
-  display: block;
-  position: relative;
-}
-
-com-nav {
-  position: sticky;
-  top: 0;
 }
