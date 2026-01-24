@@ -8,6 +8,7 @@ class ComNav extends HTMLElement {
           display: block;
           width: 220px;
           font-family: system-ui, sans-serif;
+          height: max-content;
         }
         nav {
           position: relative;
