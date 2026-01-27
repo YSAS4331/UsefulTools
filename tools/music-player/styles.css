@@ -1,0 +1,149 @@
+.player-ui {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--card-bg, #fff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- 曲情報 --- */
+.player-ui__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-ui__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text, #333);
+  max-width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-ui__time {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-light, #666);
+}
+
+/* --- コントロールボタン --- */
+.player-ui__controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.ctrl-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--btn-bg, #f2f2f2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.ctrl-btn:hover {
+  background: var(--btn-hover, #e6e6e6);
+}
+
+.ctrl-btn span {
+  font-size: 28px;
+  color: var(--text, #333);
+}
+
+/* --- シークバー --- */
+#uiSeek {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--seek-bg, #ddd);
+  cursor: pointer;
+}
+
+#uiSeek::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent, #0078ff);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* --- 音量 --- */
+.player-ui__volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#uiVolume {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--seek-bg, #ddd);
+}
+
+#uiVolume::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent, #0078ff);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* ============================
+   Playlist
+   ============================ */
+
+.playlist {
+  margin-top: 24px;
+}
+
+.playlist h2 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--text, #333);
+}
+
+#playlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#playlist li {
+  padding: 10px 14px;
+  background: var(--card-bg, #fff);
+  border-bottom: 1px solid var(--border, #eee);
+  cursor: pointer;
+  transition: 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#playlist li:hover {
+  background: var(--hover, #f7f7f7);
+}
+
+#playlist li.active {
+  background: var(--accent-light, #e6f1ff);
+  color: var(--accent, #0078ff);
+  font-weight: 600;
+}
