@@ -24,11 +24,11 @@ class Player extends HTMLElement {
       ${this.#html}
     `;
     this.#audio.addEventListener('timeupdate', e => {
-      this.dispatchEvent(new Event('timeupdate'));
+      this.dispatchEvent(new Event('timeupdate', { bubbles: true }));
     });
     
     this.#audio.addEventListener('ended', e => {
-      this.dispatchEvent(new Event('ended'));
+      this.dispatchEvent(new Event('ended', { bubbles: true }));
     });
   }
 
