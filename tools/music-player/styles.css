@@ -1,12 +1,19 @@
 .player-ui {
-  margin-top: 24px;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--card-bg, #fff);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 28px;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  transition: 0.25s ease;
+}
+
+.player-ui:hover {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
 }
 
 /* --- 曲情報 --- */
@@ -17,10 +24,10 @@
 }
 
 .player-ui__title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text, #333);
-  max-width: 60%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
+  max-width: 65%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -28,38 +35,41 @@
 
 .player-ui__time {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   font-size: 0.85rem;
-  color: var(--text-light, #666);
+  color: #444;
 }
 
 /* --- コントロールボタン --- */
 .player-ui__controls {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 22px;
 }
 
 .ctrl-btn {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border: none;
   border-radius: 50%;
-  background: var(--btn-bg, #f2f2f2);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  transition: 0.15s ease;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
 .ctrl-btn:hover {
-  background: var(--btn-hover, #e6e6e6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 
 .ctrl-btn span {
-  font-size: 28px;
-  color: var(--text, #333);
+  font-size: 30px;
+  color: #222;
 }
 
 /* --- シークバー --- */
@@ -68,24 +78,31 @@
   appearance: none;
   height: 6px;
   border-radius: 4px;
-  background: var(--seek-bg, #ddd);
+  background: linear-gradient(90deg, #0078ff 0%, #00c6ff 100%);
   cursor: pointer;
+  outline: none;
 }
 
 #uiSeek::-webkit-slider-thumb {
   appearance: none;
-  width: 14px;
-  height: 14px;
-  background: var(--accent, #0078ff);
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border: 3px solid #0078ff;
   border-radius: 50%;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#uiSeek::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
 }
 
 /* --- 音量 --- */
 .player-ui__volume {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 #uiVolume {
@@ -93,14 +110,15 @@
   appearance: none;
   height: 6px;
   border-radius: 4px;
-  background: var(--seek-bg, #ddd);
+  background: #ddd;
+  outline: none;
 }
 
 #uiVolume::-webkit-slider-thumb {
   appearance: none;
   width: 14px;
   height: 14px;
-  background: var(--accent, #0078ff);
+  background: #0078ff;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -110,40 +128,42 @@
    ============================ */
 
 .playlist {
-  margin-top: 24px;
+  margin-top: 28px;
 }
 
 .playlist h2 {
   font-size: 1rem;
-  margin-bottom: 8px;
-  color: var(--text, #333);
+  margin-bottom: 10px;
+  color: #222;
+  font-weight: 700;
 }
 
 #playlist {
   list-style: none;
   padding: 0;
   margin: 0;
-  border-radius: 8px;
+  border-radius: 14px;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
 }
 
 #playlist li {
-  padding: 10px 14px;
-  background: var(--card-bg, #fff);
-  border-bottom: 1px solid var(--border, #eee);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  transition: 0.15s ease;
+  transition: 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 #playlist li:hover {
-  background: var(--hover, #f7f7f7);
+  background: rgba(0, 120, 255, 0.08);
 }
 
 #playlist li.active {
-  background: var(--accent-light, #e6f1ff);
-  color: var(--accent, #0078ff);
-  font-weight: 600;
+  background: rgba(0, 120, 255, 0.18);
+  color: #0078ff;
+  font-weight: 700;
 }
