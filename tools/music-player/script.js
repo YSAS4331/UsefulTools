@@ -52,7 +52,10 @@ function loadTrack(i) {
 
   audio.src = URL.createObjectURL(file);
   audio.load();
-  audio.play();
+
+  audio.play().catch(err => {
+    console.warn('Autoplay blocked:', err);
+  });
 
   uiTitle.textContent = cleanName(file.name);
   updatePlaylistUI();
@@ -95,22 +98,25 @@ audio.addEventListener('ended', () => {
 });
 
 /* ============================
-   シークバー同期
+   シークバー同期（完全同期版）
 ============================ */
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
+function syncSeek() {
+  if (audio.duration) {
+    const percent = audio.currentTime / audio.duration * 100;
+    uiSeek.value = percent;
 
-  const percent = audio.currentTime / audio.duration * 100;
-  uiSeek.value = percent;
+    uiCurrent.textContent = format(audio.currentTime);
+    uiDuration.textContent = format(audio.duration);
+  }
+  requestAnimationFrame(syncSeek);
+}
+requestAnimationFrame(syncSeek);
 
-  uiCurrent.textContent = format(audio.currentTime);
-  uiDuration.textContent = format(audio.duration);
-});
-
-/* --- シークバー操作 --- */
+/* --- シークバー操作（確実に反映） --- */
 uiSeek.addEventListener('input', () => {
   if (!audio.duration) return;
-  audio.currentTime = audio.duration * (uiSeek.value / 100);
+  const newTime = audio.duration * (uiSeek.value / 100);
+  audio.currentTime = newTime;
 });
 
 /* ============================
