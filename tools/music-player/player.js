@@ -23,6 +23,13 @@ class Player extends HTMLElement {
       <style>${this.#style}</style>
       ${this.#html}
     `;
+    this.#audio.addEventListener('timeupdate', e => {
+      this.dispatchEvent(new Event('timeupdate'));
+    });
+    
+    this.#audio.addEventListener('ended', e => {
+      this.dispatchEvent(new Event('ended'));
+    });
   }
 
   /* --- Methods --- */
