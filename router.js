@@ -111,15 +111,17 @@ async function loadScripts(doc, base) {
   const scripts = $$('script[data-page][src]', doc);
 
   for (const s of scripts) {
-    const src = new URL(s.getAttribute('src'), base).href;
-    try {
-      const mod = await import(src);
-      activeScripts.push(mod);
-    } catch (err) {
-      console.error('Script error:', src, err);
-    }
+    await new Promise(resolve => {
+      const script = document.createElement('script');
+      script.src = new URL(s.getAttribute('src'), base).href;
+      script.dataset.page = '';
+      script.onload = resolve;
+      document.body.appendChild(script);
+      activeScripts.push(script);
+    });
   }
 }
+
 
 /* remove assets */
 function cleanup() {
