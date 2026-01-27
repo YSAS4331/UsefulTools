@@ -1,43 +1,37 @@
 class Player extends HTMLElement {
-  #audio
-  #style = `
-    :host {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      resize: both;
-      display: block;
-      z-index: 9999;
-    }
-  `;
-  #html = ``;
+  #audio = new Audio();
 
   constructor() {
     super();
-    this.#audio = new Audio();
     this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: none; /* UI は外部で作る前提 */
+        }
+      </style>
+    `;
   }
 
   connectedCallback() {
-    this.shadowRoot.innerHTML = `
-      <style>${this.#style}</style>
-      ${this.#html}
-    `;
-    this.#audio.addEventListener('timeupdate', e => {
-      this.dispatchEvent(new Event('timeupdate', { bubbles: true }));
-    });
-    
-    this.#audio.addEventListener('ended', e => {
-      this.dispatchEvent(new Event('ended', { bubbles: true }));
+    // Audio のイベントをそのまま外へ流す
+    const events = [
+      'play', 'pause', 'ended', 'timeupdate', 'loadedmetadata'
+    ];
+
+    events.forEach(ev => {
+      this.#audio.addEventListener(ev, e => {
+        this.dispatchEvent(new Event(ev, { bubbles: true }));
+      });
     });
   }
 
-  /* --- Methods --- */
-  play() { this.#audio.play(); }
-  pause() { this.#audio.pause(); }
-  load() { this.#audio.load(); }
+  /* --- Audio と同じメソッド --- */
+  play() { return this.#audio.play(); }
+  pause() { return this.#audio.pause(); }
+  load() { return this.#audio.load(); }
 
-  /* --- Setter --- */
+  /* --- setter --- */
   set src(v) { this.#audio.src = v; }
   set currentTime(v) { this.#audio.currentTime = v; }
   set volume(v) { this.#audio.volume = v; }
@@ -45,7 +39,7 @@ class Player extends HTMLElement {
   set loop(v) { this.#audio.loop = v; }
   set playbackRate(v) { this.#audio.playbackRate = v; }
 
-  /* --- Getter --- */
+  /* --- getter --- */
   get src() { return this.#audio.src; }
   get currentTime() { return this.#audio.currentTime; }
   get volume() { return this.#audio.volume; }
@@ -55,10 +49,6 @@ class Player extends HTMLElement {
   get duration() { return this.#audio.duration; }
   get paused() { return this.#audio.paused; }
   get ended() { return this.#audio.ended; }
-
-  /* --- Visibility control (PiP用) --- */
-  hide() { this.style.display = 'none'; }
-  show() { this.style.display = ''; }
 }
 
 customElements.define('music-player', Player);
