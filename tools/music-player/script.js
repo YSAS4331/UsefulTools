@@ -50,14 +50,18 @@ function loadTrack(i) {
   const file = tracks[i];
   if (!file) return;
 
-  audio.src = URL.createObjectURL(file);
+  const url = URL.createObjectURL(file);
+
+  audio.src = url;
   audio.load();
+
+  // タイトルはここで確定させる（同期ループに消されない）
+  uiTitle.textContent = cleanName(file.name);
 
   audio.play().catch(err => {
     console.warn('Autoplay blocked:', err);
   });
 
-  uiTitle.textContent = cleanName(file.name);
   updatePlaylistUI();
   updatePlayButton(true);
 }
@@ -98,7 +102,7 @@ audio.addEventListener('ended', () => {
 });
 
 /* ============================
-   シークバー同期（完全同期版）
+   シークバー同期（完全同期）
 ============================ */
 function syncSeek() {
   if (audio.duration) {
@@ -115,8 +119,7 @@ requestAnimationFrame(syncSeek);
 /* --- シークバー操作（確実に反映） --- */
 uiSeek.addEventListener('input', () => {
   if (!audio.duration) return;
-  const newTime = audio.duration * (uiSeek.value / 100);
-  audio.currentTime = newTime;
+  audio.currentTime = audio.duration * (uiSeek.value / 100);
 });
 
 /* ============================
