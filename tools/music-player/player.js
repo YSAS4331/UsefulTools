@@ -2,6 +2,7 @@ class Player extends HTMLElement {
   #audio = new Audio();
   #files = [];
   #index = 0;
+  #currentBlobUrl = null;
 
   constructor() {
     super();
@@ -41,7 +42,16 @@ class Player extends HTMLElement {
     const file = this.#files[this.#index];
     if (!file) return;
 
-    this.#audio.src = URL.createObjectURL(file);
+    // 古い blob を解放
+    if (this.#currentBlobUrl) {
+      URL.revokeObjectURL(this.#currentBlobUrl);
+      this.#currentBlobUrl = null;
+    }
+
+    // 新しい blob を作成
+    this.#currentBlobUrl = URL.createObjectURL(file);
+    this.#audio.src = this.#currentBlobUrl;
+
     this.#audio.load();
     this.play();
 
@@ -140,12 +150,21 @@ class Player extends HTMLElement {
   }
 
   /* --- getters --- */
-  get files() { return [...this.#files]; }
+  get files() { return [...this.#files]; } // コピー返しで安全
   get index() { return this.#index; }
+  get currentIndex() { return this.#index; }
+
+  get currentFile() { return this.#files[this.#index] || null; }
   get currentSrc() { return this.#audio.src; }
 
   get currentTime() { return this.#audio.currentTime; }
-  get duration() { return this.#audio.duration; }
+  get duration() { return this.#audio.duration || 0; }
+
+  get progress() {
+    if (!this.#audio.duration) return 0;
+    return this.#audio.currentTime / this.#audio.duration;
+  }
+
   get volume() { return this.#audio.volume; }
   get muted() { return this.#audio.muted; }
   get loop() { return this.#audio.loop; }
