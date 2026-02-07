@@ -1,5 +1,3 @@
-alert('実行')
-
 const fileUp = document.getElementById("fileUp");
 const playBtn = document.getElementById("play");
 const prevBtn = document.getElementById("prev");
