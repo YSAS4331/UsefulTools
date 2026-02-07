@@ -124,7 +124,7 @@ async function loadScripts(doc, base) {
   const scripts = $$('script[data-page][src]', doc);
 
   for (const s of scripts) {
-    await import(s.src);
+    activeScripts.push(await import(s.src));
   }
 }
 
