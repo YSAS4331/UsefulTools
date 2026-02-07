@@ -1,153 +1,199 @@
-const $ = s => document.querySelector(s);
-const c = e => document.createElement(e);
-
-/* --- music-player を確実に生成 --- */
-let audio = $('music-player');
-if (!audio) {
-  audio = c('music-player');
-  document.body.appendChild(audio);
-}
-
-/* --- UI 要素 --- */
-const fileUp = $('#fileUp');
-const uiPlay = $('#uiPlay');
-const uiPrev = $('#uiPrev');
-const uiNext = $('#uiNext');
-const uiSeek = $('#uiSeek');
-const uiVolume = $('#uiVolume');
-const uiTitle = $('#uiTitle');
-const uiCurrent = $('#uiCurrent');
-const uiDuration = $('#uiDuration');
-const playlist = $('#playlist');
-
-/* --- プレイリスト管理 --- */
-let tracks = [];
-let index = 0;
-
-/* ============================
-   ファイル読み込み
-============================ */
-fileUp.addEventListener('change', e => {
-  tracks = [...e.target.files];
-  playlist.innerHTML = '';
-
-  tracks.forEach((file, i) => {
-    const li = c('li');
-    li.textContent = cleanName(file.name);
-    li.dataset.index = i;
-    li.addEventListener('click', () => loadTrack(i));
-    playlist.appendChild(li);
-  });
-
-  loadTrack(0);
-});
-
-/* ============================
-   曲読み込み
-============================ */
-function loadTrack(i) {
-  index = i;
-  const file = tracks[i];
-  if (!file) return;
-
-  const url = URL.createObjectURL(file);
-
-  audio.src = url;
-  audio.load();
-
-  // タイトルはここで確定
-  uiTitle.textContent = cleanName(file.name);
-
-  audio.play().catch(err => {
-    console.warn('Autoplay blocked:', err);
-  });
-
-  updatePlaylistUI();
-  updatePlayButton(true);
-}
-
-/* ============================
-   再生/停止
-============================ */
-uiPlay.addEventListener('click', () => {
-  if (audio.paused) {
-    audio.play();
-    updatePlayButton(true);
-  } else {
-    audio.pause();
-    updatePlayButton(false);
+window.addEventListener("DOMContentLoaded", () => {
+  let player = document.querySelector("music-player");
+  if (!player) {
+    player = document.createElement('music-player');
+    document.body.appendChild(player);
   }
-});
 
-function updatePlayButton(isPlaying) {
-  uiPlay.innerHTML = isPlaying
-    ? '<span class="material-symbols-outlined">pause</span>'
-    : '<span class="material-symbols-outlined">play_arrow</span>';
-}
+  const fileUp = document.getElementById("fileUp");
+  const playBtn = document.getElementById("play");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
 
-/* ============================
-   前後の曲
-============================ */
-uiPrev.addEventListener('click', () => {
-  loadTrack((index - 1 + tracks.length) % tracks.length);
-});
+  const trackName = document.getElementById("trackName");
+  const trackIndex = document.getElementById("trackIndex");
+  const trackCount = document.getElementById("trackCount");
 
-uiNext.addEventListener('click', () => {
-  loadTrack((index + 1) % tracks.length);
-});
+  const seekBar = document.getElementById("seekBar");
+  const current = document.getElementById("current");
+  const duration = document.getElementById("duration");
 
-/* --- 曲が終わったら次へ --- */
-audio.addEventListener('ended', () => {
-  loadTrack((index + 1) % tracks.length);
-});
+  const volume = document.getElementById("volume");
+  const mute = document.getElementById("mute");
+  const rate = document.getElementById("rate");
+  const loop = document.getElementById("loop");
 
-/* ============================
-   シークバー同期（完全同期）
-============================ */
-function syncSeek() {
-  if (audio.duration) {
-    const percent = audio.currentTime / audio.duration * 100;
-    uiSeek.value = percent;
+  const listEl = document.getElementById("list");
 
-    uiCurrent.textContent = format(audio.currentTime);
-    uiDuration.textContent = format(audio.duration);
-  }
-  requestAnimationFrame(syncSeek);
-}
-requestAnimationFrame(syncSeek);
+  const dbgProgress = document.getElementById("dbgProgress");
+  const dbgPaused = document.getElementById("dbgPaused");
+  const dbgEnded = document.getElementById("dbgEnded");
 
-/* --- シークバー操作（確実に反映） --- */
-uiSeek.addEventListener('input', () => {
-  if (!audio.duration) return;
-  audio.currentTime = audio.duration * (uiSeek.value / 100);
-});
-
-/* ============================
-   音量
-============================ */
-uiVolume.addEventListener('input', () => {
-  audio.volume = uiVolume.value;
-});
-
-/* ============================
-   プレイリスト UI 更新
-============================ */
-function updatePlaylistUI() {
-  [...playlist.children].forEach(li => {
-    li.classList.toggle('active', Number(li.dataset.index) === index);
+  /* --- ファイル追加 --- */
+  fileUp.addEventListener("change", e => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    player.addFiles(e.target.files);
+    renderPlaylist();
   });
-}
 
-/* ============================
-   ユーティリティ
-============================ */
-function cleanName(name) {
-  return name.replace(/\.[^/.]+$/, '');
-}
+  /* --- 再生/停止 --- */
+  playBtn.addEventListener("click", () => {
+    if (player.paused) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  });
 
-function format(t) {
-  if (!t) return '00:00';
-  const m = Math.floor(t / 60);
-  const s = Math.floor(t % 60);
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-}
+  /* --- 次/前 --- */
+  prevBtn.addEventListener("click", () => player.prev());
+  nextBtn.addEventListener("click", () => player.next());
+
+  /* --- 音量 / ミュート / 速度 / ループ --- */
+  volume.addEventListener("input", () => {
+    player.volume = Number(volume.value);
+  });
+
+  mute.addEventListener("change", () => {
+    player.muted = mute.checked;
+  });
+
+  rate.addEventListener("change", () => {
+    player.playbackRate = Number(rate.value);
+  });
+
+  loop.addEventListener("change", () => {
+    player.loop = loop.checked;
+  });
+
+  /* --- 曲が変わったら UI 更新 --- */
+  player.addEventListener("trackchange", () => {
+    updateTrackInfo();
+    renderPlaylist();
+  });
+
+  /* --- 再生/停止アイコン切り替え --- */
+  player.addEventListener("play", () => {
+    playBtn.innerHTML = `<i class="fa fa-pause"></i>`;
+    dbgPaused.textContent = "false";
+  });
+
+  player.addEventListener("pause", () => {
+    playBtn.innerHTML = `<i class="fa fa-play"></i>`;
+    dbgPaused.textContent = "true";
+  });
+
+  player.addEventListener("ended", () => {
+    dbgEnded.textContent = "true";
+  });
+
+  /* --- 再生位置更新 --- */
+  player.addEventListener("timeupdate", () => {
+    const cur = player.currentTime;
+    const dur = player.duration;
+
+    if (dur > 0) {
+      seekBar.value = (cur / dur) * 100;
+    } else {
+      seekBar.value = 0;
+    }
+
+    current.textContent = formatTime(cur);
+    duration.textContent = formatTime(dur);
+
+    dbgProgress.textContent = player.progress.toFixed(3);
+    dbgEnded.textContent = String(player.ended);
+  });
+
+  /* --- シークバー操作 --- */
+  seekBar.addEventListener("input", () => {
+    const dur = player.duration;
+    if (!dur) return;
+    player.currentTime = (seekBar.value / 100) * dur;
+  });
+
+  /* --- プレイリスト描画 --- */
+  function renderPlaylist() {
+    const files = player.files; // コピーが返る
+    listEl.innerHTML = "";
+
+    trackCount.textContent = files.length;
+
+    files.forEach((file, i) => {
+      const li = document.createElement("li");
+      li.textContent = file.name;
+      if (i === player.index) li.classList.add("active");
+
+      li.addEventListener("click", () => {
+        player.index = i;
+      });
+
+      const actions = document.createElement("span");
+      actions.className = "actions";
+
+      const upBtn = document.createElement("button");
+      upBtn.textContent = "↑";
+      upBtn.disabled = i === 0;
+      upBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        player.swap(i, i - 1);
+        renderPlaylist();
+      });
+
+      const downBtn = document.createElement("button");
+      downBtn.textContent = "↓";
+      downBtn.disabled = i === files.length - 1;
+      downBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        player.swap(i, i + 1);
+        renderPlaylist();
+      });
+
+      const rmBtn = document.createElement("button");
+      rmBtn.textContent = "×";
+      rmBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        player.remove(i);
+        renderPlaylist();
+        updateTrackInfo();
+      });
+
+      actions.appendChild(upBtn);
+      actions.appendChild(downBtn);
+      actions.appendChild(rmBtn);
+
+      li.appendChild(actions);
+      listEl.appendChild(li);
+    });
+
+    updateTrackInfo();
+  }
+
+  /* --- 曲情報更新 --- */
+  function updateTrackInfo() {
+    const file = player.currentFile;
+    if (file) {
+      trackName.textContent = file.name;
+      trackIndex.textContent = player.index + 1;
+    } else {
+      trackName.textContent = "---";
+      trackIndex.textContent = "-";
+    }
+  }
+
+  /* --- 時間フォーマット --- */
+  function formatTime(sec) {
+    if (!sec || isNaN(sec)) return "0:00";
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  // 初期状態反映
+  volume.value = player.volume;
+  mute.checked = player.muted;
+  rate.value = String(player.playbackRate);
+  loop.checked = player.loop;
+  dbgPaused.textContent = String(player.paused);
+  dbgEnded.textContent = String(player.ended);
+});
