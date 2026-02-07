@@ -24,11 +24,24 @@ window.addEventListener("DOMContentLoaded", () => {
   const dbgEnded = document.getElementById("dbgEnded");
 
   let player = document.querySelector("music-player");
-  if (!player) {
-    player = document.createElement('music-player');
-    document.body.appendChild(player);
+  if (player) {
+    volume.value = player.volume;
+    mute.checked = player.muted;
+    rate.value = String(player.playbackRate);
+    loop.checked = player.loop;
     updateTrackInfo();
     renderPlaylist();
+    playBtn.innerHTML = player.paused ? `<i class="fa fa-play"></i>` : `<i class="fa fa-pause"></i>`;
+    dbgPaused.textContent = String(player.paused);
+    dbgEnded.textContent = String(player.ended);
+    const cur = player.currentTime;
+    const dur = player.duration;
+    seekBar.value = dur > 0 ? (cur / dur) * 100 : 0;
+    current.textContent = formatTime(cur);
+    duration.textContent = formatTime(dur);
+  } else {
+    player = document.createElement('music-player');
+    document.body.appendChild(player);
   }
 
   /* --- ファイル追加 --- */
