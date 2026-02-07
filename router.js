@@ -87,7 +87,7 @@ async function navigate(path, push = true) {
 
     event({type: 'after'});
   } catch (err) {
-    console.error('Nav failed:', err);
+    console.error('Nav failed:', JSON.stringify(err));
     if (push) location.href = path;
   }
 }
