@@ -1,10 +1,4 @@
 window.addEventListener("DOMContentLoaded", () => {
-  let player = document.querySelector("music-player");
-  if (!player) {
-    player = document.createElement('music-player');
-    document.body.appendChild(player);
-  }
-
   const fileUp = document.getElementById("fileUp");
   const playBtn = document.getElementById("play");
   const prevBtn = document.getElementById("prev");
@@ -28,6 +22,14 @@ window.addEventListener("DOMContentLoaded", () => {
   const dbgProgress = document.getElementById("dbgProgress");
   const dbgPaused = document.getElementById("dbgPaused");
   const dbgEnded = document.getElementById("dbgEnded");
+
+  let player = document.querySelector("music-player");
+  if (!player) {
+    player = document.createElement('music-player');
+    document.body.appendChild(player);
+    updateTrackInfo();
+    renderPlaylist();
+  }
 
   /* --- ファイル追加 --- */
   fileUp.addEventListener("change", e => {
