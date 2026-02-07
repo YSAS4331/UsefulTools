@@ -33,65 +33,71 @@
     <script src="./player.js"></script>
   </head>
   <body>
-    <h1>ミュージックプレイヤー 完全版デモ</h1>
+    <com-header></com-header>
 
-    <div class="tool">
-      <input type="file" id="fileUp" hidden multiple accept="audio/*">
-      <label for="fileUp">ファイルをアップロード...</label>
-    </div>
-
-    <div class="player-ui">
-      <div class="info">
-        <div><strong>曲名:</strong> <span id="trackName">---</span></div>
-        <div><strong>インデックス:</strong> <span id="trackIndex">-</span> / <span id="trackCount">0</span></div>
+    <main>
+      <h1>ミュージックプレイヤー 完全版デモ</h1>
+  
+      <div class="tool">
+        <input type="file" id="fileUp" hidden multiple accept="audio/*">
+        <label for="fileUp">ファイルをアップロード...</label>
       </div>
-
-      <div class="controls">
-        <button id="prev"><i class="fa fa-backward"></i></button>
-        <button id="play"><i class="fa fa-play"></i></button>
-        <button id="next"><i class="fa fa-forward"></i></button>
-      </div>
-
-      <div class="seek">
-        <span id="current">0:00</span>
-        <input type="range" id="seekBar" min="0" max="100" value="0">
-        <span id="duration">0:00</span>
-      </div>
-
-      <div class="extra">
-        <div>
-          <label>音量</label>
-          <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+  
+      <div class="player-ui">
+        <div class="info">
+          <div><strong>曲名:</strong> <span id="trackName">---</span></div>
+          <div><strong>インデックス:</strong> <span id="trackIndex">-</span> / <span id="trackCount">0</span></div>
         </div>
-        <div>
-          <label><input type="checkbox" id="mute"> ミュート</label>
+  
+        <div class="controls">
+          <button id="prev"><i class="fa fa-backward"></i></button>
+          <button id="play"><i class="fa fa-play"></i></button>
+          <button id="next"><i class="fa fa-forward"></i></button>
         </div>
-        <div>
-          <label>速度</label>
-          <select id="rate">
-            <option value="0.5">0.5x</option>
-            <option value="0.75">0.75x</option>
-            <option value="1" selected>1.0x</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2.0x</option>
-          </select>
+  
+        <div class="seek">
+          <span id="current">0:00</span>
+          <input type="range" id="seekBar" min="0" max="100" value="0">
+          <span id="duration">0:00</span>
         </div>
-        <div>
-          <label><input type="checkbox" id="loop"> ループ</label>
+  
+        <div class="extra">
+          <div>
+            <label>音量</label>
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+          </div>
+          <div>
+            <label><input type="checkbox" id="mute"> ミュート</label>
+          </div>
+          <div>
+            <label>速度</label>
+            <select id="rate">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1.0x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2.0x</option>
+            </select>
+          </div>
+          <div>
+            <label><input type="checkbox" id="loop"> ループ</label>
+          </div>
+        </div>
+  
+        <div class="playlist">
+          <strong>プレイリスト</strong>
+          <ul id="list"></ul>
+        </div>
+  
+        <div class="debug">
+          <div>progress: <span id="dbgProgress">0</span></div>
+          <div>paused: <span id="dbgPaused">true</span>, ended: <span id="dbgEnded">false</span></div>
         </div>
       </div>
+    </main>
 
-      <div class="playlist">
-        <strong>プレイリスト</strong>
-        <ul id="list"></ul>
-      </div>
-
-      <div class="debug">
-        <div>progress: <span id="dbgProgress">0</span></div>
-        <div>paused: <span id="dbgPaused">true</span>, ended: <span id="dbgEnded">false</span></div>
-      </div>
-    </div>
+    <com-footer></com-footer>
 
     <script src="./script.js"></script>
   </body>
