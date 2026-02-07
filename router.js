@@ -15,8 +15,21 @@ let activeScripts = [];
 /* wait for transition */
 const waitTransition = el =>
   new Promise(resolve => {
-    el.addEventListener('transitionend', resolve, { once: true });
+    let done = false;
+
+    const finish = () => {
+      if (!done) {
+        done = true;
+        resolve();
+      }
+    };
+
+    el.addEventListener('transitionend', finish, { once: true });
+
+    // ★ 300ms 経っても来なかったら強制 resolve
+    setTimeout(finish, 300);
   });
+
 
 /* fetch html */
 async function fetchPage(path) {
