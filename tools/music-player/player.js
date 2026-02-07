@@ -140,7 +140,7 @@ class Player extends HTMLElement {
   }
 
   /* --- getters --- */
-  get files() { return this.#files; }
+  get files() { return [...this.#files]; }
   get index() { return this.#index; }
   get currentSrc() { return this.#audio.src; }
 
