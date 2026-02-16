@@ -2,7 +2,7 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const create = e => document.createElement(e);
-const event = options => window.dispatchEvent(new CustomEvent('spa:router', { detail: options }));
+const event = detail => window.dispatchEvent(new CustomEvent('spa:router', { detail }));
 
 /* normalize url */
 const normalize = url =>
@@ -10,7 +10,7 @@ const normalize = url =>
 
 /* state */
 let activeStyles = [];
-let activeScripts = [];
+let activeModules = [];
 
 /* wait for transition */
 const waitTransition = el =>
@@ -25,11 +25,8 @@ const waitTransition = el =>
     };
 
     el.addEventListener('transitionend', finish, { once: true });
-
-    // ★ 300ms 経っても来なかったら強制 resolve
     setTimeout(finish, 300);
   });
-
 
 /* fetch html */
 async function fetchPage(path) {
@@ -60,34 +57,32 @@ document.addEventListener('click', e => {
 /* router core */
 async function navigate(path, push = true) {
   if (!path) return;
-  
-  event({type: 'before'});
-  
+
+  event({ type: 'before' });
+
   const main = $('main');
   document.body.classList.add('load');
 
-  // ★ transition と fetch を同時に開始
   const pTransition = waitTransition(main);
   const pFetch = fetchPage(path);
 
   try {
-    // ★ 両方が揃うまで絶対に書き換えない
     const [{ doc, baseUrl }] = await Promise.all([pFetch, pTransition]);
 
     cleanup();
     swapMain(doc);
     syncTitle(doc);
     loadStyles(doc, baseUrl);
-    await loadScripts(doc, baseUrl);
+    await loadPageScripts(doc, baseUrl);
 
     if (push) history.pushState(null, '', path);
     window.scrollTo(0, 0);
 
     document.body.classList.remove('load');
 
-    event({type: 'after'});
+    event({ type: 'after' });
   } catch (err) {
-    console.error('Nav failed:', JSON.stringify(err));
+    console.error('Nav failed:', err);
     if (push) location.href = path;
   }
 }
@@ -119,21 +114,26 @@ function loadStyles(doc, base) {
   });
 }
 
-/* inject scripts */
-async function loadScripts(doc, base) {
-  const scripts = $$('script[data-page][src]', doc);
+/* load page scripts (JS only, delayed) */
+async function loadPageScripts(doc, base) {
+  const scripts = $$('page-script[src]', doc);
 
   for (const s of scripts) {
-    activeScripts.push(await import(s.src));
+    const url = new URL(s.getAttribute('src'), base).href;
+    const mod = await import(url);
+
+    activeModules.push(mod);
+    mod.init?.(); // ページ側の初期化
   }
 }
 
-
-/* remove assets */
+/* cleanup */
 function cleanup() {
+  activeModules.forEach(m => m.unmount?.());
   activeStyles.forEach(l => l.remove());
+
+  activeModules = [];
   activeStyles = [];
-  activeScripts = [];
 }
 
 /* back/forward */
@@ -141,9 +141,11 @@ window.addEventListener('popstate', () => {
   navigate(location.pathname, false);
 });
 
-/* init */
+/* init (初期ロードでもページ JS を実行する) */
 window.addEventListener('DOMContentLoaded', () => {
+  // CSS は初期ロードでも必要
   activeStyles = $$('link[data-page]');
-  loadStyles(document, location.href);
-  loadScripts(document, location.href);
+
+  // ★ 初期ロードでもページ固有 JS を実行
+  loadPageScripts(document, location.href);
 });
