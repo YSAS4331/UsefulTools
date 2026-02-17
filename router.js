@@ -121,7 +121,7 @@ async function navigate(path, push = true) {
 
     event({ type: 'after' });
   } catch (err) {
-    console.error('Nav failed:', err);
+    console.error('Nav failed:', err, err.name, err.message, err.stack);
     showErrorPage();
   }
 }
