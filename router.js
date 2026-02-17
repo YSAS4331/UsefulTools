@@ -108,7 +108,6 @@ async function navigate(path, push = true) {
     document.title = doc.title;
 
     loadStyles(doc, baseUrl);
-    await loadPageScripts(doc, baseUrl);
 
     if (push) history.pushState(null, '', path);
 
@@ -117,6 +116,7 @@ async function navigate(path, push = true) {
 
     requestAnimationFrame(() => {
       document.body.classList.remove('load');
+      await loadPageScripts(doc, baseUrl);
     });
 
     nextMain.setAttribute('tabindex', '-1');
