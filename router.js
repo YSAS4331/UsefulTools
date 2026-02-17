@@ -15,6 +15,9 @@ let controller;
 const pageCache = new Map();
 const scrollMap = new Map();
 
+/* once scripts registry */
+const executedOnceScripts = new Set();
+
 /* wait for transition */
 const waitTransition = el =>
   new Promise(resolve => {
@@ -121,7 +124,7 @@ async function navigate(path, push = true) {
 
     event({ type: 'after' });
   } catch (err) {
-    console.error('Nav failed:', err, err.name, err.message, err.stack);
+    console.error('Nav failed:', err);
     showErrorPage();
   }
 }
@@ -145,50 +148,31 @@ function loadStyles(doc, base) {
   });
 }
 
-/* load page scripts (supports ?t=..., once, and safe customElements) */
+/* load page scripts (with once support) */
 async function loadPageScripts(doc, base) {
   const scripts = $$('page-script[src]', doc);
 
   for (const s of scripts) {
-    const src = s.getAttribute('src');
-    const once = s.hasAttribute('once');
-
-    // 絶対 URL 化
-    const url = new URL(src, base);
-
-    // t を残す（あなたの要求通り）
+    const url = new URL(s.getAttribute('src'), base);
     url.searchParams.set('t', performance.now());
 
-    const finalUrl = url.href;
+    const isOnce = s.hasAttribute('once');
 
-    // once の場合 → 既に読み込んだモジュールならスキップ
-    if (once && activeModules.some(m => m.__src === src)) {
+    // once かつ実行済みならスキップ
+    if (isOnce && executedOnceScripts.has(url.href)) {
       continue;
     }
 
-    try {
-      const mod = await import(finalUrl);
+    const mod = await import(url.href);
 
-      // once 判定用に「元の src」を覚えさせる
-      mod.__src = src;
+    activeModules.push(mod);
+    mod.init?.();
 
-      activeModules.push(mod);
-
-      // init があれば実行
-      if (typeof mod.init === 'function') {
-        try {
-          await mod.init();
-        } catch (err) {
-          console.error(`Module init failed (${src}):`, err);
-        }
-      }
-
-    } catch (err) {
-      console.error(`Failed to import page-script (${src}):`, err);
+    if (isOnce) {
+      executedOnceScripts.add(url.href);
     }
   }
 }
-
 
 /* cleanup */
 function cleanup() {
