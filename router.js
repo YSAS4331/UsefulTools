@@ -153,26 +153,32 @@ async function loadPageScripts(doc, base) {
   const scripts = $$('page-script[src]', doc);
 
   for (const s of scripts) {
-    const url = new URL(s.getAttribute('src'), base);
-    url.searchParams.set('t', performance.now());
-
+    const rawUrl = new URL(s.getAttribute('src'), base);
     const isOnce = s.hasAttribute('once');
 
+    // once じゃないときだけキャッシュバスターを付ける
+    if (!isOnce) {
+      rawUrl.searchParams.set('t', performance.now());
+    }
+
+    const url = rawUrl.href;
+
     // once かつ実行済みならスキップ
-    if (isOnce && executedOnceScripts.has(url.href)) {
+    if (isOnce && executedOnceScripts.has(url)) {
       continue;
     }
 
-    const mod = await import(url.href);
+    const mod = await import(url);
 
     activeModules.push(mod);
     mod.init?.();
 
     if (isOnce) {
-      executedOnceScripts.add(url.href);
+      executedOnceScripts.add(url);
     }
   }
 }
+
 
 /* cleanup */
 function cleanup() {
