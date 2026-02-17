@@ -5,37 +5,46 @@ const create = e => document.createElement(e);
 const event = detail => window.dispatchEvent(new CustomEvent('spa:router', { detail }));
 
 /* normalize url */
-const normalize = url =>
-  url.replace(/index(\.html)?$/, '');
+const normalize = url => url.replace(/index(\.html)?$/, '');
 
 /* state */
 let activeStyles = [];
 let activeModules = [];
+let navId = 0;
+let controller;
+const pageCache = new Map();
+const scrollMap = new Map();
 
 /* wait for transition */
 const waitTransition = el =>
   new Promise(resolve => {
     let done = false;
-
     const finish = () => {
       if (!done) {
         done = true;
         resolve();
       }
     };
-
-    el.addEventListener('transitionend', finish, { once: true });
+    el?.addEventListener('transitionend', finish, { once: true });
     setTimeout(finish, 300);
   });
 
-/* fetch html */
+/* fetch html (with cache + abort) */
 async function fetchPage(path) {
-  const res = await fetch(path);
+  if (pageCache.has(path)) return pageCache.get(path);
+
+  controller?.abort();
+  controller = new AbortController();
+
+  const res = await fetch(path, { signal: controller.signal });
   if (!res.ok) throw new Error(res.status);
 
   const html = await res.text();
   const doc = new DOMParser().parseFromString(html, 'text/html');
-  return { doc, baseUrl: res.url };
+  const result = { doc, baseUrl: res.url };
+
+  pageCache.set(path, result);
+  return result;
 }
 
 /* link interceptor */
@@ -44,19 +53,31 @@ document.addEventListener('click', e => {
   if (!a || !a.href) return;
 
   const url = new URL(a.href);
-  if (url.origin !== location.origin || a.target === '_blank') return;
+
+  if (url.origin !== location.origin || a.target === '_blank' || e.metaKey || e.ctrlKey) return;
 
   const to = normalize(url.href);
   const from = normalize(location.href);
-  if (to === from) return;
+
+  if (to === from && !url.hash) return;
 
   e.preventDefault();
+
+  if (url.hash && to === from) {
+    location.hash = url.hash;
+    return;
+  }
+
   navigate(url.pathname);
 });
 
 /* router core */
 async function navigate(path, push = true) {
   if (!path) return;
+
+  const id = ++navId;
+
+  scrollMap.set(location.pathname, scrollY);
 
   event({ type: 'before' });
 
@@ -69,44 +90,54 @@ async function navigate(path, push = true) {
   try {
     const [{ doc, baseUrl }] = await Promise.all([pFetch, pTransition]);
 
+    if (id !== navId) return;
+
+    const nextMain = $('main', doc);
+    if (!main || !nextMain) {
+      location.href = path;
+      return;
+    }
+
     cleanup();
-    swapMain(doc);
-    syncTitle(doc);
+
+    main.replaceWith(nextMain);
+
+    document.title = doc.title;
+
     loadStyles(doc, baseUrl);
     await loadPageScripts(doc, baseUrl);
 
     if (push) history.pushState(null, '', path);
-    window.scrollTo(0, 0);
 
-    document.body.classList.remove('load');
+    const scroll = scrollMap.get(path) ?? 0;
+    window.scrollTo(0, scroll);
+
+    requestAnimationFrame(() => {
+      document.body.classList.remove('load');
+    });
+
+    nextMain.setAttribute('tabindex', '-1');
+    nextMain.focus();
 
     event({ type: 'after' });
   } catch (err) {
     console.error('Nav failed:', err);
-    if (push) location.href = path;
+    showErrorPage();
   }
 }
 
-/* swap content */
-function swapMain(doc) {
-  const cur = $('main');
-  const next = $('main', doc);
-  if (cur && next) cur.replaceWith(next);
-}
-
-/* sync title */
-function syncTitle(doc) {
-  document.title = doc.title;
-}
-
-/* inject styles */
+/* inject styles (dedupe) */
 function loadStyles(doc, base) {
   const links = $$('link[data-page]', doc);
 
   links.forEach(l => {
+    const href = new URL(l.getAttribute('href'), base).href;
+
+    if ($(`link[data-page][href="${href}"]`)) return;
+
     const link = create('link');
     link.rel = 'stylesheet';
-    link.href = new URL(l.getAttribute('href'), base).href;
+    link.href = href;
     link.dataset.page = '';
 
     document.head.appendChild(link);
@@ -114,16 +145,18 @@ function loadStyles(doc, base) {
   });
 }
 
-/* load page scripts (JS only, delayed) */
+/* load page scripts */
 async function loadPageScripts(doc, base) {
   const scripts = $$('page-script[src]', doc);
 
   for (const s of scripts) {
-    const url = new URL(s.getAttribute('src'), base).href;
-    const mod = await import(url);
+    const url = new URL(s.getAttribute('src'), base);
+    url.searchParams.set('t', performance.now());
+
+    const mod = await import(url.href);
 
     activeModules.push(mod);
-    mod.init?.(); // ページ側の初期化
+    mod.init?.();
   }
 }
 
@@ -136,16 +169,40 @@ function cleanup() {
   activeStyles = [];
 }
 
+/* error page (SPA内表示) */
+function showErrorPage() {
+  const main = $('main');
+  if (!main) return location.reload();
+
+  main.innerHTML = `
+    <section class="router-error">
+      <h1>Navigation failed</h1>
+      <p>ページの読み込みに失敗しました</p>
+      <button onclick="location.reload()">Reload</button>
+    </section>
+  `;
+
+  document.body.classList.remove('load');
+}
+
 /* back/forward */
 window.addEventListener('popstate', () => {
   navigate(location.pathname, false);
 });
 
-/* init (初期ロードでもページ JS を実行する) */
-window.addEventListener('DOMContentLoaded', () => {
-  // CSS は初期ロードでも必要
-  activeStyles = $$('link[data-page]');
+/* prefetch on hover */
+document.addEventListener('mouseover', e => {
+  const a = e.target.closest('a');
+  if (!a || !a.href) return;
 
-  // ★ 初期ロードでもページ固有 JS を実行
+  const url = new URL(a.href);
+  if (url.origin !== location.origin) return;
+
+  fetchPage(url.pathname).catch(() => {});
+});
+
+/* init */
+window.addEventListener('DOMContentLoaded', () => {
+  activeStyles = $$('link[data-page]');
   loadPageScripts(document, location.href);
 });
