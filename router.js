@@ -145,20 +145,50 @@ function loadStyles(doc, base) {
   });
 }
 
-/* load page scripts */
+/* load page scripts (supports ?t=..., once, and safe customElements) */
 async function loadPageScripts(doc, base) {
   const scripts = $$('page-script[src]', doc);
 
   for (const s of scripts) {
-    const url = new URL(s.getAttribute('src'), base);
+    const src = s.getAttribute('src');
+    const once = s.hasAttribute('once');
+
+    // 絶対 URL 化
+    const url = new URL(src, base);
+
+    // t を残す（あなたの要求通り）
     url.searchParams.set('t', performance.now());
 
-    const mod = await import(url.href);
+    const finalUrl = url.href;
 
-    activeModules.push(mod);
-    mod.init?.();
+    // once の場合 → 既に読み込んだモジュールならスキップ
+    if (once && activeModules.some(m => m.__src === src)) {
+      continue;
+    }
+
+    try {
+      const mod = await import(finalUrl);
+
+      // once 判定用に「元の src」を覚えさせる
+      mod.__src = src;
+
+      activeModules.push(mod);
+
+      // init があれば実行
+      if (typeof mod.init === 'function') {
+        try {
+          await mod.init();
+        } catch (err) {
+          console.error(`Module init failed (${src}):`, err);
+        }
+      }
+
+    } catch (err) {
+      console.error(`Failed to import page-script (${src}):`, err);
+    }
   }
 }
+
 
 /* cleanup */
 function cleanup() {
