@@ -175,4 +175,6 @@ function init() {
   }
   
   customElements.define('music-player', Player);
+
+  console.log('music-player define!');
 }
