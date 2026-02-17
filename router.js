@@ -122,7 +122,7 @@ async function navigate(path, push = true) {
     event({ type: 'after' });
   } catch (err) {
     console.error('Nav failed:', err);
-    showErrorPage();
+    showErrorPage(eer);
   }
 }
 
@@ -170,7 +170,7 @@ function cleanup() {
 }
 
 /* error page (SPA内表示) */
-function showErrorPage() {
+function showErrorPage(e) {
   const main = $('main');
   if (!main) return location.reload();
 
@@ -179,6 +179,7 @@ function showErrorPage() {
       <h1>Navigation failed</h1>
       <p>ページの読み込みに失敗しました</p>
       <button onclick="location.reload()">Reload</button>
+      <p>${e.message}</p>
     </section>
   `;
 
