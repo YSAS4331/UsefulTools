@@ -97,7 +97,6 @@ async function navigate(path, push = true) {
 
     const nextMain = $('main', doc);
     if (!main || !nextMain) {
-      location.href = path;
       return;
     }
 
