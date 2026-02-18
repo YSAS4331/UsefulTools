@@ -1,4 +1,4 @@
-function init() {
+export function init() {
   class Player extends HTMLElement {
     #audio = new Audio();
     #files = [];
