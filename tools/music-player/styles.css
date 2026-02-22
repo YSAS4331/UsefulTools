@@ -149,7 +149,7 @@ main h1 {
   font-weight: bold;
 }
 
-button:has(.upBtn, .rmBtn, .downBtn) {
+button:is(.upBtn, .rmBtn, .downBtn) {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,7 +167,7 @@ button:has(.upBtn, .rmBtn, .downBtn) {
   font-size: 0.85rem;
 }
 
-button:has(.upBtn, .rmBtn, .downBtn):hover {
+button:is(.upBtn, .rmBtn, .downBtn):hover {
   transform: translateY(-2px);
   filter: brightness(1.07);
 }
