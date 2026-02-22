@@ -107,6 +107,7 @@ function setup() {
       actions.className = "actions";
 
       const upBtn = document.createElement("button");
+      upBtn.className = 'nostyle'
       upBtn.textContent = "↑";
       upBtn.disabled = i === 0;
       upBtn.addEventListener("click", e => {
@@ -116,6 +117,7 @@ function setup() {
       });
 
       const downBtn = document.createElement("button");
+       downBtn.className = 'nostyle';
       downBtn.textContent = "↓";
       downBtn.disabled = i === files.length - 1;
       downBtn.addEventListener("click", e => {
@@ -125,6 +127,7 @@ function setup() {
       });
 
       const rmBtn = document.createElement("button");
+       rmBtn.className = 'nostyle';
       rmBtn.textContent = "×";
       rmBtn.addEventListener("click", e => {
         e.stopPropagation();
