@@ -1,6 +1,6 @@
 class Header extends HTMLElement {
   #Style = `
-    header {
+    #header {
       max-width: 1100px;
       width: 80%;
       margin: 1rem auto;
@@ -20,6 +20,12 @@ class Header extends HTMLElement {
       top: 1rem;
       transform: translateX(-50%);
       z-index: 1000;
+
+      transition: transform .45s ease;
+
+      &.hide {
+        transform: translate(-50%, -120%);
+      }
     }
 
     #searchBar {
@@ -98,7 +104,7 @@ class Header extends HTMLElement {
   `;
 
   #HTML = `
-    <header>
+    <header id="header">
       <a href="/UsefulTools/"><span>Useful Tools</span></a>
 
       <div id="searchBar">
@@ -162,6 +168,23 @@ class Header extends HTMLElement {
   #attachEvents() {
     this.$theme.addEventListener('click', () => this.#applyTheme());
     this.$settings.addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-settings')));
+  
+    let lastY = window.scrollY;
+  
+    window.addEventListener('scroll', () => {
+      const header = this.querySelector('header');
+      const currentY = window.scrollY;
+  
+      if (currentY > lastY && currentY > 50) {
+        // 下スクロール → 隠す
+        header.classList.add('hide');
+      } else {
+        // 上スクロール → 表示
+        header.classList.remove('hide');
+      }
+  
+      lastY = currentY;
+    });
   }
 }
 
