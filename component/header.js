@@ -24,7 +24,7 @@ class Header extends HTMLElement {
       transition: transform .45s ease;
 
       &.hide {
-        transform: translate(-50%, -120%);
+        transform: translate(-50%, -150%);
       }
     }
 
