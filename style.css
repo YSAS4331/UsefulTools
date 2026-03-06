@@ -25,6 +25,17 @@
   border: 2.5px dashed var(--accentBlack);
   cursor: pointer;
 }
+.tool-section {
+  margin-top: 4rem;
+  padding: 0 1.6rem;
+}
+
+.tool-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: var(--text);
+}
 /* ====== カードを並べるグリッド ====== */
 .tool-grid {
   display: grid;
