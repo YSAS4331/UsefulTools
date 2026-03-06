@@ -34,7 +34,7 @@ const waitTransition = el =>
 
 /* fetch html (with cache + abort) */
 async function fetchPage(path) {
-  if (pageCache.has(path)) return pageCache.get(path);
+  // if (pageCache.has(path)) return pageCache.get(path);
 
   controller?.abort();
   controller = new AbortController();
