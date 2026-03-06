@@ -97,6 +97,7 @@ async function navigate(path, push = true) {
 
     const nextMain = $('main', doc);
     if (!main || !nextMain) {
+      document.body.classList.remove('load');
       return;
     }
 
