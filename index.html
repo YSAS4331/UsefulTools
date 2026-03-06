@@ -6,44 +6,106 @@
     <meta name="description" content="Useful Tools は、一般向けの便利ツールから開発者向けのユーティリティまで、用途別に選べる軽量ツール集です。ブラウザだけで手軽に使えて、作業効率をシンプルに向上させます。">
     <title>Useful Tools - 用途別に選べる、万能ツールセット。</title>
     
-    <!-- Font Awesome のCDN読み込み -->
+    <!-- Font Awesome -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
-    <!-- 速度最適化：DNS を先に引く -->
+    <!-- DNS Prefetch -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   
-    <!-- 速度最適化：接続を先に張る -->
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-    <!-- Material Symbols Outlined 読み込み -->
+    <!-- Material Symbols -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     
-    <!-- CSS の読み込み -->
+    <!-- CSS -->
     <link rel="stylesheet" href="./assets/css/variables.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./style.css" data-page>
     
-    <!-- JSの読み込み -->
+    <!-- JS -->
     <script type="module" src="./index.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-416K6GDFJP"></script>
   </head>
+
   <body>
     <com-header></com-header>
     
     <main>
-      <div id="page">
-        <h1>用途別に<span class="accent">選べる、</span><span class="accent">万能ツール</span>セット。</h1>
-        <p class="desc">シンプルなツールで、日常を少し便利に</p>
+      <!-- Hero Section -->
+      <section id="hero">
+        <div id="page">
+          <h1>用途別に<span class="accent">選べる、</span><span class="accent">万能ツール</span>セット。</h1>
+          <p class="desc">シンプルなツールで、日常を少し便利に</p>
 
-        <div id="cta">
-          <button id="cta-search">ツールを探す<i class="fa-solid fa-arrow-right"></i></button>
-          <button id="cta-category" class="nostyle">カテゴリで探す<i class="fa-solid fa-arrow-right"></i></button>
+          <div id="cta">
+            <button id="cta-search">ツールを探す<i class="fa-solid fa-arrow-right"></i></button>
+            <button id="cta-category" class="nostyle">カテゴリで探す<i class="fa-solid fa-arrow-right"></i></button>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Tools Section -->
+      <section id="tools">
+        <h2>人気のツール</h2>
+
+        <div class="tool-grid">
+
+          <!-- Card 1 -->
+          <article class="tool-card">
+            <div class="icon"><i class="fa-solid fa-calculator"></i></div>
+            <h3>数値変換ツール</h3>
+            <p>進数変換・単位変換など、開発にも日常にも使える軽量ユーティリティ。</p>
+            <a href="./tools/convert/" class="tool-link">開く<i class="fa-solid fa-arrow-right"></i></a>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="tool-card">
+            <div class="icon"><i class="fa-solid fa-file-lines"></i></div>
+            <h3>テキスト整形</h3>
+            <p>大文字化・整形・改行調整など、文章を一瞬でクリーンに。</p>
+            <a href="./tools/text/" class="tool-link">開く<i class="fa-solid fa-arrow-right"></i></a>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="tool-card">
+            <div class="icon"><i class="fa-solid fa-image"></i></div>
+            <h3>画像圧縮</h3>
+            <p>ブラウザだけで画像を軽量化。品質を保ったまま容量を削減。</p>
+            <a href="./tools/image-compress/" class="tool-link">開く<i class="fa-solid fa-arrow-right"></i></a>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="tool-card">
+            <div class="icon"><i class="fa-solid fa-code"></i></div>
+            <h3>JSON 整形 / 検証</h3>
+            <p>JSON の整形・バリデーションを高速に。開発者向けの定番ツール。</p>
+            <a href="./tools/json/" class="tool-link">開く<i class="fa-solid fa-arrow-right"></i></a>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="tool-card">
+            <div class="icon"><i class="fa-solid fa-clock"></i></div>
+            <h3>タイマー & ストップウォッチ</h3>
+            <p>作業・勉強・運動に使えるシンプルな時間管理ツール。</p>
+            <a href="./tools/timer/" class="tool-link">開く<i class="fa-solid fa-arrow-right"></i></a>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="tool-card">
+            <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <h3>パスワード生成</h3>
+            <p>安全なランダムパスワードをワンクリックで生成。</p>
+            <a href="./tools/password/" class="tool-link">開く<i class="fa-solid fa-arrow-right"></i></a>
+          </article>
+
+        </div>
+      </section>
     </main>
+
     <com-footer></com-footer>
   </body>
 </html>
