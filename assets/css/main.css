@@ -151,10 +151,10 @@ main::before {
   transition: opacity .5s ease;
   pointer-events: none;
 }
-body.load main::before {
+/*body.load main::before {
   opacity: 1;
   pointer-events: auto;
-}
+}*/
 h2 {
   font-size: 1.17rem;
   font-weight: bold;
