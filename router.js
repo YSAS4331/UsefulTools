@@ -120,9 +120,6 @@ async function navigate(path, push = true) {
       await loadPageScripts(doc, baseUrl);
     });
 
-    nextMain.setAttribute('tabindex', '-1');
-    nextMain.focus();
-
     event({ type: 'after' });
   } catch (err) {
     console.error('Nav failed:', err, err.name, err.message, err.stack);
