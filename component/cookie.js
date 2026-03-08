@@ -53,6 +53,9 @@
     <span class="material-symbols-outlined" aria-hidden="true">
       cookie
     </span>
+    <span class="material-symbols-outlined cookie-close">
+      close
+    </span>
     <div class="cookie-inner">
       <p class="cookie-text">
         このサイトでは、より良い体験のために Cookie を使用しています。<br>
