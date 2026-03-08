@@ -2,15 +2,13 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){ dataLayer.push(arguments); }
   function enableCookie() {gtag('js', new Date());gtag('config', 'G-416K6GDFJP');}
-  
-  const STORAGE_KEY = 'USEFUL-cookie';
 
-  // すでに同意ずみなら読み込む
+  const STORAGE_KEY = 'USEFUL-cookie';
   const state = localStorage.getItem(STORAGE_KEY);
   if (state !== null) {
     enableCookie();
     return;
-  };
+  }
 
   const c = tag => document.createElement(tag);
 
@@ -44,18 +42,22 @@
     boxSizing: 'border-box',
     opacity: '0',
     transition: 'opacity .25s ease, transform .25s ease',
-    backdropFilter: 'blur(4px)'
+    backdropFilter: 'blur(4px)',
+
+    // ★ 追加：close ボタンを absolute で置くため
+    position: 'fixed',
   });
 
-  // 中身の構造
-  // アイコン + テキスト + ボタン群
+  // DOM 構造：close を最上位に移動
   parent.innerHTML = `
+    <button class="cookie-close" aria-label="閉じる">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
     <span class="material-symbols-outlined" aria-hidden="true">
       cookie
     </span>
-    <span class="material-symbols-outlined cookie-close">
-      close
-    </span>
+
     <div class="cookie-inner">
       <p class="cookie-text">
         このサイトでは、より良い体験のために Cookie を使用しています。<br>
@@ -72,8 +74,23 @@
     </div>
   `;
 
+  // ★ close ボタンの右上固定スタイル
+  const closeBtn = parent.querySelector('.cookie-close');
+  Object.assign(closeBtn.style, {
+    position: 'absolute',
+    top: '6px',
+    right: '6px',
+    padding: '4px',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: 'var(--text)',
+  });
+
+  closeBtn.onclick = () => closeBanner();
+
   // アイコンスタイル
-  const icon = parent.querySelector('.material-symbols-outlined');
+  const icon = parent.querySelector('.material-symbols-outlined:not(.cookie-close .material-symbols-outlined)');
   if (icon) {
     Object.assign(icon.style, {
       fontSize: '1.5rem',
@@ -83,7 +100,6 @@
     });
   }
 
-  // テキストとボタンコンテナ
   const inner = parent.querySelector('.cookie-inner');
   if (inner) {
     Object.assign(inner.style, {
@@ -104,18 +120,15 @@
     });
   }
 
-  // ボタン: accept は既存の button:not(.nostyle) スタイルが乗る前提
   const acceptBtn = parent.querySelector('.cookie-accept');
   if (acceptBtn) {
     Object.assign(acceptBtn.style, {
-      // ここでは最小限だけ。見た目はグローバル CSS に任せる
       paddingInline: '0.75rem',
       whiteSpace: 'nowrap',
       borderRadius: 'var(--radius)'
     });
   }
 
-  // 詳細リンク風ボタン（nostyle でベーススタイル解除前提）
   const moreBtn = parent.querySelector('.cookie-more');
   if (moreBtn) {
     Object.assign(moreBtn.style, {
@@ -129,36 +142,27 @@
       color: 'var(--linkColor)'
     });
   }
-  const closeBtn = parent.querySelector('.cookie-close');
-  closeBtn.onclick = () => closeBanner();
 
-  // 閉じる処理
   const closeBanner = () => {
     parent.style.opacity = '0';
     parent.style.transform = 'translate(-50%, 12px)';
-    setTimeout(() => {
-      parent.remove();
-    }, 260);
+    setTimeout(() => parent.remove(), 260);
   };
 
-  // 同意ボタン
   if (acceptBtn) {
     acceptBtn.addEventListener('click', () => {
       localStorage.setItem(STORAGE_KEY, 'accepted');
-      enableCookie()
+      enableCookie();
       closeBanner();
     });
   }
 
-  // 詳細ボタン（必要ならリンク先を変えて）
   if (moreBtn) {
     moreBtn.addEventListener('click', () => {
-      // ここ、主のサイトのポリシーページに差し替え推奨
       window.open('/UsefulTools/privacy', '_blank', 'noopener');
     });
   }
 
-  // DOM に追加してからフェードイン
   document.body.appendChild(parent);
   requestAnimationFrame(() => {
     parent.style.opacity = '1';
