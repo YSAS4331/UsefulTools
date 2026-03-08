@@ -129,6 +129,8 @@
       color: 'var(--linkColor)'
     });
   }
+  const closeBtn = parent.querySelector('.cookie-close');
+  closeBtn.onclick = () => closeBanner();
 
   // 閉じる処理
   const closeBanner = () => {
