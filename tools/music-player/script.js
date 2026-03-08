@@ -197,6 +197,14 @@ function setup() {
     } else {
       document.title = "Music Player - UsefulTools";
     }
+
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: file?.name ?? "Unknown Track",
+        artist: "Local File",
+        album: "UsefulTools Player"
+      });
+    }
   });
 
   player.addEventListener("play", () => {
