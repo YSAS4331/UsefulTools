@@ -1,10 +1,3 @@
-/* ============================================================
-   SPA 対応版 music-player script.js
-   - DOM が揃ってから初期化
-   - 他ページでは何もしない
-   - イベント多重登録なし
-   ============================================================ */
-
 let initialized = false;
 
 export function init() {
@@ -197,6 +190,13 @@ function setup() {
   player.addEventListener("trackchange", () => {
     updateTrackInfo();
     renderPlaylist();
+
+    const file = player.currentFile;
+    if (file) {
+      document.title = `${file.name} - UsefulTools`;
+    } else {
+      document.title = "Music Player - UsefulTools";
+    }
   });
 
   player.addEventListener("play", () => {
