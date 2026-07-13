@@ -7,6 +7,11 @@ class header extends HTMLElement {
   
   #render() {
     this.innerHTML = `
+<style>
+:host {
+  display: block;
+}
+</style>
 <header>
   <a href="/UsefulTools/">UsefulTools</a>
 </header>
