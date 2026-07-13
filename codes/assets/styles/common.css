@@ -8,3 +8,8 @@ html, body, #app {
   min-height: 100vh;
   overflow-x: hidden;
 }
+
+app-header {
+  width: 95%;
+  height: 75px;
+}
