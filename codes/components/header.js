@@ -14,7 +14,8 @@ class header extends HTMLElement {
 header {
   display: flex;
   align-items: center;
-  height: 48px;
+  height: 100%;
+  width: 100%;
   padding: 0 16px;
 }
 </style>
