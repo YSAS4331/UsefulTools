@@ -1,17 +1,11 @@
 * {
-  margin: 0; padding: 0;
-  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box
 }
 
-html, body, #app {
+body,html {
   width: 100vw;
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-app-header {
-  width: 95%;
-  height: 75px;
-
-  display: block;
+  overflow-x: hidden
 }
