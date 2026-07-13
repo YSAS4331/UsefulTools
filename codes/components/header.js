@@ -11,6 +11,12 @@ class header extends HTMLElement {
 :host {
   display: block;
 }
+header {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+}
 </style>
 <header>
   <a href="/UsefulTools/">UsefulTools</a>
