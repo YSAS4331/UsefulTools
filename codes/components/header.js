@@ -1,32 +1,10 @@
 class header extends HTMLElement {
-  constructor() {
-    super();
-    
-    this.attachShadow({ mode: 'open' });
-  }
-  
-  #render() {
+  connectedCallback() {
     this.innerHTML = `
-<style>
-:host {
-  display: block;
-}
-header {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  padding: 0 16px;
-}
-</style>
 <header>
   <a href="/UsefulTools/">UsefulTools</a>
 </header>
     `;
-  }
-  
-  connectedCallback() {
-    this.#render();
   }
 }
 
