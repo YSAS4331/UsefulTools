@@ -12,4 +12,6 @@ html, body, #app {
 app-header {
   width: 95%;
   height: 75px;
+
+  display: block;
 }
