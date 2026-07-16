@@ -12,11 +12,11 @@ body,html {
 
 #app {
   display: flex;
-  height: clac(100vh - 60px);
+  height: calc(100vh - 60px);
   margin-top: 60px;
   overflow: hidden;
 }
 
 main {
-  padding: 2rem, 0, 0, 2rem;
+  padding: 2rem 0 0 2rem;
 }
