@@ -19,4 +19,6 @@ body,html {
 
 main {
   padding: 2rem 0 0 2rem;
+  width: calc(100vw - 240px);
+  height: 100%;
 }
