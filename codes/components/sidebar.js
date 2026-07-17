@@ -24,7 +24,7 @@ class side extends HTMLElement {
 }
 </style>
 <aside id="aside">
-  <a href="/UsefulTools">トップページ</a>
+  <a href="/UsefulTools">UsefulTools</a>
 </aside>
     `;
   }
