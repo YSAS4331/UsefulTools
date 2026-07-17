@@ -24,7 +24,32 @@ main {
 }
 
 button {
-  border: 2px solid var(--accent-border);
+  background: var(--glass-bg-2);
+  border: 1px solid var(--glass-border-1);
+  box-shadow: var(--glass-inner-shadow);
+  
+  color: var(--text-primary);
   border-radius: var(--radius);
-  padding: 6px 15px;
+  
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background: var(--glass-bg-3);
+  border-color: var(--accent);
+  box-shadow: var(--glass-inner-shadow), 0 4px 12px rgba(74, 222, 128, 0.15);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(1px);
 }
