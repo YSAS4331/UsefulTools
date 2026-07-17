@@ -1,1 +1,16 @@
+#hero {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+  justify-content: center;
+}
+
+#hero-title {
+  font-size: 2rem;
+  color: var(--text-primary);
+}
 
