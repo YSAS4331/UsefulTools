@@ -1,11 +1,11 @@
 :root {
   /* アクセント（ミント系） */
-  --accent: #B7F5C8;
-  --accent-strong: #9ff0b8;
+  --accent: #4ade80;
+  --accent-strong: #22c55e;
 
   /* アクセントを境界線に使う */
-  --accent-border: rgba(183, 245, 200, 0.55);
-  --accent-border-strong: rgba(183, 245, 200, 0.75);
+  --accent-border: rgba(74, 222, 128, 0.4);
+  --accent-border-strong: rgba(34, 197, 94, 0.6);
 
   /* ガラスの光沢 */
   --glass-inner-shadow: 
