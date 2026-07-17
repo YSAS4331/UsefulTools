@@ -25,7 +25,7 @@ main {
 
 button {
   background: var(--glass-bg-2);
-  border: 1px solid var(--glass-border-1);
+  border: 1px solid var(--border-color);
   box-shadow: var(--glass-inner-shadow);
   
   color: var(--text-primary);
