@@ -3,8 +3,7 @@ class side extends HTMLElement {
     this.innerHTML = `
 <style>
 #aside {
-  min-width: 240px;
-  max-width: 75vh;
+  width: 240px;
   height: 100%;
 
   background: rgba(255, 255, 255, 0.32);
