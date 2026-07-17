@@ -10,7 +10,7 @@ class side extends HTMLElement {
   background: rgba(255, 255, 255, 0.32);
   backdrop-filter: blur(28px) saturate(180%);
 
-  border-right: 1px solid rgba(255, 255, 255, 0.45);
+  border-right: 1px solid var(--accent-border);
 
   box-shadow:
     inset 0 0 1px rgba(255, 255, 255, 0.9),
