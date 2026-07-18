@@ -66,6 +66,14 @@ app-sidebar {
   transition: transform .25s ease;
 }
 
+.text-gradient {
+  background: linear-gradient(135deg, #ff416c 0%, #8a2387 50%, #1d9bf0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
 /* スマホ：サイドバーを完全に隠す */
 @media (max-width: 600px) {
   /* サイドバーを左に隠す */
