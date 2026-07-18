@@ -18,9 +18,13 @@ class Side extends HTMLElement {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
 
   padding: 24px 0;
+}
+
+.sidebar footer {
+  margin-top: auto;
 }
 
 .sidebar footer a {
