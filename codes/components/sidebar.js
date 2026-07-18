@@ -33,7 +33,7 @@ class Side extends HTMLElement {
 </style>
 
 <aside class="sidebar">
-  <a href="/UsefulTools">UsefulTools</a>
+  <a href="/UsefulTools/">UsefulTools</a>
 
   <footer>
     <a href="/UsefulTools/terms/">利用規約</a>
