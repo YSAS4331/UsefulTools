@@ -17,10 +17,52 @@ class header extends HTMLElement {
   top: 0; left: 0; right: 0;
   z-index: 20;
 }
+
+#hamburger {
+  display: none;
+  width: 32px;
+  height: 32px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+#hamburger span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: var(--accent-border);
+  border-radius: 4px;
+}
+
+/* スマホでハンバーガー表示 */
+@media (max-width: 600px) {
+  #hamburger {
+    display: flex;
+  }
+}
 </style>
+
 <header id="global-header">
   <a href="/UsefulTools/">UsefulTools</a>
+  <div id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 </header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("#hamburger");
+    const sidebar = document.querySelector("app-sidebar");
+
+    btn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+  });
+</script>
     `;
   }
 }
