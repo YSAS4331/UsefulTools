@@ -1,20 +1,20 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box
 }
 
 body,html {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow: hidden
 }
 
 #app {
   display: flex;
   height: calc(100vh - 60px);
   margin-top: 60px;
-  overflow: hidden;
+  overflow: hidden
 }
 
 main {
@@ -46,52 +46,56 @@ button:not(.nostyle) {
   font-weight: 600;
   color: #1d9bf0;
   text-decoration: none;
-  transition: .15s ease;
+  transition: .15s ease
 }
 button:not(.nostyle):hover {
   border-color: var(--accent-border);
   background: rgba(255,255,255,.75);
   box-shadow: var(--accent-glow);
-  text-decoration: underline;
+  text-decoration: underline
 }
 
-/* ------------------------------
-   Responsive
------------------------------- */
+/* -----------------------------------
+   Responsive: サイドバーを隠す
+----------------------------------- */
 
-/* タブレット以下：サイドバーを縮める */
-@media (max-width: 1024px) {
-  #app {
-    height: auto;
-    flex-direction: column;
-  }
-
-  app-sidebar {
-    width: 100% !important;
-    height: auto !important;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  main {
-    width: 100%;
-    padding: 1.5rem;
-  }
+/* PCでは普通に表示 */
+app-sidebar {
+  width: 240px;
+  transition: transform .25s ease;
 }
 
-/* スマホ：サイドバーを折りたたむ（上に来る） */
+/* スマホ：サイドバーを完全に隠す */
 @media (max-width: 600px) {
+
   #app {
     flex-direction: column;
+    height: auto;
   }
 
+  /* サイドバーを左に隠す */
   app-sidebar {
-    width: 100% !important;
-    height: auto !important;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 60px);
+    background: rgba(255,255,255,.6);
+    backdrop-filter: blur(18px) saturate(160%);
+    border-right: 1px solid var(--accent-border);
+    box-shadow: var(--glass-inner-shadow);
+    transform: translateX(-100%);
+    z-index: 30;
   }
 
+  /* ハンバーガーで開いた状態 */
+  app-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* main を全幅にする */
   main {
-    width: 100%;
+    width: 100% !important;
     padding: 1rem;
   }
 
