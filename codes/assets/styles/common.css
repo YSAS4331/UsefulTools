@@ -18,7 +18,7 @@ body,html {
 }
 
 main {
-  padding: 2rem 0 0 2rem;
+  padding: 2rem;
   width: calc(100vw - 240px);
   min-height: 100%;
   overflow-y: auto;
@@ -54,10 +54,6 @@ button:not(.nostyle):hover {
   box-shadow: var(--accent-glow);
   text-decoration: underline
 }
-
-/* -----------------------------------
-   Responsive: サイドバーを隠す
------------------------------------ */
 
 /* PCでは普通に表示 */
 app-sidebar {
