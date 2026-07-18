@@ -1,16 +1,52 @@
 #hero {
   width: 100%;
   height: 100%;
-
   display: flex;
   flex-direction: column;
-  
   align-items: center;
   justify-content: center;
+  text-align: center;
+  padding: 2rem;
 }
 
 #hero-title {
-  font-size: 2rem;
+  font-size: clamp(2rem, 5vw, 3.5rem); /* スマホからPCまで画面幅に合わせて自動可変 */
+  font-weight: 800;
+  line-height: 1.3;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
 }
 
+#hero-lead {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+#hero-cta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  #hero {
+    padding: 2rem 1rem;
+  }
+  
+  #hero-cta {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  /* スマホ時にボタンを横幅いっぱいに広げて押しやすくする */
+  #hero-cta button,
+  #hero-cta a {
+    width: 100%;
+  }
+}
