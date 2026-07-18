@@ -1,26 +1,28 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
-body,html {
+body, html {
   width: 100vw;
   height: 100vh;
-  overflow: hidden
+  overflow: hidden;
 }
 
 #app {
   display: flex;
   height: calc(100vh - 60px);
   margin-top: 60px;
-  overflow: hidden
+  overflow: hidden;
 }
 
+/* 修正：width の引き算を止め、Flexbox に伸縮を任せることでバグを防止 */
 main {
-  padding: 2rem;
-  width: calc(100vw - var(--sidebar-width));
+  flex: 1;
+  width: 0;
   min-height: 100%;
+  padding: 2rem;
   overflow-y: auto;
 }
 
@@ -62,7 +64,8 @@ button:not(.nostyle):hover {
 }
 
 app-sidebar {
-  width: var(--sidebar-width);
+  width: 300px;
+  flex-shrink: 0; /* サイドバーが潰れるのを防ぐ */
   transition: transform .25s ease;
 }
 
@@ -94,7 +97,7 @@ app-sidebar {
     transform: translateX(0);
   }
 
-  /* main を全幅にする */
+  /* main を全幅にする（flex: 1 が効いているため width 上書きだけでOK） */
   main {
     width: 100%;
     padding: 1rem;
