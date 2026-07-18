@@ -55,7 +55,6 @@ button:not(.nostyle):hover {
   text-decoration: underline
 }
 
-/* PCでは普通に表示 */
 app-sidebar {
   width: 300px;
   transition: transform .25s ease;
@@ -68,7 +67,7 @@ app-sidebar {
     position: fixed;
     top: 60px;
     left: 0;
-    width: 100vw;
+    width: 95vw;
     height: calc(100vh - 60px);
     z-index: 100;
     border-right: 1px solid var(--accent-border);
