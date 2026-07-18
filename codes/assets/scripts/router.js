@@ -166,7 +166,7 @@ function ensureProgressEl() {
     position: "fixed",
     top: "0",
     left: "0",
-    height: "2px",
+    height: "5px",
     width: "0%",
     background: "var(--spa-progress-color, #2563eb)",
     zIndex: "9999",
