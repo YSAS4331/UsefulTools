@@ -27,7 +27,7 @@ button {
   background: var(--glass-bg-1);
   /* 2pxの透明な線をあらかじめ敷いておく（ホバー時にガタつかせないため） */
   border: 2px solid var(--border-color); 
-  color: var(--text-secondary);
+  color: var(--accent);
   border-radius: var(--radius);
   padding: 10px 22px;
   font-weight: 600;
