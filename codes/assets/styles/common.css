@@ -23,29 +23,29 @@ main {
   height: 100%
 }
 
-button {
-  background: var(--glass-bg-1);
-  /* 2pxの透明な線をあらかじめ敷いておく（ホバー時にガタつかせないため） */
-  border: 2px solid var(--border-color); 
-  color: var(--accent);
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 16px;
   border-radius: var(--radius);
-  padding: 10px 22px;
+
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px) saturate(160%);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--glass-inner-shadow);
+
   font-weight: 600;
-  cursor: pointer;
-  
-  /* 線の変化をヌルッとさせる */
-  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+  color: #1d9bf0;
+  text-decoration: none;
+
+  transition: 0.15s ease;
 }
 
-button:hover {
-  /* 背景のガラスを1段階濃くし、境界線をミント色に */
-  background: var(--glass-bg-2);
-  border-color: var(--accent);
-  color: var(--text-primary);
-}
-
-button:active {
-  /* クリック時はさらに濃くして「押し込まれた感」を出す */
-  background: var(--glass-bg-3);
-  border-color: var(--accent-strong);
+.nav-item:hover {
+  border-color: var(--accent-border);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--accent-glow);
+  text-decoration: underline;
 }
