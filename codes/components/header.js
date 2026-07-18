@@ -36,7 +36,6 @@ class header extends HTMLElement {
   border-radius: 4px;
 }
 
-/* スマホでハンバーガー表示 */
 @media (max-width: 600px) {
   #hamburger {
     display: flex;
@@ -52,18 +51,16 @@ class header extends HTMLElement {
     <span></span>
   </div>
 </header>
+    `;
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.querySelector("#hamburger");
-    const sidebar = document.querySelector("app-sidebar");
+    // ★ ここでイベントを付ける（ヘッダー自身の中で完結）
+    const btn = this.querySelector("#hamburger");
 
     btn.addEventListener("click", () => {
+      const sidebar = document.querySelector("app-sidebar");
+      if (!sidebar) return;
       sidebar.classList.toggle("open");
     });
-  });
-</script>
-    `;
   }
 }
 
