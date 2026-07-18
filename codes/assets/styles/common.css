@@ -28,6 +28,8 @@ button {
   align-items: center;
   gap: 10px;
 
+  cursor: pointer;
+
   padding: 14px 16px;
   border-radius: var(--radius);
 
