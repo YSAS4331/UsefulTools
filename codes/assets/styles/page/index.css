@@ -44,7 +44,6 @@
     max-width: 300px;
   }
   
-  /* スマホ時にボタンを横幅いっぱいに広げて押しやすくする */
   #hero-cta button,
   #hero-cta a {
     width: 100%;
