@@ -80,12 +80,12 @@ app-sidebar {
     left: 0;
     width: 100vw;
     height: 100vh;
+    z-index: 100;
     background: rgba(255,255,255,.6);
     backdrop-filter: blur(18px) saturate(160%);
     border-right: 1px solid var(--accent-border);
     box-shadow: var(--glass-inner-shadow);
     transform: translateX(-100%);
-    z-index: 30;
   }
 
   /* ハンバーガーで開いた状態 */
