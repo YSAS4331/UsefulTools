@@ -1,26 +1,34 @@
 article {
-  width: 100%; min-height: 100%;
+  width: 100%;
+  /* 修正：親の main いっぱいに広げて #hero の縦中央配置（flex: 1）を機能させる */
+  flex: 1;
   display: flex;
   flex-direction: column;
+  /* 修正：スクロールバーの2重発生を防ぐため overflow は削除 */
 }
 
+/* --------------------------------------------------------------------------
+   Hero Section
+   -------------------------------------------------------------------------- */
 #hero {
+  flex: 1;
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 2rem;
+  /* 補足：全ツールエリアがあるため、最低でも少し高さを確保しておくと綺麗です */
+  min-height: calc(100vh - 160px);
 }
 
 #hero-title {
-  font-size: clamp(2rem, 5vw, 3.5rem); /* スマホからPCまで画面幅に合わせて自動可変 */
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 800;
   line-height: 1.3;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -.02em;
   margin-bottom: 1.5rem;
 }
 
@@ -39,27 +47,64 @@ article {
   align-items: center;
 }
 
+/* ボタンのバリエーション（HTMLのクラスに対応） */
+.btn-primary {
+  background: linear-gradient(135deg, #1d9bf0 0%, #0c85d0 100%) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0c85d0 0%, #0a73b5 100%) !important;
+  opacity: 0.95;
+}
+
+/* --------------------------------------------------------------------------
+   All Tools Section
+   -------------------------------------------------------------------------- */
+#alltools {
+  width: 100%;
+  padding: 4rem 0; /* ヒーローの下にしっかりと余白を確保 */
+}
+
 section h2 {
   display: flex;
   align-items: center;
-  
+  gap: 0.5rem; /* アイコンと文字の間隔 */
+  font-size: 1.75rem;
+  font-weight: 700;
   border-left: 4px solid var(--accent);
   padding-left: 1rem;
+  margin-bottom: 2rem;
+}
+
+section h2 i {
+  width: 24px;
+  height: 24px;
 }
 
 @media (max-width: 600px) {
   #hero {
     padding: 2rem 1rem;
+    min-height: calc(100vh - 120px); /* スマホ用に高さ微調整 */
   }
-  
+
   #hero-cta {
     flex-direction: column;
     width: 100%;
     max-width: 300px;
   }
-  
-  #hero-cta button,
-  #hero-cta a {
+
+  #hero-cta a,
+  #hero-cta button {
     width: 100%;
+  }
+
+  #alltools {
+    padding: 2rem 0;
+  }
+
+  section h2 {
+    font-size: 1.4rem;
   }
 }
