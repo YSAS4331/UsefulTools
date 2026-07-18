@@ -25,7 +25,16 @@ main {
   overflow-y: auto;
 }
 
-button {
+a:not(.nostyle) {
+  color: var(--link-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button:not(.nostyle) {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -39,12 +48,13 @@ button {
   font-weight: 600;
   color: #1d9bf0;
   text-decoration: none;
-  transition: .15s ease
-}
+  transition: .15s ease;
 
-button:hover {
-  border-color: var(--accent-border);
-  background: rgba(255,255,255,.75);
-  box-shadow: var(--accent-glow);
-  text-decoration: underline
+  
+  &:hover {
+    border-color: var(--accent-border);
+    background: rgba(255,255,255,.75);
+    box-shadow: var(--accent-glow);
+    text-decoration: underline
+  }
 }
