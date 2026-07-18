@@ -37,6 +37,7 @@ class Side extends HTMLElement {
 
   <footer>
     <a href="/UsefulTools/terms/">利用規約</a>
+    <a href="/UsefulTools/privacy/">プライバシーポリシー</a>
   </footer>
 </aside>
     `;
