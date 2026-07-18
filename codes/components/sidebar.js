@@ -18,14 +18,22 @@ class Side extends HTMLElement {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
 
-  padding-top: 24px;
+  padding: 24px 0;
+}
+
+.sidebar footer a {
+  color: var(--text-tertiary);
 }
 </style>
 
 <aside class="sidebar">
   <a href="/UsefulTools">UsefulTools</a>
+
+  <footer>
+    <a href="/UsefulTools/terms/">利用規約</a>
+  </footer>
 </aside>
     `;
   }
