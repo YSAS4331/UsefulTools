@@ -203,6 +203,23 @@ function finishProgress(success = true) {
   }
 }
 
+/* ---- ハッシュへのスクロール ----
+   ページ間遷移・同一ページ内リンク・戻る/進む・初回ロードのすべてで
+   共通して使う。要素が見つからなければトップへ。 */
+function scrollToHash(hash, smooth = true) {
+  if (!hash) {
+    window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
+    return;
+  }
+  const id = hash.slice(1);
+  const target = id ? document.getElementById(id) : null;
+  if (target) {
+    target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+  } else {
+    window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
+  }
+}
+
 /* link interceptor */
 document.addEventListener("click", (e) => {
   const a = e.target.closest("a");
@@ -227,7 +244,8 @@ document.addEventListener("click", (e) => {
 
   if (url.hash && to === from) {
     e.preventDefault();
-    location.hash = url.hash;
+    history.pushState(null, "", to + url.hash);
+    scrollToHash(url.hash);
     return;
   }
 
@@ -328,12 +346,7 @@ async function navigate(pathWithQuery, push = true, hash = "") {
     if (push) history.pushState(null, "", key + hash);
 
     if (hash) {
-      const target = document.getElementById(hash.slice(1));
-      if (target) {
-        target.scrollIntoView();
-      } else {
-        window.scrollTo(0, 0);
-      }
+      scrollToHash(hash);
     } else {
       const scroll = push ? 0 : (cacheGet(scrollMap, key) ?? 0);
       window.scrollTo(0, scroll);
@@ -500,8 +513,8 @@ function showErrorPage() {
 /* back/forward */
 window.addEventListener("popstate", () => {
   const to = normalize(location.href);
-  log("[popstate]", "to:", to);
-  navigate(to, false);
+  log("[popstate]", "to:", to, "hash:", location.hash);
+  navigate(to, false, location.hash);
 });
 
 /* prefetch on hover（mouseenterはバブリングしないため対象リンクのみで発火） */
@@ -531,7 +544,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const initBase = resolveBase(document, location.href);
   log("[init]", "base:", initBase);
 
-  loadPageScripts($$("page-script[src]"), initBase, location.href);
+  loadPageScripts($$("page-script[src]"), initBase, location.href).then(() => {
+    // page-script が動的に要素を挿入するケースで、ネイティブの
+    // アンカーへのジャンプが間に合わないことがあるためフォールバック
+    if (location.hash) scrollToHash(location.hash, false);
+  });
 });
 
 /* 外部公開 */
