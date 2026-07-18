@@ -78,8 +78,8 @@ app-sidebar {
     position: fixed;
     top: 60px;
     left: 0;
-    width: 240px;
-    height: calc(100vh - 60px);
+    width: 100vw;
+    height: 100vh;
     background: rgba(255,255,255,.6);
     backdrop-filter: blur(18px) saturate(160%);
     border-right: 1px solid var(--accent-border);
