@@ -1,27 +1,26 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 body,html {
   width: 100vw;
   height: 100vh;
-  overflow: hidden
+  overflow: hidden;
 }
 
 #app {
   display: flex;
   height: calc(100vh - 60px);
   margin-top: 60px;
-  overflow: hidden
+  overflow: hidden;
 }
 
 main {
   padding: 2rem 0 0 2rem;
   width: calc(100vw - 240px);
   min-height: 100%;
-
   overflow-y: auto;
 }
 
@@ -47,11 +46,57 @@ button:not(.nostyle) {
   font-weight: 600;
   color: #1d9bf0;
   text-decoration: none;
-  transition: .15s ease
+  transition: .15s ease;
 }
 button:not(.nostyle):hover {
   border-color: var(--accent-border);
   background: rgba(255,255,255,.75);
   box-shadow: var(--accent-glow);
-  text-decoration: underline
+  text-decoration: underline;
+}
+
+/* ------------------------------
+   Responsive
+------------------------------ */
+
+/* タブレット以下：サイドバーを縮める */
+@media (max-width: 1024px) {
+  #app {
+    height: auto;
+    flex-direction: column;
+  }
+
+  app-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  main {
+    width: 100%;
+    padding: 1.5rem;
+  }
+}
+
+/* スマホ：サイドバーを折りたたむ（上に来る） */
+@media (max-width: 600px) {
+  #app {
+    flex-direction: column;
+  }
+
+  app-sidebar {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  main {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  button:not(.nostyle) {
+    padding: 12px 14px;
+    gap: 8px;
+  }
 }
