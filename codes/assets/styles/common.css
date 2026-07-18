@@ -57,7 +57,7 @@ button:not(.nostyle):hover {
 
 /* PCでは普通に表示 */
 app-sidebar {
-  width: 240px;
+  width: 300px;
   transition: transform .25s ease;
 }
 
