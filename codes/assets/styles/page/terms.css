@@ -1,11 +1,3 @@
-/* terms.css */
-
-main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 20px 64px;
-}
-
 article {
   display: flex;
   flex-direction: column;
