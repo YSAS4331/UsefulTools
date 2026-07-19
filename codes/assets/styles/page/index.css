@@ -1,10 +1,9 @@
 article {
   width: 100%;
-  /* 修正：親の main いっぱいに広げて #hero の縦中央配置（flex: 1）を機能させる */
+  /* 改善：親要素の高さいっぱいに広げて #hero の縦中央配置を機能させる */
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* 修正：スクロールバーの2重発生を防ぐため overflow は削除 */
 }
 
 /* --------------------------------------------------------------------------
@@ -19,7 +18,6 @@ article {
   justify-content: center;
   text-align: center;
   padding: 2rem;
-  /* 補足：全ツールエリアがあるため、最低でも少し高さを確保しておくと綺麗です */
   min-height: calc(100vh - 160px);
 }
 
@@ -47,16 +45,64 @@ article {
   align-items: center;
 }
 
-/* ボタンのバリエーション（HTMLのクラスに対応） */
+/* --------------------------------------------------------------------------
+   Hero Buttons (nostyle を適用したため綺麗に独立記述が可能)
+   -------------------------------------------------------------------------- */
 .btn-primary {
-  background: linear-gradient(135deg, #1d9bf0 0%, #0c85d0 100%) !important;
-  color: #ffffff !important;
-  border-color: transparent !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity 0.25s ease, box-shadow 0.25s ease;
+  
+  /* メイングラデーションを適用 */
+  background: linear-gradient(135deg, #ff416c 0%, #8a2387 50%, #1d9bf0 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(138, 35, 135, 0.25);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #0c85d0 0%, #0a73b5 100%) !important;
-  opacity: 0.95;
+  opacity: 0.9;
+  box-shadow: 0 6px 20px rgba(138, 35, 135, 0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+
+  /* 共通ボタンと同じグラスモフィズムを適用 */
+  background: var(--glass-bg-2);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border-2);
+  box-shadow: var(--glass-inner-shadow);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: var(--glass-bg-3);
+  color: var(--accent-strong);
 }
 
 /* --------------------------------------------------------------------------
@@ -64,29 +110,27 @@ article {
    -------------------------------------------------------------------------- */
 #alltools {
   width: 100%;
-  padding: 4rem 0; /* ヒーローの下にしっかりと余白を確保 */
+  padding: 4rem 0;
 }
 
 section h2 {
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* アイコンと文字の間隔 */
+  gap: 0.5rem;
   font-size: 1.75rem;
   font-weight: 700;
+  color: var(--text-primary);
   border-left: 4px solid var(--accent);
   padding-left: 1rem;
-  margin-bottom: 2rem;
 }
 
-section h2 i {
-  width: 24px;
-  height: 24px;
-}
-
+/* --------------------------------------------------------------------------
+   Responsive (Mobile)
+   -------------------------------------------------------------------------- */
 @media (max-width: 600px) {
   #hero {
     padding: 2rem 1rem;
-    min-height: calc(100vh - 120px); /* スマホ用に高さ微調整 */
+    min-height: calc(100vh - 120px);
   }
 
   #hero-cta {
@@ -95,7 +139,6 @@ section h2 i {
     max-width: 300px;
   }
 
-  #hero-cta a,
   #hero-cta button {
     width: 100%;
   }
