@@ -561,3 +561,7 @@ window.spaRouter = {
   },
   isNavigating: () => isNavigating,
 };
+
+event({
+  type: "setup-ok"
+});
