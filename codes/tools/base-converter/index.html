@@ -24,67 +24,29 @@
   <div id="app">
     <app-sidebar></app-sidebar>
     <main>
-      <div class="tool-wrapper">
-        <!-- ツール共通ヘッダー -->
+      <article class="tool-container">
+        <!-- 1. ツールアイコン ツール名 -->
         <header class="tool-header">
-          <h1><i data-lucide="hash"></i><span class="text-gradient">進数変換ツール</span></h1>
-          <p class="tool-description">2進数、8進数、10進数、16進数の相互変換を行います。値を入力すると、他の進数へリアルタイムに自動変換されます。</p>
+          <h1>
+            <i class="tool-icon" data-lucide="hash"></i>
+            <span class="text-gradient tool-name">進数変換ツール</span>
+          </h1>
+          <!-- 2. 簡単な説明 -->
+          <p class="tool-lead">2進数、8進数、10進数、16進数の相互変換を行います。値を入力すると、他の進数へリアルタイムに自動変換されます。</p>
         </header>
 
-        <!-- ツール共通ワークスペース -->
-        <div class="tool-workspace">
-          <!-- 2進数入力カード -->
-          <section class="tool-card">
-            <div class="tool-card-title">
-              <span class="tool-label">2進数 (Binary)</span>
-              <span class="font-mono">Base 2</span>
-            </div>
-            <div class="tool-field">
-              <input type="text" id="bin-input" class="tool-input font-mono" placeholder="01010101" inputmode="numeric" pattern="[01]*">
-            </div>
-          </section>
+        <!-- 3. ツール本体 -->
+        <div id="tool"></div>
 
-          <!-- 8進数入力カード -->
-          <section class="tool-card">
-            <div class="tool-card-title">
-              <span class="tool-label">8進数 (Octal)</span>
-              <span class="font-mono">Base 8</span>
-            </div>
-            <div class="tool-field">
-              <input type="text" id="oct-input" class="tool-input font-mono" placeholder="123" inputmode="numeric" pattern="[0-7]*">
-            </div>
-          </section>
-
-          <!-- 10進数入力カード -->
-          <section class="tool-card">
-            <div class="tool-card-title">
-              <span class="tool-label">10進数 (Decimal)</span>
-              <span class="font-mono">Base 10</span>
-            </div>
-            <div class="tool-field">
-              <input type="text" id="dec-input" class="tool-input font-mono" placeholder="85" inputmode="numeric" pattern="[0-9]*">
-            </div>
-          </section>
-
-          <!-- 16進数入力カード -->
-          <section class="tool-card">
-            <div class="tool-card-title">
-              <span class="tool-label">16進数 (Hexadecimal)</span>
-              <span class="font-mono">Base 16</span>
-            </div>
-            <div class="tool-field">
-              <input type="text" id="hex-input" class="tool-input font-mono" placeholder="55" pattern="[0-9a-fA-F]*">
-            </div>
-          </section>
-        </div>
-
-        <!-- アクションエリア（クリアボタンなど） -->
-        <div class="tool-actions">
-          <button type="button" id="clear-btn">
-            <i data-lucide="refresh-cw"></i>クリア
-          </button>
-        </div>
-      </div>
+        <!-- 4. 詳細（使い方・解説など） -->
+        <footer class="tool-details">
+          <h2><i data-lucide="info"></i>このツールについて</h2>
+          <p>本ツールは、各種進数をブラウザ上でリアルタイムに相互変換できる開発者・学習者向けのシミュレーターです。主要な4つの基数（2進法、8進法、10進法、16進法）を網羅しており、入力形式の間違いを自動判定する機能を備えています。</p>
+          
+          <h3>基本的な使い方</h3>
+          <p>変換したい進数の入力欄に数値を入力してください。入力と同時に、その他の入力欄が適切な値に自動的に更新されます。値をすべてクリアしたい場合は、下部のクリアボタンを利用してください。</p>
+        </footer>
+      </article>
     </main>
   </div>
 </body>
