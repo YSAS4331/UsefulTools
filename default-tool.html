@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>ツール名 - UsefulTools</title>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ツール説明">
+
+  <link rel="icon" href="data:,">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/UsefulTools/assets/styles/variable.css">
+  <link rel="stylesheet" href="/UsefulTools/assets/styles/common.css">
+
+  <link rel="stylesheet" href="/UsefulTools/assets/styles/tools.css" data-page>
+
+  <!-- Scripts -->
+  <script type="module" src="/UsefulTools/assets/scripts/load.js"></script>
+  <script src="/UsefulTools/assets/scripts/router.js" type="module"></script>
+
+  <page-script src="./script.js"></page-script>
+</head>
+<body>
+  <app-header></app-header>
+  <div id="app">
+    <app-sidebar></app-sidebar>
+    <main>
+      <article class="tool-container">
+        <!-- 1. ツールアイコン ツール名 -->
+        <header class="tool-header">
+          <h1>
+            <i class="tool-icon" data-lucide="hash"></i>
+            <span class="text-gradient tool-name">ツール名</span>
+          </h1>
+          <!-- 2. 簡単な説明 -->
+          <p class="tool-lead">簡単な説明</p>
+        </header>
+
+        <!-- 3. ツール本体 -->
+        <div id="tool">
+          
+        </div>
+
+        <!-- 4. 詳細（使い方・解説など） -->
+        <footer class="tool-details">
+          <section>
+            <h2><i data-lucide="info"></i>このツールについて</h2>
+            <p>詳細説明</p>
+          </section>
+          <section>
+            <h3></h3>
+            <p></p>
+          </section>
+        </footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
