@@ -48,7 +48,7 @@ button:not(.nostyle) {
   background: var(--glass-bg-2);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid var(--glass-border-1);
+  border: 2px solid var(--border-color);
   box-shadow: var(--glass-inner-shadow);
   font-size: 0.95rem;
   font-weight: 600;
