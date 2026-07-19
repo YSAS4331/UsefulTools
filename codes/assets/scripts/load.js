@@ -1,6 +1,6 @@
 import '/UsefulTools/components/header.js';
 import '/UsefulTools/components/sidebar.js';
-import { createIcons, Star, Folders, Blocks, Info } from 'https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm';
+import { createIcons, Star, Folders, Blocks, Info, Hash } from 'https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm';
 
 const setupIcons = () => {
   createIcons({
@@ -8,7 +8,8 @@ const setupIcons = () => {
       Star,
       Folders,
       Blocks,
-      Info
+      Info,
+      Hash
     }
   });
 }
