@@ -1,1 +1,129 @@
+/* ツール共通レイアウト */
+.tool-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
+/* ツール共通ヘッダー（説明文など） */
+.tool-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool-description {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ツール共通ワークスペース（グリッド配置用） */
+.tool-workspace {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* グラスモフィズム共通カードコンポーネント */
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background: var(--glass-bg-1);
+  border: 1px solid var(--glass-border-1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: var(--glass-inner-shadow);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tool-card:focus-within {
+  border-color: var(--accent-border-strong);
+}
+
+/* カードタイトル・ラベル */
+.tool-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* フォーム共通スタイル */
+.tool-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* 入力・選択コントロール */
+.tool-input,
+.tool-select,
+.tool-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.tool-input:focus,
+.tool-select:focus,
+.tool-textarea:focus {
+  border-color: var(--accent-strong);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* 等幅フォント（結果表示や計算用） */
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* アクション・ボタンエリア */
+.tool-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 600px) {
+  .tool-wrapper {
+    gap: 1.5rem;
+  }
+
+  .tool-workspace {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tool-card {
+    padding: 1.25rem;
+  }
+
+  .tool-input,
+  .tool-select,
+  .tool-textarea {
+    font-size: 0.95rem;
+    padding: 0.65rem 0.85rem;
+  }
+}
