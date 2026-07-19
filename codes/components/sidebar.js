@@ -24,9 +24,19 @@ class Side extends HTMLElement {
 }
 .sidebar footer {
   margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  justify-items: center;
+  width: 100%;
 }
 .sidebar footer a {
   color: var(--text-tertiary);
+  text-decoration: none;
+  font-size: 14px;
+}
+.sidebar footer a:hover {
+  text-decoration: underline;
 }
 </style>
 <aside class="sidebar">
