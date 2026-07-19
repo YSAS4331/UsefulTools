@@ -24,7 +24,67 @@
   <div id="app">
     <app-sidebar></app-sidebar>
     <main>
-      <h1><i data-lucide="hash"></i><span class="text-gradient">進数変換ツール</span></h1>
+      <div class="tool-wrapper">
+        <!-- ツール共通ヘッダー -->
+        <header class="tool-header">
+          <h1><i data-lucide="hash"></i><span class="text-gradient">進数変換ツール</span></h1>
+          <p class="tool-description">2進数、8進数、10進数、16進数の相互変換を行います。値を入力すると、他の進数へリアルタイムに自動変換されます。</p>
+        </header>
+
+        <!-- ツール共通ワークスペース -->
+        <div class="tool-workspace">
+          <!-- 2進数入力カード -->
+          <section class="tool-card">
+            <div class="tool-card-title">
+              <span class="tool-label">2進数 (Binary)</span>
+              <span class="font-mono">Base 2</span>
+            </div>
+            <div class="tool-field">
+              <input type="text" id="bin-input" class="tool-input font-mono" placeholder="01010101" inputmode="numeric" pattern="[01]*">
+            </div>
+          </section>
+
+          <!-- 8進数入力カード -->
+          <section class="tool-card">
+            <div class="tool-card-title">
+              <span class="tool-label">8進数 (Octal)</span>
+              <span class="font-mono">Base 8</span>
+            </div>
+            <div class="tool-field">
+              <input type="text" id="oct-input" class="tool-input font-mono" placeholder="123" inputmode="numeric" pattern="[0-7]*">
+            </div>
+          </section>
+
+          <!-- 10進数入力カード -->
+          <section class="tool-card">
+            <div class="tool-card-title">
+              <span class="tool-label">10進数 (Decimal)</span>
+              <span class="font-mono">Base 10</span>
+            </div>
+            <div class="tool-field">
+              <input type="text" id="dec-input" class="tool-input font-mono" placeholder="85" inputmode="numeric" pattern="[0-9]*">
+            </div>
+          </section>
+
+          <!-- 16進数入力カード -->
+          <section class="tool-card">
+            <div class="tool-card-title">
+              <span class="tool-label">16進数 (Hexadecimal)</span>
+              <span class="font-mono">Base 16</span>
+            </div>
+            <div class="tool-field">
+              <input type="text" id="hex-input" class="tool-input font-mono" placeholder="55" pattern="[0-9a-fA-F]*">
+            </div>
+          </section>
+        </div>
+
+        <!-- アクションエリア（クリアボタンなど） -->
+        <div class="tool-actions">
+          <button type="button" id="clear-btn">
+            <i data-lucide="refresh-cw"></i>クリア
+          </button>
+        </div>
+      </div>
     </main>
   </div>
 </body>
