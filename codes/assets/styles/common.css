@@ -1,42 +1,43 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box
 }
 
-body, html {
+body,html {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   background-color: var(--bg);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif
 }
 
 #app {
   display: flex;
   height: calc(100vh - 60px);
   margin-top: 60px;
-  overflow: hidden;
+  overflow: hidden
 }
 
-/* 改善：横幅の引き算を廃止し、Flexboxに伸縮を任せることで横スクロールバグを完全に防止 */
 main {
   flex: 1;
   width: 0;
   min-height: 100%;
   padding: 2rem;
   overflow-y: auto;
+
+  background: var(--bg);
 }
 
 a:not(.nostyle) {
   color: var(--link-color);
-  text-decoration: none;
-}
-a:not(.nostyle):hover {
-  text-decoration: underline;
+  text-decoration: none
 }
 
-/* サイト共通の標準グラスモフィズムボタン */
+a:not(.nostyle):hover {
+  text-decoration: underline
+}
+
 button:not(.nostyle) {
   display: inline-flex;
   align-items: center;
@@ -50,41 +51,39 @@ button:not(.nostyle) {
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 2px solid var(--border-color);
   box-shadow: var(--glass-inner-shadow);
-  font-size: 0.95rem;
+  font-size: .95rem;
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1;
   text-decoration: none;
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  transition: background-color .25s ease,border-color .25s ease,color .25s ease;
   user-select: none;
-  -webkit-user-select: none;
+  -webkit-user-select: none
 }
 
 button:not(.nostyle):hover {
   border-color: var(--accent-border-strong);
   background: var(--glass-bg-3);
-  color: var(--accent-strong);
+  color: var(--accent-strong)
 }
 
 app-sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
-  transition: transform .25s ease;
+  transition: transform .25s ease
 }
 
-/* タイトル等に使用するメインの美しいグラデーション */
 .text-gradient {
-  background: linear-gradient(135deg, #ff416c 0%, #8a2387 50%, #1d9bf0 100%);
+  background: linear-gradient(135deg,#ff416c 0,#8a2387 50%,#1d9bf0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: transparent;
+  color: transparent
 }
 
-/* スマホ：サイドバーを完全に隠すレスポンシブ対応 */
 @media (max-width: 600px) {
   app-sidebar {
-    position: fixed;
+    position:fixed;
     top: 60px;
     left: 0;
     width: 95vw;
@@ -92,21 +91,21 @@ app-sidebar {
     z-index: 100;
     border-right: 1px solid var(--accent-border);
     box-shadow: var(--glass-inner-shadow);
-    transform: translateX(-100%);
+    transform: translateX(-100%)
   }
 
   app-sidebar.open {
-    transform: translateX(0);
+    transform: translateX(0)
   }
 
   main {
     width: 100%;
-    padding: 1rem;
+    padding: 1rem
   }
 
   button:not(.nostyle) {
     padding: 10px 20px;
-    font-size: 0.9rem;
-    gap: 6px;
+    font-size: .9rem;
+    gap: 6px
   }
 }
