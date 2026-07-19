@@ -38,7 +38,7 @@ section h2 {
   color: var(--text-primary);
 }
 
-section ol {
+section:is(ol, ul) {
   margin: 0;
   padding-left: 1.6rem;
 }
