@@ -8,6 +8,8 @@ body, html {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-color: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 #app {
@@ -17,7 +19,7 @@ body, html {
   overflow: hidden;
 }
 
-/* 修正：width の引き算を止め、Flexbox に伸縮を任せることでバグを防止 */
+/* 改善：横幅の引き算を廃止し、Flexboxに伸縮を任せることで横スクロールバグを完全に防止 */
 main {
   flex: 1;
   width: 0;
@@ -34,6 +36,7 @@ a:not(.nostyle):hover {
   text-decoration: underline;
 }
 
+/* サイト共通の標準グラスモフィズムボタン */
 button:not(.nostyle) {
   display: inline-flex;
   align-items: center;
@@ -42,14 +45,14 @@ button:not(.nostyle) {
   cursor: pointer;
   padding: 12px 24px;
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--glass-bg-2);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border-1);
   box-shadow: var(--glass-inner-shadow);
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1d9bf0;
+  color: var(--text-primary);
   line-height: 1;
   text-decoration: none;
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
@@ -58,17 +61,18 @@ button:not(.nostyle) {
 }
 
 button:not(.nostyle):hover {
-  border-color: var(--accent-border);
-  background: rgba(255, 255, 255, 0.9);
-  color: #0c85d0;
+  border-color: var(--accent-border-strong);
+  background: var(--glass-bg-3);
+  color: var(--accent-strong);
 }
 
 app-sidebar {
-  width: 300px;
-  flex-shrink: 0; /* サイドバーが潰れるのを防ぐ */
+  width: var(--sidebar-width);
+  flex-shrink: 0;
   transition: transform .25s ease;
 }
 
+/* タイトル等に使用するメインの美しいグラデーション */
 .text-gradient {
   background: linear-gradient(135deg, #ff416c 0%, #8a2387 50%, #1d9bf0 100%);
   -webkit-background-clip: text;
@@ -77,9 +81,8 @@ app-sidebar {
   color: transparent;
 }
 
-/* スマホ：サイドバーを完全に隠す */
+/* スマホ：サイドバーを完全に隠すレスポンシブ対応 */
 @media (max-width: 600px) {
-  /* サイドバーを左に隠す */
   app-sidebar {
     position: fixed;
     top: 60px;
@@ -92,12 +95,10 @@ app-sidebar {
     transform: translateX(-100%);
   }
 
-  /* ハンバーガーで開いた状態 */
   app-sidebar.open {
     transform: translateX(0);
   }
 
-  /* main を全幅にする（flex: 1 が効いているため width 上書きだけでOK） */
   main {
     width: 100%;
     padding: 1rem;
