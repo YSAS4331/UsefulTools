@@ -22,22 +22,19 @@ class Side extends HTMLElement {
 
   padding: 24px 0;
 }
-
 .sidebar footer {
   margin-top: auto;
 }
-
 .sidebar footer a {
   color: var(--text-tertiary);
 }
 </style>
-
 <aside class="sidebar">
   <a href="/UsefulTools/">UsefulTools</a>
-
   <footer>
     <a href="/UsefulTools/terms/">利用規約</a>
     <a href="/UsefulTools/privacy/">プライバシーポリシー</a>
+    <a href="/UsefulTools/sitemap/">サイトマップ</a>
   </footer>
 </aside>
     `;
