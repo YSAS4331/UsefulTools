@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <title>UsefulTools - 日常生活に使える、便利なツール集</title>
-  
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="あとで作る">
-
-  <link rel="icon" href="data:,">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="/UsefulTools/assets/styles/variable.css">
-  <link rel="stylesheet" href="/UsefulTools/assets/styles/common.css">
-
-  <link rel="stylesheet" href="/UsefulTools/assets/styles/page/index.css" data-page>
-
-  <!-- Scripts -->
-  <script type="module" src="/UsefulTools/assets/scripts/load.js"></script>
-  <script src="/UsefulTools/assets/scripts/router.js" type="module"></script>
-</head>
-<body>
-  <app-header></app-header>
-  <div id="app">
-    <app-sidebar></app-sidebar>
-    <main><article>
-      <section id="hero">
-        <h1 id="hero-title">日常の「ちょっと面倒」を、<br>Web上で<span class="text-gradient">サクッと解決</span>。</h1>
-        <p id="hero-lead">会員登録は不要。計算、変換、テキスト処理など、今すぐ使える便利なツール集です。</p>
-        <div id="hero-cta">
-          <button id="hero-category" class="btn-primary">カテゴリから探す</button>
-          <button id="hero-alltools" class="btn-secondary">全ツール一覧</button>
-        </div>
-      </section>
-      <section id="alltools">
-        <h2><i data-lucide="star"></i><span class="text-gradient">人気のツール</span></h2>
-      </section>
-    </article></main>
-  </div>
-</body>
+  <head>
+    <title>UsefulTools - 日常生活に使える、便利なツール集</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="会員登録不要で、計算、変換、テキスト処理など日常のちょっとした面倒をWeb上でサクッと解決できる便利なツール集です。">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/UsefulTools/assets/styles/variable.css">
+    <link rel="stylesheet" href="/UsefulTools/assets/styles/common.css">
+    <link rel="stylesheet" href="/UsefulTools/assets/styles/page/index.css" data-page>
+    <script type="module" src="/UsefulTools/assets/scripts/load.js"></script>
+    <script src="/UsefulTools/assets/scripts/router.js" type="module"></script>
+  </head>
+  <body>
+    <app-header></app-header>
+    <div id="app">
+      <app-sidebar></app-sidebar>
+      <main>
+        <article>
+          <section id="hero">
+            <h1 id="hero-title">
+              日常の「ちょっと面倒」を、<br>
+              Web上で<span class="text-gradient">サクッと解決</span>。
+            </h1>
+            <p id="hero-lead">会員登録は不要。計算、変換、テキスト処理など、今すぐ使える便利なツール集です。</p>
+            <div id="hero-cta">
+              <button id="hero-category" class="nostyle btn-primary">カテゴリから探す</button>
+              <button id="hero-alltools" class="nostyle btn-secondary">全ツール一覧</button>
+            </div>
+          </section>
+          <section id="alltools">
+            <h2>
+              <i data-lucide="star"></i>
+              <span class="text-gradient">人気のツール</span>
+            </h2>
+          </section>
+        </article>
+      </main>
+    </div>
+  </body>
 </html>
