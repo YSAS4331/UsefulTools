@@ -6,9 +6,9 @@ const shareData = {
 };
 
 const init = () => {
-  const buttonsParent = $('tool-buttons');
-  const shareBtn = $('tool-share', buttonsParent);
-  const favoBtn = $('tool-favorite', buttonsParent);
+  const buttonsParent = $('.tool-buttons');
+  const shareBtn = $('.tool-share', buttonsParent);
+  const favoBtn = $('.tool-favorite', buttonsParent);
 
   shareBtn.addEventListener('click', async () => {
     try {
