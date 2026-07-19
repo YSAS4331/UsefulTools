@@ -115,6 +115,20 @@ article {
   gap: 1rem;
 }
 
+#about {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.5rem 0;
+}
+
+#about p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  padding-left: 1.5rem;
+}
+
 section h2 {
   display: flex;
   align-items: center;
@@ -126,9 +140,7 @@ section h2 {
   padding-left: 1rem;
 }
 
-/* --------------------------------------------------------------------------
-   Responsive (Mobile)
-   -------------------------------------------------------------------------- */
+/* Responsive (Mobile) */
 @media (max-width: 600px) {
   #hero {
     padding: 2rem 1rem;
@@ -143,10 +155,6 @@ section h2 {
 
   #hero-cta button {
     width: 100%;
-  }
-
-  #alltools {
-    padding: 2rem 0;
   }
 
   section h2 {
