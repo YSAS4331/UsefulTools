@@ -31,6 +31,7 @@ const MAX_SCROLL_ENTRIES = 100;
 const htmlCache = new Map(); // LRU: Map の挿入順を利用
 const scrollMap = new Map();
 const executedOnceScripts = new Set();
+const moduleCache = new Map(); // scriptKey -> module（onceの有無に関わらずimportは1回だけ）
 
 const TRANSITION_TIMEOUT = 600;
 const FETCH_RETRY_COUNT = 1;
@@ -424,7 +425,10 @@ function getScriptKey(rawHref) {
   return u.origin + u.pathname;
 }
 
-/* ---- ページスクリプト読み込み（script と同じ挙動） ---- */
+/* ---- ページスクリプト読み込み ----
+   importは全スクリプト共通で初回の1回のみ。
+   2回目以降のナビゲーションではmoduleCacheから取り出してinit()だけ呼ぶ。
+   once属性は「init()自体を2回目以降スキップするか」を制御する。 */
 async function loadPageScripts(scriptElements, base, responseUrl) {
   for (const s of scriptElements) {
     const raw = s.getAttribute("src");
@@ -443,12 +447,12 @@ async function loadPageScripts(scriptElements, base, responseUrl) {
 
     if (isOnce && executedOnceScripts.has(scriptKey)) continue;
 
-    if (!isOnce) {
-      resolved.searchParams.set("t", performance.now());
-    }
-
     try {
-      const mod = await import(resolved.href);
+      let mod = moduleCache.get(scriptKey);
+      if (!mod) {
+        mod = await import(resolved.href);
+        moduleCache.set(scriptKey, mod);
+      }
       activeModules.push(mod);
       mod.init?.();
       if (isOnce) executedOnceScripts.add(scriptKey);
