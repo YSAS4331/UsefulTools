@@ -37,8 +37,21 @@ const TRANSITION_TIMEOUT = 600;
 const FETCH_RETRY_COUNT = 1;
 const FETCH_RETRY_DELAY = 400;
 
-/* beforeEach ガード（true / パス文字列 / false を返す） */
-let beforeEachHook = null;
+/* beforeEach ガード（true / パス文字列 / false を返す）
+   複数登録に対応。第二引数 page を指定すると、そのフックは
+   「今 page にいる間だけ」有効なガードとして扱われ、page 以外の
+   ページへの遷移が確定した時点で配列から自動的に削除される
+   （消し忘れて他のページでも発火し続ける、というバグを防ぐため）。
+   page は 文字列 / 正規表現 / (key) => boolean のいずれかを渡せる。
+   省略した場合は常に有効なグローバルフックになる。 */
+let beforeEachHooks = []; // [{ fn, page }]
+
+function matchesPage(page, key) {
+  if (page == null) return true;
+  if (typeof page === "function") return !!page(key);
+  if (page instanceof RegExp) return page.test(key);
+  return normalize(page) === key;
+}
 
 const waitTransition = (el) =>
   new Promise((resolve) => {
@@ -280,11 +293,11 @@ async function navigate(pathWithQuery, push = true, hash = "") {
 
   log("[navigate]", "from:", from, "to:", key);
 
-  // beforeEach ガード
-  if (typeof beforeEachHook === "function") {
+  // beforeEach ガード（登録順に直列実行。フック内での追加/削除に影響されないようコピーを回す）
+  for (const hook of [...beforeEachHooks]) {
     let result;
     try {
-      result = await beforeEachHook(key, from);
+      result = await hook.fn(key, from);
     } catch (err) {
       console.error("beforeEach hook failed:", err);
       result = true;
@@ -297,6 +310,11 @@ async function navigate(pathWithQuery, push = true, hash = "") {
       return navigate(result, push);
     }
   }
+
+  // page指定ありのフックは、page以外への遷移が確定した時点で自動解除
+  beforeEachHooks = beforeEachHooks.filter(
+    (hook) => hook.page == null || matchesPage(hook.page, key)
+  );
 
   const id = ++navId;
 
@@ -560,8 +578,13 @@ window.spaRouter = {
   navigate,
   invalidateCache,
   debug: DEBUG, // window.spaRouter.debug.on = true; で有効化
-  beforeEach(fn) {
-    beforeEachHook = fn;
+  beforeEach(fn, page) {
+    const entry = { fn, page };
+    beforeEachHooks.push(entry);
+    // 呼び出し側が明示的に解除したい場合用（任意）
+    return () => {
+      beforeEachHooks = beforeEachHooks.filter((h) => h !== entry);
+    };
   },
   isNavigating: () => isNavigating,
 };
