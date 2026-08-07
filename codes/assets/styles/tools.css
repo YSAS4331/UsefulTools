@@ -50,6 +50,7 @@
 #tool {
   width: 100%;
   min-height: 200px;
+  padding: 1.5rem;
 
   border: 2px solid var(--border-color);
   border-radius: var(--radius);
