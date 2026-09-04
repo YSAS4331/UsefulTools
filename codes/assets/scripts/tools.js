@@ -16,15 +16,43 @@ createUI.fullscreen = buttons => {
 
   const create = window.spaRouter.commonStorage.get('createIcons');
   const icons = window.spaRouter.commonStorage.get('lucideIcons');
+
   create({ icons });
 
-  btn.addEventListener('click', async () => {
-    const tool = $('#tool');
+  const tool = $('#tool');
 
+  btn.addEventListener('click', async () => {
+    try {
+      if (!document.fullscreenElement) {
+        tool.classList.add('fullscreen-enter');
+
+        await tool.requestFullscreen();
+
+        requestAnimationFrame(() => {
+          tool.classList.add('fullscreen-active');
+        });
+
+        btn.innerHTML = '<i data-lucide="minimize-2"></i>全画面解除';
+        create({ icons });
+
+      } else {
+        tool.classList.remove('fullscreen-active');
+
+        setTimeout(async () => {
+          await document.exitFullscreen();
+          tool.classList.remove('fullscreen-enter');
+        }, 250);
+      }
+    } catch (e) {
+      console.warn('全画面化に失敗しました。', e);
+    }
+  });
+
+  document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
-      await tool.requestFullscreen();
-    } else {
-      await document.exitFullscreen();
+      tool.classList.remove('fullscreen-enter', 'fullscreen-active');
+      btn.innerHTML = '<i data-lucide="maximize-2"></i>全画面化';
+      create({ icons });
     }
   });
 };
