@@ -1,6 +1,6 @@
 import '/UsefulTools/components/header.js';
 import '/UsefulTools/components/sidebar.js';
-import { createIcons, Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines } from 'https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm';
+import { createIcons, Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines, Maxmize2, Minimize2 } from 'https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm';
 
 const setupIcons = () => {
   createIcons({
@@ -14,7 +14,9 @@ const setupIcons = () => {
       HeartPlus,
       BookOpen,
       Lightbulb,
-      AudioLines
+      AudioLines,
+      Maxmize2,
+      Minimize2
     }
   });
 }
