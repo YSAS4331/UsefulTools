@@ -2,7 +2,7 @@ import '/UsefulTools/components/header.js';
 import '/UsefulTools/components/sidebar.js';
 import { createIcons, Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2 } from 'https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm';
 
-const lucide = { createIcons, Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2 };
+const icons = { Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2 };
 
 const setupIcons = () => {
   createIcons({
@@ -31,4 +31,5 @@ window.addEventListener('spa:router', e => {
 
 setupIcons();
 
-window.spaRouter.commonStorage.set("lucide", lucide);
+window.spaRouter.commonStorage.set("createIcons", createIcons);
+window.spaRouter.commonStorage.set("lucideIcons", icons);
