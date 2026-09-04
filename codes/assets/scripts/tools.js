@@ -15,7 +15,7 @@ createUI.fullscreen = buttons => {
   buttons.appendChild(btn);
   const create = window.spaRouter.commonStorage.get('createIcons');
   const icons = window.spaRouter.commonStorage.get('lucideIcons');
-  create(icons);
+  create({ icons });
 };
 
 const init = () => {
