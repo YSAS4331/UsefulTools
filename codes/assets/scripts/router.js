@@ -573,6 +573,58 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+/* ---- commonStorage（Proxy監視付き共有ストレージ） ----
+   実データは内部のMapで保持し、set/get/has/delete/clear/keys の
+   メソッド経由でのみアクセスする。Proxyのgetトラップでメソッド呼び出しを
+   ラップし、set/delete/clearのたびにログ出力＋spa:storageイベントを発火する。
+   （com.foo = value のような直接プロパティ代入は監視できないため非対応） */
+const commonStorageMap = new Map();
+
+const commonStorageBase = {
+  set(key, value) {
+    commonStorageMap.set(key, value);
+    return commonStorage;
+  },
+  get(key) {
+    return commonStorageMap.get(key);
+  },
+  has(key) {
+    return commonStorageMap.has(key);
+  },
+  delete(key) {
+    return commonStorageMap.delete(key);
+  },
+  clear() {
+    commonStorageMap.clear();
+  },
+  keys() {
+    return [...commonStorageMap.keys()];
+  },
+};
+
+const commonStorage = new Proxy(commonStorageBase, {
+  get(target, prop, receiver) {
+    const value = Reflect.get(target, prop, receiver);
+    if (typeof value !== "function") return value;
+
+    return (...args) => {
+      const result = value.apply(target, args);
+
+      if (prop === "set" || prop === "delete" || prop === "clear") {
+        const [key, val] = args;
+        log("[commonStorage]", prop, key, val);
+        window.dispatchEvent(
+          new CustomEvent("spa:storage", {
+            detail: { action: prop, key, value: val },
+          })
+        );
+      }
+
+      return result;
+    };
+  },
+});
+
 /* 外部公開 */
 window.spaRouter = {
   navigate,
@@ -587,6 +639,7 @@ window.spaRouter = {
     };
   },
   isNavigating: () => isNavigating,
+  commonStorage,
 };
 
 event({
