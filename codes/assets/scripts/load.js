@@ -1,35 +1,27 @@
-import '/UsefulTools/components/header.js';
-import '/UsefulTools/components/sidebar.js';
-import { createIcons, Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2 } from 'https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm';
+import "/UsefulTools/components/header.js";
+import "/UsefulTools/components/sidebar.js";
+import {
+  createIcons, Star, Folders, Blocks, Info, Hash, Share2, 
+  HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2
+} from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
 
-const icons = { Star, Folders, Blocks, Info, Hash, Share2, HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2 };
+const icons = {
+  Star, Folders, Blocks, Info, Hash, Share2, 
+  HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2
+};
 
 const setupIcons = () => {
-  createIcons({
-    icons: {
-      Star,
-      Folders,
-      Blocks,
-      Info,
-      Hash,
-      Share2,
-      HeartPlus,
-      BookOpen,
-      Lightbulb,
-      AudioLines,
-      Maximize2,
-      Minimize2
-    }
-  });
-}
+  createIcons({ icons });
+};
 
-window.addEventListener('spa:router', e => {
-  if (e.detail.type === 'after') {
+window.addEventListener("spa:router", (e) => {
+  if (e.detail?.type === "after") {
     setupIcons();
   }
 });
 
 setupIcons();
 
+// 共通ストレージへの登録
 window.spaRouter.commonStorage.set("createIcons", createIcons);
 window.spaRouter.commonStorage.set("lucideIcons", icons);
