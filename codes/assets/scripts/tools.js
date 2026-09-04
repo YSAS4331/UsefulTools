@@ -1,14 +1,24 @@
 const $ = (s,r=document) => r.querySelector(s);
+const c = el => document.createElement(el);
 const shareData = {
   title: document.title,
   text: $('meta[name="description"]')?.content ?? '',
   url: location.href
 };
 
+const createUI = {};
+
+createUI.fullscreen = buttons => {
+  const btn = c("button");
+  btn.classList.add("tool-fullscreen");
+  btn.innerHTML = '<i data-lucide="maximize-2"></i>全画面化';
+  buttons.appendChild(btn);
+};
+
 const init = () => {
-  const buttonsParent = $('.tool-buttons');
-  const shareBtn = $('.tool-share', buttonsParent);
-  const favoBtn = $('.tool-favorite', buttonsParent);
+  const buttons = $('.tool-buttons');
+  const shareBtn = $('.tool-share', buttons);
+  const favoBtn = $('.tool-favorite', buttons);
 
   shareBtn.addEventListener('click', async () => {
     try {
@@ -23,6 +33,16 @@ const init = () => {
       }
     }
   });
+
+  const setting = $('#page-settings');
+
+  if (setting) {
+    const json = JSON.parse(setting.textContent);
+
+    if (json["tool-fullscreen"]) {
+      createUI.fullscreen(buttons);
+    }
+  }
 };
 
 export { init };
