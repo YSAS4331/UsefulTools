@@ -15,7 +15,7 @@ const setupIcons = () => {
       BookOpen,
       Lightbulb,
       AudioLines,
-      Maxmize2,
+      Maximize2,
       Minimize2
     }
   });
