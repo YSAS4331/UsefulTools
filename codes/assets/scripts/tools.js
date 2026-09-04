@@ -13,9 +13,20 @@ createUI.fullscreen = buttons => {
   btn.classList.add("tool-fullscreen");
   btn.innerHTML = '<i data-lucide="maximize-2"></i>全画面化';
   buttons.appendChild(btn);
+
   const create = window.spaRouter.commonStorage.get('createIcons');
   const icons = window.spaRouter.commonStorage.get('lucideIcons');
   create({ icons });
+
+  btn.addEventListener('click', async () => {
+    const tool = $('#tool');
+
+    if (!document.fullscreenElement) {
+      await tool.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  });
 };
 
 const init = () => {
