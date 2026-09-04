@@ -18,10 +18,10 @@ window.addEventListener("spa:router", (e) => {
   if (e.detail?.type === "after") {
     setupIcons();
   }
+  if (e.detail?.type === "setup-ok") {
+    window.spaRouter.commonStorage.set("createIcons", createIcons);
+    window.spaRouter.commonStorage.set("lucideIcons", icons);
+  }
 });
 
 setupIcons();
-
-// 共通ストレージへの登録
-window.spaRouter.commonStorage.set("createIcons", createIcons);
-window.spaRouter.commonStorage.set("lucideIcons", icons);
