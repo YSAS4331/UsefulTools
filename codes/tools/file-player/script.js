@@ -24,6 +24,9 @@ const init = () => {
       li.setAttribute('data-file-key', fileKey);
       li.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) `;
 
+      const buttons = document.createElement('div');
+      buttons.classList.add('buttons');
+
       const deleteBtn = document.createElement('button');
       deleteBtn.title = '削除';
       deleteBtn.type = 'button';
@@ -35,7 +38,9 @@ const init = () => {
         renderList('remove', fileKey);
       });
 
-      li.appendChild(deleteBtn);
+      buttons.appendChild(deleteBtn);
+
+      li.appendChild(buttons);
       list.appendChild(li);
 
       const create = window.spaRouter?.commonStorage?.get('createIcons');
