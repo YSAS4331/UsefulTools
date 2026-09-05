@@ -22,7 +22,7 @@ const init = () => {
 
       const li = document.createElement('li');
       li.setAttribute('data-file-key', fileKey);
-      li.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) `;
+      li.innerHTML = `<span class="list-filename">${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</span>`;
 
       const buttons = document.createElement('div');
       buttons.classList.add('buttons');
