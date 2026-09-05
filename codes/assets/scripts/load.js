@@ -4,12 +4,14 @@ import '/Components/source/tabs.js';
 
 import {
   createIcons, Star, Folders, Blocks, Info, Hash, Share2, 
-  HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload
+  HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
+  Trash
 } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
 
 const icons = {
   Star, Folders, Blocks, Info, Hash, Share2, 
-  HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload
+  HeartPlus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
+  Trash
 };
 
 const setupIcons = () => {
