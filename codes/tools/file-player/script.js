@@ -61,7 +61,6 @@ const init = () => {
     const fileKey = `${file.name}-${file.size}`;
 
     if (files.has(fileKey)) {
-      alert('このファイルは既に選択されています。');
       return;
     }
 
