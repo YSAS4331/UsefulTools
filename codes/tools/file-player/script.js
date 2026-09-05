@@ -31,8 +31,6 @@ const init = () => {
       deleteBtn.innerHTML = '<i data-lucide="trash"></i>';
       const create = window.spaRouter?.commonStorage?.get("createIcons");
       const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
-      
-      create?.({ icons });
       deleteBtn.addEventListener('click', () => {
         files.delete(fileKey);
         renderList('remove', fileKey);
@@ -40,6 +38,7 @@ const init = () => {
 
       li.appendChild(deleteBtn);
       list.appendChild(li);
+      create?.({ icons });
     } 
     
     else if (action === 'remove') {
