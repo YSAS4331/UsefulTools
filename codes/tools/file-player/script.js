@@ -1,57 +1,25 @@
-const $ = (s,r=document) => r.querySelector(s);
+const $ = (selector, root = document) => root.querySelector(selector);
 
 const init = () => {
   const input = $('#upload-file');
   const uploadContainer = $('#upload-container');
-  const playerContainer = $('#player-container');
 
-  if (!input || !uploadContainer || !playerContainer) return;
+  if (!input || !uploadContainer) return;
 
-  let objectURL = null;
-  let audio = null;
-
-  const createPlayer = file => {
-    if (!file.type.startsWith('audio/') && !file.type.startsWith('video/')) return;
-
-    if (objectURL) {
-      URL.revokeObjectURL(objectURL);
-      objectURL = null;
-    }
-
-    audio?.pause();
-    audio = null;
-
-    objectURL = URL.createObjectURL(file);
-
-    if (file.type.startsWith('audio/')) {
-      audio = new Audio(objectURL);
-      audio.preload = 'metadata';
-      audio.controls = true;
-
-      playerContainer.replaceChildren(audio);
-      audio.play().catch(() => {});
-      return;
-    }
-
-    const video = document.createElement('video');
-
-    video.controls = true;
-    video.preload = 'metadata';
-    video.playsInline = true;
-    video.src = objectURL;
-
-    playerContainer.replaceChildren(video);
-    video.play().catch(() => {});
+  const preventDefaults = event => {
+    event.preventDefault();
+    event.stopPropagation();
   };
 
-  input.addEventListener('change', () => {
-    const file = input.files?.[0];
-
-    if (file) createPlayer(file);
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(type => {
+    uploadContainer.addEventListener(type, preventDefaults);
   });
 
-  uploadContainer.addEventListener('dragover', event => {
-    event.preventDefault();
+  uploadContainer.addEventListener('dragenter', () => {
+    uploadContainer.classList.add('dragover');
+  });
+
+  uploadContainer.addEventListener('dragover', () => {
     uploadContainer.classList.add('dragover');
   });
 
@@ -60,19 +28,12 @@ const init = () => {
   });
 
   uploadContainer.addEventListener('drop', event => {
-    event.preventDefault();
     uploadContainer.classList.remove('dragover');
 
     const file = event.dataTransfer.files?.[0];
 
-    if (file) createPlayer(file);
-  });
-
-  window.addEventListener('beforeunload', () => {
-    audio?.pause();
-
-    if (objectURL) {
-      URL.revokeObjectURL(objectURL);
+    if (file) {
+      console.log(file);
     }
   });
 };
