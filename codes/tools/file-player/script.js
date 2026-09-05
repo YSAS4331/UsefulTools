@@ -32,7 +32,7 @@ const init = () => {
       const create = window.spaRouter?.commonStorage?.get("createIcons");
       const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
       
-      create?.(icons);
+      create?.({ icons });
       deleteBtn.addEventListener('click', () => {
         files.delete(fileKey);
         renderList('remove', fileKey);
