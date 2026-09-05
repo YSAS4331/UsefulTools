@@ -27,6 +27,7 @@ const init = () => {
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = '削除';
       deleteBtn.type = 'button';
+      deleteBtn.classList.add("nostyle");
       deleteBtn.addEventListener('click', () => {
         files.delete(fileKey);
         renderList('remove', fileKey);
