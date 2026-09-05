@@ -1,4 +1,5 @@
 #upload-container {
+  display: block;
   width: 100%; min-height: 10rem;
   border-radius: var(--radius);
   border: 2px solid var(--border-color);
