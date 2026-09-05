@@ -53,10 +53,8 @@
         <div id="tool">
           <com-tabs>
             <section label="File">
-              <com-tabs orientation="vertical">
-                <section label="Upload">Upload</section>
-                <section label="Management">Management</section>
-              </com-tabs>
+              <input type="file" id="upload-file" accept="audio/*, video/*" hidden>
+              <label for="upload-file" id="upload-container">ファイルをアップロード</label>
             </section>
             <section label="Player">Player</section>
           </com-tabs>
