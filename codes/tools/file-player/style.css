@@ -7,6 +7,10 @@
   min-height: 10rem;
   border-radius: var(--radius);
   border: 2px dashed var(--border-color);
+  cursor: pointer;
+}
+#upload-container:is(:hover, .dragover) {
+  border-color: var(--accent-border);
 }
 
 .sub-text {
