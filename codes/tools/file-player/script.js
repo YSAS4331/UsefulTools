@@ -27,10 +27,9 @@ const init = () => {
       const deleteBtn = document.createElement('button');
       deleteBtn.title = '削除';
       deleteBtn.type = 'button';
-      deleteBtn.classList.add("nostyle");
+      deleteBtn.classList.add('nostyle');
       deleteBtn.innerHTML = '<i data-lucide="trash"></i>';
-      const create = window.spaRouter?.commonStorage?.get("createIcons");
-      const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
+
       deleteBtn.addEventListener('click', () => {
         files.delete(fileKey);
         renderList('remove', fileKey);
@@ -38,11 +37,14 @@ const init = () => {
 
       li.appendChild(deleteBtn);
       list.appendChild(li);
+
+      const create = window.spaRouter?.commonStorage?.get('createIcons');
+      const icons = window.spaRouter?.commonStorage?.get('lucideIcons');
+
       create?.({ icons });
-    } 
-    
-    else if (action === 'remove') {
+    } else if (action === 'remove') {
       const targetLi = $(`[data-file-key="${fileKey}"]`, list);
+
       if (targetLi) {
         targetLi.remove();
       }
@@ -51,7 +53,10 @@ const init = () => {
 
   const updateList = file => {
     const type = file.type;
-    if (!(type.startsWith("audio/") || type.startsWith("video/"))) return;
+
+    if (!(type.startsWith('audio/') || type.startsWith('video/'))) {
+      return;
+    }
 
     const fileKey = `${file.name}-${file.size}`;
 
@@ -62,6 +67,10 @@ const init = () => {
 
     files.set(fileKey, file);
     renderList('add', fileKey, file);
+  };
+
+  const updateFiles = fileList => {
+    [...fileList].forEach(updateList);
   };
 
   ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(type => {
@@ -83,17 +92,18 @@ const init = () => {
   uploadContainer.addEventListener('drop', event => {
     uploadContainer.classList.remove('dragover');
 
-    const file = event.dataTransfer.files?.[0];
+    const fileList = event.dataTransfer?.files;
 
-    if (file) {
-      updateList(file);
+    if (fileList?.length) {
+      updateFiles(fileList);
     }
   });
 
-  input?.addEventListener('change', event => {
-    const file = event.target.files?.[0];
-    if (file) {
-      updateList(file);
+  input.addEventListener('change', event => {
+    const fileList = event.target.files;
+
+    if (fileList?.length) {
+      updateFiles(fileList);
     }
   });
 };
