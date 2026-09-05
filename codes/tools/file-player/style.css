@@ -1,6 +1,14 @@
 #upload-container {
-  display: block;
-  width: 100%; min-height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 10rem;
   border-radius: var(--radius);
-  border: 2px solid var(--border-color);
+  border: 2px dashed var(--border-color);
+}
+
+.sub-text {
+  color: var(--text-tertiary);
 }
