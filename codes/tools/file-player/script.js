@@ -25,9 +25,14 @@ const init = () => {
       li.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) `;
 
       const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = '削除';
+      deleteBtn.title = '削除';
       deleteBtn.type = 'button';
       deleteBtn.classList.add("nostyle");
+      deleteBtn.innerHTML = '<i data-lucide="trash"></i>';
+      const create = window.spaRouter?.commonStorage?.get("createIcons");
+      const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
+      
+      create({ icons: { Trash: icons.Trash } });
       deleteBtn.addEventListener('click', () => {
         files.delete(fileKey);
         renderList('remove', fileKey);
