@@ -27,6 +27,13 @@ jobs:
         with:
           node-version: 22
 
+      # 👇 ここから追加した3行が綺麗に入ります
+      - name: Cache global npm modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-minify-${{ hashFiles('**/deploy.yml') }}
+
       - name: Install minify tools
         run: |
           npm install -g html-minifier-terser terser clean-css-cli
