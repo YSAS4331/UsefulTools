@@ -53,7 +53,6 @@ class header extends HTMLElement {
 </header>
     `;
 
-    // ★ ここでイベントを付ける（ヘッダー自身の中で完結）
     const btn = this.querySelector("#hamburger");
 
     btn.addEventListener("click", () => {
