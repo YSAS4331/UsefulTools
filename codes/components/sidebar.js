@@ -40,11 +40,11 @@ class Side extends HTMLElement {
 }
 </style>
 <aside class="sidebar">
-  <a href="/UsefulTools/">UsefulTools</a>
+  <a href="/">UsefulTools</a>
   <footer>
-    <a href="/UsefulTools/terms/">利用規約</a>
-    <a href="/UsefulTools/privacy/">プライバシーポリシー</a>
-    <a href="/UsefulTools/sitemap/">サイトマップ</a>
+    <a href="/terms/">利用規約</a>
+    <a href="/privacy/">プライバシーポリシー</a>
+    <a href="/sitemap/">サイトマップ</a>
   </footer>
 </aside>
     `;
