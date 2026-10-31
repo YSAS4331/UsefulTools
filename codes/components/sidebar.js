@@ -82,7 +82,6 @@ class Side extends HTMLElement {
     const canOpen = !this.isOpen &&
       touch.clientX <= window.innerWidth * 0.3;
 
-    // 開いている場合はサイドバー内から開始
     const canClose = this.isOpen &&
       touch.clientX <= this.width;
 
