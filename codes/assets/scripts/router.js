@@ -1,17 +1,14 @@
-/* shortcut utils */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const create = (e) => document.createElement(e);
 const event = (detail) =>
   window.dispatchEvent(new CustomEvent("spa:router", { detail }));
 
-/* ---- debug ---- */
 const DEBUG = { on: false };
 const log = (...args) => {
   if (DEBUG.on) console.log(...args);
 };
 
-/* ---- normalize ---- */
 function normalize(input) {
   const u = new URL(input, location.href);
   u.hash = "";
@@ -23,7 +20,7 @@ function normalize(input) {
 let activeStyles = [];
 let activeModules = [];
 let navId = 0;
-let navController; // ナビゲーション専用（prefetchとは分離）
+let navController;
 let isNavigating = false;
 
 const MAX_HTML_CACHE = 30;
