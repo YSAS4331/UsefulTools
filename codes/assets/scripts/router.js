@@ -24,22 +24,15 @@ let isNavigating = false;
 
 const MAX_HTML_CACHE = 30;
 const MAX_SCROLL_ENTRIES = 100;
-const htmlCache = new Map(); // LRU: Map の挿入順を利用
+const htmlCache = new Map();
 const scrollMap = new Map();
 const executedOnceScripts = new Set();
-const moduleCache = new Map(); // scriptKey -> module（onceの有無に関わらずimportは1回だけ）
+const moduleCache = new Map();
 
 const TRANSITION_TIMEOUT = 600;
 const FETCH_RETRY_COUNT = 1;
 const FETCH_RETRY_DELAY = 400;
 
-/* beforeEach ガード（true / パス文字列 / false を返す）
-   複数登録に対応。第二引数 page を指定すると、そのフックは
-   「今 page にいる間だけ」有効なガードとして扱われ、page 以外の
-   ページへの遷移が確定した時点で配列から自動的に削除される
-   （消し忘れて他のページでも発火し続ける、というバグを防ぐため）。
-   page は 文字列 / 正規表現 / (key) => boolean のいずれかを渡せる。
-   省略した場合は常に有効なグローバルフックになる。 */
 let beforeEachHooks = []; // [{ fn, page }]
 
 function matchesPage(page, key) {
