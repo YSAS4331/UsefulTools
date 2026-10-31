@@ -41,9 +41,6 @@ article {
   align-items: center;
 }
 
-/* --------------------------------------------------------------------------
-   Hero Buttons (グラデーションを廃止し、ミニマルでソリッドなデザインに)
-   -------------------------------------------------------------------------- */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -58,8 +55,6 @@ article {
   user-select: none;
   -webkit-user-select: none;
   transition: background-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
-  
-  /* 修正：ミントグリーンのソリッドカラーに変更（文字は白） */
   background: var(--accent-strong);
   color: #ffffff;
   border: 1px solid var(--accent-strong);
@@ -86,8 +81,6 @@ article {
   user-select: none;
   -webkit-user-select: none;
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-
-  /* 修正：背景の重なりを考慮し、よりクリーンな白ガラス背景に固定 */
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -136,7 +129,6 @@ section h2 {
   padding-left: 1rem;
 }
 
-/* Responsive (Mobile) */
 @media (max-width: 600px) {
   #hero {
     padding: 2rem 1rem;
