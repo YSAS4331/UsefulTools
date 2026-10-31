@@ -44,7 +44,7 @@ class header extends HTMLElement {
 </style>
 
 <header id="global-header">
-  <a href="/UsefulTools/">UsefulTools</a>
+  <a href="/">UsefulTools</a>
   <div id="hamburger">
     <span></span>
     <span></span>
