@@ -1,0 +1,21 @@
+{
+  "short_name": "UsefulTools",
+  "name": "UsefulTools - 日常生活に使える、便利なツール集",
+  "icons": [
+    {
+      "src": "https://placehold.co",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://placehold.co",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "display": "standalone",
+  "scope": "/"
+}
