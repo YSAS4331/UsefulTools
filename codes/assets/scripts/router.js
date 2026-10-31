@@ -16,7 +16,6 @@ function normalize(input) {
   return u.pathname + u.search;
 }
 
-/* state */
 let activeStyles = [];
 let activeModules = [];
 let navId = 0;
