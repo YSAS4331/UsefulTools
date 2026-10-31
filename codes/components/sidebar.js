@@ -79,9 +79,8 @@ class Side extends HTMLElement {
     this.width = this.offsetWidth;
     this.isOpen = this.classList.contains('open');
 
-    // 閉じている場合は画面左端4%から開始
     const canOpen = !this.isOpen &&
-      touch.clientX <= window.innerWidth * 0.04;
+      touch.clientX <= window.innerWidth * 0.3;
 
     // 開いている場合はサイドバー内から開始
     const canClose = this.isOpen &&
@@ -128,7 +127,6 @@ class Side extends HTMLElement {
 
     this.currentX = touch.clientX;
 
-    // 開閉状態に応じて移動量を計算
     const base = this.isOpen ? 0 : -this.width;
 
     const moveX = Math.max(
@@ -138,7 +136,9 @@ class Side extends HTMLElement {
 
     this.style.transform = `translateX(${moveX}px)`;
 
-    e.preventDefault();
+    if (this.isHorizontal && e.cancelable) {
+      e.preventDefault();
+    }
   }
 
   onTouchEnd(e) {
