@@ -1,4 +1,4 @@
-name: Build & Deploy Pages
+name: Build & Push to Main
 
 on:
   push:
@@ -6,16 +6,14 @@ on:
       - dev
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: push-main
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +25,6 @@ jobs:
         with:
           node-version: 22
 
-      # 👇 ここから追加した3行が綺麗に入ります
       - name: Cache global npm modules
         uses: actions/cache@v4
         with:
@@ -64,22 +61,10 @@ jobs:
             terser "$file" -c -m -o "$file"
           done
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to main branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: main
+          keep_files: false
