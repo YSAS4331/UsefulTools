@@ -49,7 +49,6 @@ class Side extends HTMLElement {
 </aside>
     `;
 
-    // --- ここからスワイプ機能の追加 ---
     this.mediaQuery = window.matchMedia('(max-width: 600px)');
     this.width = 0;
     this.startX = 0;
@@ -77,7 +76,7 @@ class Side extends HTMLElement {
     this.isOpen = this.classList.contains('open');
 
     const canStartClose = this.isOpen && touchX <= this.width;
-    const canStartOpen = !this.isOpen && touchX < screenWidth * 0.1;
+    const canStartOpen = !this.isOpen && touchX < screenWidth * 0.2;
 
     if (canStartOpen || canStartClose) {
       this.startX = touchX;
