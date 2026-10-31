@@ -2,20 +2,6 @@ class Side extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
 <style>
-:host {
-  position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 1000;
-  width: min(280px, 85vw);
-  transform: translateX(-100%);
-  transition: transform .28s cubic-bezier(.2, .8, .2, 1);
-  will-change: transform;
-}
-
-:host(.open) {
-  transform: translateX(0);
-}
-
 .sidebar {
   width: 100%;
   height: 100%;
@@ -27,7 +13,7 @@ class Side extends HTMLElement {
 
   box-shadow:
     var(--glass-inner-shadow),
-    inset 0 0 14px rgba(255, 255, 255, .35);
+    inset 0 0 14px rgba(255, 255, 255, 0.35);
 
   box-sizing: border-box;
   display: flex;
@@ -36,7 +22,6 @@ class Side extends HTMLElement {
 
   padding: 24px 0;
 }
-
 .sidebar footer {
   margin-top: auto;
   display: grid;
@@ -45,28 +30,15 @@ class Side extends HTMLElement {
   justify-items: center;
   width: 100%;
 }
-
 .sidebar footer a {
   color: var(--text-tertiary);
   text-decoration: none;
   font-size: 14px;
 }
-
 .sidebar footer a:hover {
   text-decoration: underline;
 }
-
-@media (min-width: 601px) {
-  :host {
-    position: relative;
-    transform: none;
-    transition: none;
-    width: 240px;
-    flex-shrink: 0;
-  }
-}
 </style>
-
 <aside class="sidebar">
   <a href="/">UsefulTools</a>
   <footer>
@@ -79,6 +51,7 @@ class Side extends HTMLElement {
 
     this.mediaQuery = window.matchMedia('(max-width: 600px)');
 
+    this.width = 0;
     this.startX = 0;
     this.startY = 0;
     this.currentX = 0;
@@ -87,8 +60,6 @@ class Side extends HTMLElement {
     this.isDragging = false;
     this.isHorizontal = false;
     this.isOpen = false;
-
-    this.width = this.offsetWidth || 280;
 
     this.handleTouchStart = this.onTouchStart.bind(this);
     this.handleTouchMove = this.onTouchMove.bind(this);
@@ -104,22 +75,23 @@ class Side extends HTMLElement {
     if (!this.mediaQuery.matches || e.touches.length !== 1) return;
 
     const touch = e.touches[0];
-    const x = touch.clientX;
 
+    this.width = this.offsetWidth;
     this.isOpen = this.classList.contains('open');
-    this.width = this.offsetWidth || 280;
 
-    // 閉じている場合は画面左端からのみ開始
-    const canOpen = !this.isOpen && x <= 24;
+    // 閉じている場合は画面左端4%から開始
+    const canOpen = !this.isOpen &&
+      touch.clientX <= window.innerWidth * 0.04;
 
     // 開いている場合はサイドバー内から開始
-    const canClose = this.isOpen && x <= this.width;
+    const canClose = this.isOpen &&
+      touch.clientX <= this.width;
 
     if (!canOpen && !canClose) return;
 
-    this.startX = x;
+    this.startX = touch.clientX;
     this.startY = touch.clientY;
-    this.currentX = x;
+    this.currentX = touch.clientX;
     this.startTime = performance.now();
 
     this.isDragging = true;
@@ -136,12 +108,18 @@ class Side extends HTMLElement {
     const diffX = touch.clientX - this.startX;
     const diffY = touch.clientY - this.startY;
 
-    // 横方向か縦方向かを判定
+    // スワイプ方向を判定
     if (!this.isHorizontal) {
-      if (Math.abs(diffX) < 5 && Math.abs(diffY) < 5) return;
+      const threshold = this.width * 0.02;
+
+      if (
+        Math.abs(diffX) < threshold &&
+        Math.abs(diffY) < threshold
+      ) return;
 
       if (Math.abs(diffY) > Math.abs(diffX)) {
         this.isDragging = false;
+        this.style.transition = '';
         return;
       }
 
@@ -150,7 +128,7 @@ class Side extends HTMLElement {
 
     this.currentX = touch.clientX;
 
-    // 開いている場合は0から、閉じている場合は-widthから移動
+    // 開閉状態に応じて移動量を計算
     const base = this.isOpen ? 0 : -this.width;
 
     const moveX = Math.max(
@@ -170,7 +148,6 @@ class Side extends HTMLElement {
 
     const diffX = this.currentX - this.startX;
     const elapsed = Math.max(1, performance.now() - this.startTime);
-
     const velocity = diffX / elapsed;
 
     const threshold = this.width * 0.3;
@@ -187,7 +164,6 @@ class Side extends HTMLElement {
     this.style.transform = '';
 
     this.classList.toggle('open', shouldOpen);
-
     this.isOpen = shouldOpen;
   }
 
