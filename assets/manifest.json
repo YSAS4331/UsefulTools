@@ -3,12 +3,12 @@
   "name": "UsefulTools - 日常生活に使える、便利なツール集",
   "icons": [
     {
-      "src": "https://placehold.co",
+      "src": "https://placehold.co/192.png?text=Useful\nTools",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://placehold.co",
+      "src": "https://placehold.co/512.png?text=Useful\nTools",
       "type": "image/png",
       "sizes": "512x512"
     }
