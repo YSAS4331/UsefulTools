@@ -76,7 +76,7 @@ class Side extends HTMLElement {
     this.isOpen = this.classList.contains('open');
 
     const canStartClose = this.isOpen && touchX <= this.width;
-    const canStartOpen = !this.isOpen && touchX < screenWidth * 0.2;
+    const canStartOpen = !this.isOpen && touchX < screenWidth * 0.3;
 
     if (canStartOpen || canStartClose) {
       this.startX = touchX;
