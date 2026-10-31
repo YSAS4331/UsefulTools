@@ -104,7 +104,7 @@ class Side extends HTMLElement {
     this.style.transform = '';
 
     const finalDiffX = e.changedTouches[0].clientX - this.startX;
-    const threshold = this.width * 0.4;
+    const threshold = this.width * 0.3;
 
     if (this.isOpen) {
       if (finalDiffX < -threshold) this.classList.remove('open');
