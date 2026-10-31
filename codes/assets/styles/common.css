@@ -87,7 +87,7 @@ app-sidebar {
     top: 60px;
     left: 0;
     width: 95vw;
-    height: calc(100vh - 60px);
+    height: calc(100dvh - 60px);
     z-index: 100;
     border-right: 1px solid var(--accent-border);
     box-shadow: var(--glass-inner-shadow);
