@@ -47,6 +47,11 @@
   max-width: 720px
 }
 
+.tool-buttons {
+  display: flex;
+  gap: .4rem;
+}
+
 #tool {
   width: 100%;
   min-height: 200px;
