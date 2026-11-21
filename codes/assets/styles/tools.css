@@ -48,11 +48,22 @@
 }
 
 .tool-buttons {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  display: flex;
   gap: .4rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+
+.tool-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.tool-buttons button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 
 #tool {
   width: 100%;
