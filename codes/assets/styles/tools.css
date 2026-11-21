@@ -64,7 +64,6 @@
   white-space: nowrap;
 }
 
-
 #tool {
   width: 100%;
   min-height: 200px;
@@ -73,6 +72,10 @@
   border: 2px solid var(--border-color);
   border-radius: var(--radius);
   background: var(--bg-2);
+}
+
+#tool.fullscreen-active {
+  border-radius: 0px;
 }
 
 .tool-details {
