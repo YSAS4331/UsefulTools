@@ -115,7 +115,7 @@ const init = () => {
     const entry=currentEntry();
     trackTitle.textContent=entry?entry.file.name.replace(/\.[^.]+$/,""):"再生待ち";
     trackMeta.textContent=entry?(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size):"ファイルが選択されていません";
-    stageEmpty.hidden=!!entry;audioVisual.hidden=!entry||entry.kind==="video";video.hidden=!entry||entry.kind!=="video";
+    stageEmpty.hidden=!!entry;audioVisual.hidden=!entry||entry.kind==="video"||!!entry.artwork;video.hidden=!entry||entry.kind!=="video";
     artwork.hidden=!entry||entry.kind!=="audio"||!entry.artwork;
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
@@ -140,7 +140,7 @@ const init = () => {
     const entry=entries.get(id);if(!entry)return;
     const ids=[...entries.keys()],wasCurrent=id===currentId,next=wasCurrent?ids[(ids.indexOf(id)+1)%ids.length]:null;
     if(wasCurrent){pauseAll();audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();currentId=null;}
-    entries.delete(id);if(wasCurrent&&entries.size)selectEntry(next===id?entries.keys().next().value:next,false);
+    entries.delete(id);for(const url of [entry.url,entry.artworkUrl])if(url){URL.revokeObjectURL(url);objectUrls.delete(url);}if(wasCurrent&&entries.size)selectEntry(next===id?entries.keys().next().value:next,false);
     if(!entries.size){currentId=null;artwork.hidden=true;artwork.removeAttribute("src");stageEmpty.hidden=false;audioVisual.hidden=false;video.hidden=true;seek.disabled=true;playButton.disabled=true;trackTitle.textContent="再生待ち";trackMeta.textContent="ファイルが選択されていません";currentLyrics=[];showLyrics();updatePlaybackState();updateProgress();}
     render();updateTrack();
   };
@@ -179,7 +179,7 @@ const init = () => {
   listen(volume,"input",()=>{audio.volume=Number(volume.value);video.volume=Number(volume.value);});
   listen(speed,"change",()=>{audio.playbackRate=Number(speed.value);video.playbackRate=Number(speed.value);});
   listen($("#clear-queue-button",root),"click",()=>{for(const id of [...entries.keys()])removeEntry(id);});
-  for(const tab of $$(".content-tab",root))listen(tab,"click",()=>{$$(".content-tab",root).forEach(item=>{const active=item===tab;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});$$(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==tab.dataset.contentTab);});
+  for(const tab of $$(".content-tab",root))listen(tab,"click",()=>{$$(".content-tab",root).forEach(item=>{const active=item===tab;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});$(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==tab.dataset.contentTab);if(tab.dataset.contentTab==="lyrics"){activeLyricIndex=-1;updateLyrics();}});
   for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   if(upload){
