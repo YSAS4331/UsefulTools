@@ -92,7 +92,7 @@ const init = () => {
       const name=document.createElement("strong");name.textContent=entry.file.name;
       const meta=document.createElement("small");meta.textContent=(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size);copy.append(name,meta);
       const actions=document.createElement("span");actions.className="library-actions";
-      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$(".content-tab[data-content-tab=\\\"library\\\"]",root).click();});
+      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$(".content-tab",root).find(tab=>tab.dataset.contentTab==="playlist")?.click();});
       const remove=document.createElement("button");remove.type="button";remove.className="small-action";remove.textContent="削除";remove.addEventListener("click",()=>removeEntry(id));
       actions.append(play,remove);li.append(icon,copy,actions);library.append(li);
     }
