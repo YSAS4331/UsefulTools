@@ -81,7 +81,7 @@ class UICollapse extends HTMLElement {
           }
         </style>
         <button class="toggle" type="button" aria-expanded="false">
-          <span class="label"></span>
+          <span class="label"><slot name="label"><span class="label-fallback"></span></slot></span>
           <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="m9 18 6-6-6-6"></path>
@@ -94,6 +94,7 @@ class UICollapse extends HTMLElement {
         </div>
       `;
       this.shadowRoot.querySelector('.toggle').addEventListener('click', this.onToggleClick);
+      this.shadowRoot.querySelector('slot[name="label"]').addEventListener('slotchange', () => this.sync());
     }
 
     this.sync();
@@ -131,9 +132,17 @@ class UICollapse extends HTMLElement {
     this.style.setProperty('--collapse-duration', /^\d+(\.\d+)?$/.test(duration) ? `${duration}ms` : duration);
     this.style.setProperty('--collapse-easing', easing);
 
-    this.shadowRoot.querySelector('.label').textContent = label;
+    const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
+    const fallback = this.shadowRoot.querySelector('.label-fallback');
+    fallback.textContent = label;
+    const slottedLabel = labelSlot.assignedNodes({ flatten: true })
+      .map(node => node.textContent || '')
+      .join('')
+      .trim();
+    const accessibleLabel = slottedLabel || label;
+
     button.setAttribute('aria-expanded', String(this.isOpen));
-    button.setAttribute('aria-label', `${label}${this.isOpen ? 'を閉じる' : 'を開く'}`);
+    button.setAttribute('aria-label', `${accessibleLabel}${this.isOpen ? 'を閉じる' : 'を開く'}`);
 
     const panel = this.shadowRoot.querySelector('.panel');
     panel.setAttribute('aria-hidden', String(!this.isOpen));
