@@ -156,17 +156,20 @@
   #tool.media-tool[data-view="lyrics"] .lyrics-content { max-height:65vh; }
 }
 
-/* Keep the main view tabs docked to the bottom while the content scrolls. */
+
+/* Tab view stack: mini player, selected content, navigation. */
 .view-navigation {
-  position:sticky;
-  bottom:0;
-  z-index:20;
+  position:static;
+  order:3;
   flex:0 0 auto;
+  width:100%;
   margin-top:.5rem;
   padding:.65rem .25rem calc(.65rem + env(safe-area-inset-bottom));
   border:0;
   border-top:1px solid var(--border-color);
   border-radius:0;
   background:var(--bg-2);
-  box-shadow:0 -8px 18px color-mix(in srgb,var(--bg) 75%,transparent);
+  box-shadow:none;
 }
+.content-section { order:2; }
+.mini-player { order:1; }
