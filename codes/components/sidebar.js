@@ -16,21 +16,6 @@ class Side extends HTMLElement {
   border-right: 1px solid var(--border-color);
 }
 
-.sidebar > a {
-  display: block;
-  width: 100%;
-  padding: 0 24px 22px;
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  text-decoration: none;
-}
-.sidebar > a:hover {
-  color: var(--text-primary);
-  text-decoration: none;
-}
-
 .sidebar-favorites {
   width: 100%;
   min-height: 0;
