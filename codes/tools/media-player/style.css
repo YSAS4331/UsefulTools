@@ -132,3 +132,7 @@
 #tool.media-tool[data-view="playlist"] .content-panel,#tool.media-tool[data-view="lyrics"] .content-panel,#tool.media-tool[data-view="library"] .content-panel { min-height:calc(100dvh - 9rem); }
 #tool.media-tool[data-view="lyrics"] .lyrics-content { min-height:calc(100dvh - 13rem); }
 }
+
+.view-handle { display:none!important; }
+#tool.media-tool[data-view="playlist"] .view-handle,#tool.media-tool[data-view="lyrics"] .view-handle,#tool.media-tool[data-view="library"] .view-handle { display:flex!important; align-items:center; justify-content:center; width:100%; height:1.5rem; margin:-.8rem 0 .25rem; padding:0!important; border:0!important; box-shadow:none!important; background:transparent!important; }
+.view-handle span { width:3rem; height:.3rem; border-radius:99px; background:var(--text-tertiary); opacity:.65; }
