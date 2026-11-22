@@ -91,11 +91,12 @@ class Side extends HTMLElement {
     this.favoriteList = this.querySelector('.sidebar-favorite-list');
     this.favoriteInitToken = 0;
     this.favoriteUnsubscribe = null;
+    this.favoriteInitializing = false;
     this.handleRouterEvent = (event) => {
       if (event.detail?.type === 'setup-ok') this.setupFavorites();
     };
     this.handleStorageEvent = (event) => {
-      if (['LibDB', 'toolsPromise', 'favoriteDBPromise'].includes(event.detail?.key)) {
+      if (['LibDB', 'toolsPromise'].includes(event.detail?.key)) {
         this.setupFavorites();
       }
     };
@@ -127,9 +128,10 @@ class Side extends HTMLElement {
 
   async setupFavorites() {
     const storage = window.spaRouter?.commonStorage;
-    if (!storage || !this.favoriteList || this.favoriteUnsubscribe) return;
+    if (!storage || !this.favoriteList || this.favoriteUnsubscribe || this.favoriteInitializing) return;
     if (!storage.get('LibDB') || !storage.get('toolsPromise')) return;
 
+    this.favoriteInitializing = true;
     const token = ++this.favoriteInitToken;
 
     try {
@@ -191,6 +193,8 @@ class Side extends HTMLElement {
         this.favoriteList.textContent = 'お気に入りを読み込めませんでした';
       }
       console.error('[sidebar] お気に入りの初期化に失敗しました。', error);
+    } finally {
+      this.favoriteInitializing = false;
     }
   }
 
