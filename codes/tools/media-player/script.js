@@ -16,7 +16,7 @@ const init = () => {
   if (!root || !input) return;
   const audio=$("#audio-player",root), video=$("#video-player",root), artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
-  const lyricsContent=$("#lyrics-content",root), relatedList=$("#related-list",root), count=$("#file-count",root);
+  const lyricsContent=$("#lyrics-content",root), count=$("#file-count",root);
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
@@ -97,20 +97,7 @@ const init = () => {
       actions.append(play,remove);li.append(icon,copy,actions);library.append(li);
     }
   };
-  const renderRelated=()=>{
-    relatedList.replaceChildren();
-    const related=[...entries].filter(([id,e])=>id!==currentId&&e.kind==="audio");
-    if(!related.length){const p=document.createElement("p");p.className="content-empty";p.textContent="ほかの音声ファイルを追加すると、ここに表示されます。";relatedList.append(p);return;}
-    for(const [id,entry] of related){
-      const button=document.createElement("button");button.type="button";button.className="queue-select";
-      const icon=document.createElement("span");icon.className="file-type-icon";icon.textContent="♫";
-      const copy=document.createElement("span");copy.className="queue-copy";
-      const name=document.createElement("strong");name.textContent=entry.file.name;
-      const meta=document.createElement("small");meta.textContent="ライブラリ内の音声ファイル";copy.append(name,meta);button.append(icon,copy);
-      button.addEventListener("click",()=>selectEntry(id,true));relatedList.append(button);
-    }
-  };
-  const render=()=>{renderQueue();renderLibrary();renderRelated();};
+  const render=()=>{renderQueue();renderLibrary();};
   const updateTrack=()=>{
     const entry=currentEntry();
     trackTitle.textContent=entry?entry.file.name.replace(/\.[^.]+$/,""):"再生待ち";
