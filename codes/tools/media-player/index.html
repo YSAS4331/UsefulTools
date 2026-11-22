@@ -82,13 +82,14 @@
                 </div>
               </section>
 
+              <section class="mini-player" aria-label="再生中">
+                <div class="mini-artwork"><img id="mini-artwork-image" alt="" hidden><i data-lucide="music-2" id="mini-artwork-icon"></i></div>
+                <div class="mini-track"><strong id="mini-track-title">再生待ち</strong><span id="mini-track-meta">ファイルが選択されていません</span></div>
+                <button type="button" id="mini-play-button" aria-label="再生"><i data-lucide="play"></i></button>
+                <button type="button" id="mini-next-button" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
+              </section>
               <section class="content-section">
-                <div class="content-tabs" role="tablist" aria-label="コンテンツ">
-                  <button type="button" class="content-tab is-active" data-content-tab="playlist" aria-selected="true">プレイリスト</button>
-                  <button type="button" class="content-tab" data-content-tab="lyrics" aria-selected="false">歌詞</button>
-                  <button type="button" class="content-tab" data-content-tab="library" aria-selected="false">ライブラリ <span id="file-count">0</span></button>
-                </div>
-                <section class="content-panel" data-content-panel="playlist">
+                <section class="content-panel" data-content-panel="playlist" hidden>
                   <div class="section-heading"><h3>次に再生</h3><button type="button" class="subtle-button" id="clear-queue-button">すべて削除</button></div>
                   <ol id="queue-list" class="queue-list"><li class="queue-empty">ファイルを追加してください</li></ol>
                 </section>
@@ -108,6 +109,11 @@
                   <ol id="files" class="library-list"><li class="library-empty">まだファイルがありません</li></ol>
                 </section>
               </section>
+              <nav class="view-navigation" aria-label="プレイヤー表示">
+                <button type="button" class="content-tab" data-content-tab="playlist">プレイリスト</button>
+                <button type="button" class="content-tab" data-content-tab="lyrics">歌詞</button>
+                <button type="button" class="content-tab" data-content-tab="library">ライブラリ <span class="nav-file-count">0</span></button>
+              </nav>
             </div>
           <audio id="audio-player" preload="metadata"></audio>
         </div>
