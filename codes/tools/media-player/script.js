@@ -16,7 +16,7 @@ const init = () => {
   if (!root || !input) return;
   const audio=$("#audio-player",root), video=$("#video-player",root), artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
-  const lyricsContent=$("#lyrics-content",root), count=$("#file-count",root), miniCount=$(".nav-file-count",root);
+  const lyricsContent=$("#lyrics-content",root), count=$(".nav-file-count",root);
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
@@ -80,7 +80,7 @@ const init = () => {
       const remove=document.createElement("button");remove.type="button";remove.className="remove-file";remove.textContent="×";remove.setAttribute("aria-label",entry.file.name+"を削除");remove.addEventListener("click",()=>removeEntry(id));
       li.append(select,remove);queue.append(li);
     }
-    count.textContent=String(entries.size);if(miniCount)miniCount.textContent=String(entries.size);previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;$("#clear-queue-button",root).disabled=!entries.size;
+    count.textContent=String(entries.size);previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;$("#clear-queue-button",root).disabled=!entries.size;
   };
   const renderLibrary=()=>{
     library.replaceChildren();
