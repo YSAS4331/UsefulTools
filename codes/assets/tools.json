@@ -1,0 +1,12 @@
+{
+  "base-converter": {
+    "title": "進数・基数変換ツール",
+    "description": "2進数・8進数・10進数・16進数など、様々な進数同士を簡単に変換できます。",
+    "url": "/UsefulTools/tools/base-converter/"
+  },
+  "media-player": {
+    "title": "メディアプレイヤー",
+    "description": "パソコンやスマホにある音声・動画ファイルをアップロードして、Web上で再生できます。バックグラウンド再生に対応しています。",
+    "url": "/UsefulTools/tools/media-player/"
+  }
+}
