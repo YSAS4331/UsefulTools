@@ -3,6 +3,7 @@ const c = (el) => document.createElement(el);
 
 let favoriteUnsubscribe = null;
 let activeCleanup = null;
+let lifecycle = 0;
 
 const createUI = {};
 
@@ -110,7 +111,7 @@ const updateFavoriteButton = (button, isFavorite, create, icons) => {
   create({ icons });
 };
 
-const initFavorites = async (button, storage) => {
+const initFavorites = async (button, storage, token) => {
   button.disabled = true;
   button.textContent = "読み込み中...";
 
@@ -124,6 +125,8 @@ const initFavorites = async (button, storage) => {
       toolsPromise,
       getFavoriteDB(storage)
     ]);
+
+    if (token !== lifecycle || !button.isConnected) return;
 
     const tool = findCurrentTool(registry);
     if (!tool) {
@@ -178,8 +181,10 @@ const initFavorites = async (button, storage) => {
       }
     });
   } catch (error) {
-    button.disabled = true;
-    button.textContent = "お気に入りを利用できません";
+    if (token === lifecycle && button.isConnected) {
+      button.disabled = true;
+      button.textContent = "お気に入りを利用できません";
+    }
     console.error("[favorite] 初期化に失敗しました。", error);
   }
 };
@@ -187,6 +192,7 @@ const initFavorites = async (button, storage) => {
 const init = () => {
   activeCleanup?.();
   activeCleanup = null;
+  const token = ++lifecycle;
 
   const buttons = $(".tool-buttons");
   if (!buttons) return;
@@ -216,7 +222,7 @@ const init = () => {
   });
 
   if (favoriteBtn) {
-    initFavorites(favoriteBtn, window.spaRouter.commonStorage);
+    initFavorites(favoriteBtn, window.spaRouter.commonStorage, token);
   }
 
   const setting = $("#page-settings");
@@ -242,6 +248,7 @@ const init = () => {
 };
 
 const unmount = () => {
+  lifecycle++;
   activeCleanup?.();
   activeCleanup = null;
 };
