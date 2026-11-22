@@ -305,15 +305,15 @@ class Side extends HTMLElement {
         if (!saved.length) {
           const empty = document.createElement('span');
           empty.className = 'sidebar-favorite-empty';
-          empty.textContent = 'お気に入りはまだありません。\\n気に入ったツールを追加すると、ここに表示されます。';
+          empty.textContent = 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。';
           this.favoriteList.append(empty);
           return;
         }
 
-        const currentPath = location.pathname.replace(/\\/+$/, '') || '/';
+        const currentPath = location.pathname.replace(/\/+$/, '') || '/';
         for (const favorite of saved) {
           const link = document.createElement('a');
-          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\\/+$/, '') || '/';
+          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\/+$/, '') || '/';
           link.href = favorite.url;
           link.title = favorite.description || favorite.title || favorite.key || '';
           if (favoritePath === currentPath) link.setAttribute('aria-current', 'page');
