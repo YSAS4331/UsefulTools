@@ -175,6 +175,8 @@ const init = () => {
   for(const tab of root.querySelectorAll(".content-tab[data-content-tab]"))listen(tab,"click",()=>switchView(tab.dataset.contentTab));
   listen(miniPlay,"click",()=>isPlaying()?pauseAll():play());
   listen(miniNext,"click",()=>move(1));
+  const miniPlayer=$(".mini-player",root);
+  listen(miniPlayer,"click",event=>{if(event.target.closest("button"))return;switchView("player");});
   switchView("player");
   for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
