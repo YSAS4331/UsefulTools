@@ -1,6 +1,6 @@
 class Side extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = \`
+    this.innerHTML = `
 <style>
 .sidebar {
   width: 100%;
@@ -226,7 +226,7 @@ class Side extends HTMLElement {
     <a href="/sitemap/">サイトマップ</a>
   </footer>
 </aside>
-    \`;
+    `;
 
     this.favoriteList = this.querySelector('.sidebar-favorite-list');
     this.favoriteInitToken = 0;
@@ -406,7 +406,7 @@ class Side extends HTMLElement {
       Math.min(0, base + diffX)
     );
 
-    this.style.transform = \`translateX(\${moveX}px)\`;
+    this.style.transform = `translateX(${moveX}px)`;
 
     if (this.isHorizontal && e.cancelable) {
       e.preventDefault();
