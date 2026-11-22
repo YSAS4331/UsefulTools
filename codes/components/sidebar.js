@@ -25,7 +25,7 @@ class Side extends HTMLElement {
 }
 .sidebar-favorite-list {
   display: grid;
-  gap: .4rem;
+  gap: .2rem;
   max-height: 100%;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -33,7 +33,7 @@ class Side extends HTMLElement {
 .sidebar-favorite-list a {
   display: block;
   overflow: hidden;
-  padding: .15rem .65rem;
+  padding: .35rem .65rem;
   border-radius: 6px;
   color: var(--text-secondary);
   font-size: .9rem;
