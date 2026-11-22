@@ -33,8 +33,7 @@ class Side extends HTMLElement {
 .sidebar-favorite-list a {
   display: block;
   overflow: hidden;
-  padding: .55rem .65rem;
-  border: 1px solid var(--border-color);
+  padding: .35rem .65rem;
   border-radius: var(--radius);
   color: var(--text-secondary);
   font-size: .9rem;
@@ -45,15 +44,12 @@ class Side extends HTMLElement {
 }
 .sidebar-favorite-list a:hover {
   color: var(--text-primary);
-  background: var(--bg-3);
-  border-color: var(--border-color);
+  background: var(--border-color);
   text-decoration: none;
 }
 .sidebar-favorite-list a[aria-current="page"] {
   color: var(--text-primary);
-  background: var(--bg-3);
-  border-color: var(--border-color);
-  font-weight: 650;
+  background: var(--accent);
 }
 .sidebar-favorite-empty {
   color: var(--text-tertiary);
