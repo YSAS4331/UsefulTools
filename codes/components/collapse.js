@@ -50,7 +50,7 @@ class UICollapse extends HTMLElement {
           }
 
           :host([open]) .chevron {
-            transform: rotate(180deg);
+            transform: rotate(90deg);
           }
 
           .panel {
@@ -82,7 +82,7 @@ class UICollapse extends HTMLElement {
           <span class="label"></span>
           <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
+            <path d="m9 18 6-6-6-6"></path>
           </svg>
         </button>
         <div class="panel">
