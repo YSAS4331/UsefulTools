@@ -4,7 +4,7 @@ class header extends HTMLElement {
 <style>
 #global-header {
   height: 60px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--header-bg);
   backdrop-filter: blur(28px) saturate(180%);
   border-bottom: 1px solid var(--accent-border);
   box-shadow: var(--glass-inner-shadow), var(--accent-glow);
