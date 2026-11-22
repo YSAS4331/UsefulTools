@@ -177,7 +177,8 @@ class Side extends HTMLElement {
 
       const favorites = db.store('favorite');
       const nodes = new Map();
-      let emptyMessage = null;
+      // Reuse the initial loading placeholder so it is removed when data arrives.
+      let emptyMessage = this.favoriteList.querySelector('.sidebar-favorite-empty');
 
       const render = async () => {
         const saved = await favorites.getAll();
@@ -199,15 +200,18 @@ class Side extends HTMLElement {
           if (!emptyMessage) {
             emptyMessage = document.createElement('span');
             emptyMessage.className = 'sidebar-favorite-empty';
-            emptyMessage.textContent = 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。';
           }
-          if (this.favoriteList.firstElementChild !== emptyMessage) {
+          emptyMessage.textContent = 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。';
+          if (this.favoriteList.firstElementChild !== emptyMessage ||
+              this.favoriteList.childElementCount !== 1) {
             this.favoriteList.replaceChildren(emptyMessage);
           }
           return;
         }
 
+        // Remove the loading/empty placeholder once at least one favorite exists.
         emptyMessage?.remove();
+        emptyMessage = null;
         for (let index = 0; index < saved.length; index++) {
           const favorite = saved[index];
           const id = String(favorite.id);
