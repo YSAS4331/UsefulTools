@@ -6,6 +6,8 @@ const shareData = {
   url: location.href
 };
 
+let DB;
+
 const createUI = {};
 
 createUI.fullscreen = buttons => {
@@ -74,6 +76,15 @@ const init = () => {
         console.warn('共有に失敗しました。', e);
       }
     }
+  });
+
+  favoBtn.addEventListener('click', async () => {
+    DB = DB ?? window.spaRouter.commonStorage.get("LibDB");
+    const db = new DB("UsefulTools", "auto", {
+      favorite: { keyPath: "id" }
+    });
+
+    console.log("[favorite]" + db);
   });
 
   const setting = $('#page-settings');
