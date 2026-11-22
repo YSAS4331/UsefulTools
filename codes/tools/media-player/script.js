@@ -92,7 +92,7 @@ const init = () => {
       const name=document.createElement("strong");name.textContent=entry.file.name;
       const meta=document.createElement("small");meta.textContent=(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size);copy.append(name,meta);
       const actions=document.createElement("span");actions.className="library-actions";
-      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$("#tab-player",root).click();});
+      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$(".content-tab[data-content-tab=\\\"library\\\"]",root).click();});
       const remove=document.createElement("button");remove.type="button";remove.className="small-action";remove.textContent="削除";remove.addEventListener("click",()=>removeEntry(id));
       actions.append(play,remove);li.append(icon,copy,actions);library.append(li);
     }
@@ -151,13 +151,6 @@ const init = () => {
     }
     render();if(currentId===null&&firstAdded!==null)selectEntry(firstAdded,false);
   };
-  const switchTab=name=>{
-    const active=name==="player";
-    $("#tab-player",root).classList.toggle("is-active",active);$("#tab-library",root).classList.toggle("is-active",!active);
-    $("#tab-player",root).setAttribute("aria-selected",String(active));$("#tab-library",root).setAttribute("aria-selected",String(!active));
-    $("#panel-player",root).hidden=!active;$("#panel-library",root).hidden=active;
-  };
-  listen($("#tab-player",root),"click",()=>switchTab("player"));listen($("#tab-library",root),"click",()=>switchTab("library"));
   listen(playButton,"click",()=>isPlaying()?pauseAll():play());listen(previousButton,"click",()=>move(-1));listen(nextButton,"click",()=>move(1));
   listen(shuffleButton,"click",()=>{shuffle=!shuffle;shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
   listen(repeatButton,"click",()=>{repeat=!repeat;repeatButton.classList.toggle("is-on",repeat);repeatButton.setAttribute("aria-pressed",String(repeat));});
