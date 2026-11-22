@@ -103,7 +103,7 @@ const findCurrentTool = (registry) => {
 
 const updateFavoriteButton = (button, isFavorite, create, icons) => {
   button.innerHTML = isFavorite
-    ? '<i data-lucide="star"></i>お気に入り登録済み'
+    ? '<i data-lucide="heart-minus"></i>お気に入り解除'
     : '<i data-lucide="heart-plus"></i>お気に入り';
 
   button.setAttribute("aria-pressed", String(isFavorite));
