@@ -22,6 +22,39 @@ class Side extends HTMLElement {
 
   padding: 24px 0;
 }
+.sidebar-favorites {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px 16px;
+}
+.sidebar-favorites h2 {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+.sidebar-favorite-list {
+  display: grid;
+  gap: 6px;
+}
+.sidebar-favorite-list a {
+  display: block;
+  overflow: hidden;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-favorite-list a:hover {
+  background: var(--glass-bg-2);
+}
+.sidebar-favorite-empty {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
 .sidebar footer {
   margin-top: auto;
   display: grid;
@@ -41,6 +74,12 @@ class Side extends HTMLElement {
 </style>
 <aside class="sidebar">
   <a href="/">UsefulTools</a>
+  <section class="sidebar-favorites" aria-label="お気に入り">
+    <h2>お気に入り</h2>
+    <nav class="sidebar-favorite-list" aria-live="polite">
+      <span class="sidebar-favorite-empty">読み込み中...</span>
+    </nav>
+  </section>
   <footer>
     <a href="/terms/">利用規約</a>
     <a href="/privacy/">プライバシーポリシー</a>
@@ -48,6 +87,15 @@ class Side extends HTMLElement {
   </footer>
 </aside>
     `;
+
+    this.favoriteList = this.querySelector('.sidebar-favorite-list');
+    this.favoriteInitToken = 0;
+    this.favoriteUnsubscribe = null;
+    this.handleRouterEvent = (event) => {
+      if (event.detail?.type === 'setup-ok') this.setupFavorites();
+    };
+    window.addEventListener('spa:router', this.handleRouterEvent);
+    this.setupFavorites();
 
     this.mediaQuery = window.matchMedia('(max-width: 600px)');
 
@@ -69,6 +117,74 @@ class Side extends HTMLElement {
     window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleTouchEnd, { passive: true });
     window.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
+  }
+
+  async setupFavorites() {
+    const storage = window.spaRouter?.commonStorage;
+    if (!storage || !this.favoriteList || this.favoriteUnsubscribe) return;
+
+    const token = ++this.favoriteInitToken;
+
+    try {
+      const LibDB = storage.get('LibDB');
+      const toolsPromise = storage.get('toolsPromise');
+      if (!LibDB || !toolsPromise) return;
+
+      let dbPromise = storage.get('favoriteDBPromise');
+      if (!dbPromise) {
+        const db = new LibDB('UsefulTools', 'auto', {
+          favorite: { keyPath: 'id' }
+        });
+        dbPromise = db.ready.then(() => db).catch((error) => {
+          storage.delete('favoriteDBPromise');
+          db.close();
+          throw error;
+        });
+        storage.set('favoriteDBPromise', dbPromise);
+      }
+
+      const [registry, db] = await Promise.all([toolsPromise, dbPromise]);
+      if (token !== this.favoriteInitToken || !this.isConnected) return;
+
+      const favorites = db.store('favorite');
+      const render = async () => {
+        const saved = await favorites.getAll();
+        if (token !== this.favoriteInitToken || !this.isConnected) return;
+
+        saved.sort((a, b) => (b.addedAt ?? 0) - (a.addedAt ?? 0));
+        this.favoriteList.replaceChildren();
+
+        if (!saved.length) {
+          const empty = document.createElement('span');
+          empty.className = 'sidebar-favorite-empty';
+          empty.textContent = 'お気に入りはありません';
+          this.favoriteList.append(empty);
+          return;
+        }
+
+        for (const favorite of saved) {
+          const link = document.createElement('a');
+          link.href = favorite.url;
+          link.textContent = favorite.title || favorite.key || '名称未設定';
+          link.title = favorite.description || link.textContent;
+          this.favoriteList.append(link);
+        }
+      };
+
+      await render();
+      this.favoriteUnsubscribe = db.on('change', (event) => {
+        if (event.stores?.includes('favorite')) {
+          render().catch((error) => {
+            console.error('[sidebar] お気に入り一覧の更新に失敗しました。', error);
+          });
+        }
+      });
+    } catch (error) {
+      if (token === this.favoriteInitToken && this.isConnected) {
+        this.favoriteList.textContent = 'お気に入りを読み込めませんでした';
+      }
+      console.error('[sidebar] お気に入りの初期化に失敗しました。', error);
+    }
   }
 
   onTouchStart(e) {
@@ -167,6 +283,10 @@ class Side extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this.favoriteInitToken++;
+    this.favoriteUnsubscribe?.();
+    this.favoriteUnsubscribe = null;
+    window.removeEventListener('spa:router', this.handleRouterEvent);
     window.removeEventListener('touchstart', this.handleTouchStart);
     window.removeEventListener('touchmove', this.handleTouchMove);
     window.removeEventListener('touchend', this.handleTouchEnd);
