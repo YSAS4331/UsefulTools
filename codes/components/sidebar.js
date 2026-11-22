@@ -55,6 +55,7 @@ class Side extends HTMLElement {
   display: block;
   overflow: hidden;
   padding: .55rem .65rem;
+  border: 1px solid var(--border-color);
   border-radius: var(--radius);
   color: var(--text-secondary);
   font-size: .9rem;
@@ -66,12 +67,13 @@ class Side extends HTMLElement {
 .sidebar-favorite-list a:hover {
   color: var(--text-primary);
   background: var(--bg-3);
+  border-color: var(--border-color);
   text-decoration: none;
 }
 .sidebar-favorite-list a[aria-current="page"] {
   color: var(--text-primary);
   background: var(--bg-3);
-  box-shadow: inset 2px 0 var(--accent);
+  border-color: var(--border-color);
   font-weight: 650;
 }
 .sidebar-favorite-empty {
@@ -127,7 +129,12 @@ class Side extends HTMLElement {
     this.favoriteUnsubscribe = null;
     this.favoriteInitializing = false;
     this.handleRouterEvent = (event) => {
-      if (event.detail?.type === 'setup-ok') this.setupFavorites();
+      const type = event.detail?.type;
+      if (type === 'setup-ok') {
+        this.setupFavorites();
+      } else if (type === 'after') {
+        this.renderFavorites?.();
+      }
     };
     this.handleStorageEvent = (event) => {
       if (['LibDB', 'toolsPromise'].includes(event.detail?.key)) {
@@ -221,6 +228,7 @@ class Side extends HTMLElement {
         }
       };
 
+      this.renderFavorites = render;
       await render();
       this.favoriteUnsubscribe = db.on('change', (event) => {
         if (event.stores?.includes('favorite')) {
@@ -337,6 +345,7 @@ class Side extends HTMLElement {
     this.favoriteInitToken++;
     this.favoriteUnsubscribe?.();
     this.favoriteUnsubscribe = null;
+    this.renderFavorites = null;
     window.removeEventListener('spa:router', this.handleRouterEvent);
     window.removeEventListener('spa:storage', this.handleStorageEvent);
     window.removeEventListener('touchstart', this.handleTouchStart);
