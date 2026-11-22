@@ -12,11 +12,8 @@ class Side extends HTMLElement {
   padding: 24px 0;
   overflow: hidden;
   color: var(--text-primary);
-  background: var(--glass-bg-3);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  background: var(--bg-2);
   border-right: 1px solid var(--border-color);
-  box-shadow: var(--glass-inner-shadow);
 }
 
 .sidebar > a {
@@ -24,12 +21,13 @@ class Side extends HTMLElement {
   width: 100%;
   padding: 0 24px 22px;
   color: var(--text-primary);
-  font-size: 17px;
-  font-weight: 750;
-  letter-spacing: -.025em;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
   text-decoration: none;
 }
 .sidebar > a:hover {
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -38,17 +36,17 @@ class Side extends HTMLElement {
   min-height: 0;
   flex: 1;
   box-sizing: border-box;
-  padding: 24px 16px;
+  padding: 20px 16px;
 }
 .sidebar-favorites h2 {
   margin: 0 0 12px;
   color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 650;
+  font-size: .85rem;
+  font-weight: 700;
 }
 .sidebar-favorite-list {
   display: grid;
-  gap: 6px;
+  gap: .4rem;
   max-height: 100%;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -56,27 +54,29 @@ class Side extends HTMLElement {
 .sidebar-favorite-list a {
   display: block;
   overflow: hidden;
-  padding: 9px 10px;
-  border-radius: 9px;
-  color: var(--text-primary);
-  font-size: 14px;
+  padding: .55rem .65rem;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: .9rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-decoration: none;
   transition: background-color .18s ease, color .18s ease;
 }
 .sidebar-favorite-list a:hover {
-  background: var(--glass-bg-2);
+  color: var(--text-primary);
+  background: var(--bg-3);
   text-decoration: none;
 }
 .sidebar-favorite-list a[aria-current="page"] {
-  background: rgba(0, 0, 0, .045);
-  box-shadow: inset 2px 0 var(--accent-border-strong);
+  color: var(--text-primary);
+  background: var(--bg-3);
+  box-shadow: inset 2px 0 var(--accent);
   font-weight: 650;
 }
 .sidebar-favorite-empty {
   color: var(--text-tertiary);
-  font-size: 13px;
+  font-size: .85rem;
   line-height: 1.6;
 }
 
@@ -91,9 +91,10 @@ class Side extends HTMLElement {
 .sidebar footer a {
   color: var(--text-tertiary);
   text-decoration: none;
-  font-size: 14px;
+  font-size: .85rem;
 }
 .sidebar footer a:hover {
+  color: var(--text-secondary);
   text-decoration: underline;
 }
 
@@ -104,7 +105,7 @@ class Side extends HTMLElement {
 }
 </style>
 <aside class="sidebar">
-  <a href="/">UsefulTools</a>
+  <a href="/">ホーム</a>
 
   <section class="sidebar-favorites" aria-label="お気に入り">
     <h2>お気に入り</h2>
