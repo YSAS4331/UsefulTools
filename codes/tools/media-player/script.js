@@ -21,7 +21,7 @@ const init = () => {
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
   const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
-  const entries=new Map(), sidecars=new Map(), listeners=[], objectUrls=new Set();
+  const entries=new Map(), artworks=new Map(), lyricFiles=new Map(), listeners=[], objectUrls=new Set();
   let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[];
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
   const currentEntry=()=>entries.get(currentId);
@@ -147,11 +147,11 @@ const init = () => {
     const files=[...fileList],mediaFiles=files.filter(file=>file.type.startsWith("audio/")||file.type.startsWith("video/"));
     for(const file of files){
       const ext=file.name.split(".").pop().toLowerCase(),base=baseName(file.name);
-      if(file.type.startsWith("image/")||ext==="lrc"||ext==="txt")sidecars.set(base,file);
+      if(file.type.startsWith("image/"))artworks.set(base,file);\n      if(ext==="lrc")lyricFiles.set(base,file);
     }
     let firstAdded=null;
     for(const file of mediaFiles){
-      const id=nextId++,base=baseName(file.name),artworkFile=sidecars.get(base);
+      const id=nextId++,base=baseName(file.name),artworkFile=artworks.get(base),lyricFile=lyricFiles.get(base);
       const entry={id,file,kind:file.type.startsWith("video/")?"video":"audio",url:makeUrl(file),artwork:null,artworkUrl:null,lyrics:[]};
       if(entry.kind==="audio"&&artworkFile?.type.startsWith("image/")){entry.artwork=artworkFile;entry.artworkUrl=makeUrl(artworkFile);}
       const lyricFile=sidecars.get(base);
