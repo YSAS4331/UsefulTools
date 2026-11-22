@@ -1,0 +1,142 @@
+class UICollapse extends HTMLElement {
+  static get observedAttributes() {
+    return ['label', 'duration', 'easing', 'open'];
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.onToggleClick = this.onToggleClick.bind(this);
+  }
+
+  connectedCallback() {
+    if (!this.shadowRoot.hasChildNodes()) {
+      this.shadowRoot.innerHTML = `
+        <style>
+          :host {
+            display: block;
+            min-width: 0;
+          }
+
+          .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .75rem;
+            width: 100%;
+            padding: 0 .25rem 0 .75rem;
+            border: 0;
+            border-left: 3px solid var(--accent);
+            border-radius: 0;
+            background: transparent;
+            color: var(--text-secondary);
+            font: inherit;
+            font-size: .85rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+          }
+
+          .toggle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+          }
+
+          .chevron {
+            width: 1rem;
+            height: 1rem;
+            flex: none;
+            transition: transform var(--collapse-duration, 240ms) var(--collapse-easing, ease);
+          }
+
+          :host([open]) .chevron {
+            transform: rotate(180deg);
+          }
+
+          .panel {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows var(--collapse-duration, 240ms) var(--collapse-easing, ease);
+          }
+
+          :host([open]) .panel {
+            grid-template-rows: 1fr;
+          }
+
+          .panel-inner {
+            min-height: 0;
+            overflow: hidden;
+          }
+
+          .content {
+            padding-top: .75rem;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .panel, .chevron {
+              transition-duration: 0ms !important;
+            }
+          }
+        </style>
+        <button class="toggle" type="button" aria-expanded="false">
+          <span class="label"></span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </button>
+        <div class="panel">
+          <div class="panel-inner">
+            <div class="content"><slot></slot></div>
+          </div>
+        </div>
+      `;
+      this.shadowRoot.querySelector('.toggle').addEventListener('click', this.onToggleClick);
+    }
+
+    this.sync();
+  }
+
+  attributeChangedCallback() {
+    if (this.isConnected) this.sync();
+  }
+
+  get isOpen() {
+    return this.hasAttribute('open');
+  }
+
+  set isOpen(value) {
+    this.toggleAttribute('open', Boolean(value));
+  }
+
+  onToggleClick() {
+    this.isOpen = !this.isOpen;
+    this.dispatchEvent(new CustomEvent('toggle', {
+      bubbles: true,
+      composed: true,
+      detail: { open: this.isOpen }
+    }));
+  }
+
+  sync() {
+    const button = this.shadowRoot.querySelector('.toggle');
+    if (!button) return;
+
+    const label = this.getAttribute('label') || '開閉';
+    const duration = this.getAttribute('duration') || '240ms';
+    const easing = this.getAttribute('easing') || 'ease';
+
+    this.style.setProperty('--collapse-duration', /^\d+(\.\d+)?$/.test(duration) ? `${duration}ms` : duration);
+    this.style.setProperty('--collapse-easing', easing);
+
+    this.shadowRoot.querySelector('.label').textContent = label;
+    button.setAttribute('aria-expanded', String(this.isOpen));
+    button.setAttribute('aria-label', `${label}${this.isOpen ? 'を閉じる' : 'を開く'}`);
+
+    const panel = this.shadowRoot.querySelector('.panel');
+    panel.setAttribute('aria-hidden', String(!this.isOpen));
+    panel.inert = !this.isOpen;
+  }
+}
+
+customElements.define('ui-collapse', UICollapse);
