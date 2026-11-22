@@ -44,12 +44,11 @@ class UICollapse extends HTMLElement {
             content: "";
             position: absolute;
             left: 0;
-            top: 50%;
+            top: 0;
+            bottom: 0;
             width: 3px;
-            height: 1rem;
             border-radius: 2px;
             background: var(--accent);
-            transform: translateY(-50%);
           }
 
           .label {
