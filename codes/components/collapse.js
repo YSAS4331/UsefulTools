@@ -37,6 +37,18 @@ class UICollapse extends HTMLElement {
             cursor: pointer;
           }
 
+          .label {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+          }
+
+          .label ::slotted(*) {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+          }
+
           .toggle:focus-visible {
             outline: 2px solid var(--accent);
             outline-offset: 3px;
