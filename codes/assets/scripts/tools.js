@@ -2,6 +2,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const c = (el) => document.createElement(el);
 
 let favoriteUnsubscribe = null;
+let activeCleanup = null;
 
 const createUI = {};
 
@@ -184,6 +185,9 @@ const initFavorites = async (button, storage) => {
 };
 
 const init = () => {
+  activeCleanup?.();
+  activeCleanup = null;
+
   const buttons = $(".tool-buttons");
   if (!buttons) return;
 
@@ -230,11 +234,16 @@ const init = () => {
     }
   }
 
-  return () => {
+  activeCleanup = () => {
     favoriteUnsubscribe?.();
     favoriteUnsubscribe = null;
     cleanups.forEach((cleanup) => cleanup());
   };
 };
 
-export { init };
+const unmount = () => {
+  activeCleanup?.();
+  activeCleanup = null;
+};
+
+export { init, unmount };
