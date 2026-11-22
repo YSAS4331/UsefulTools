@@ -40,6 +40,8 @@ class Side extends HTMLElement {
 }
 .sidebar-favorites h2 {
   margin: 0 0 12px;
+  padding-left: .75rem;
+  border-left: 3px solid var(--accent);
   color: var(--text-secondary);
   font-size: .85rem;
   font-weight: 700;
