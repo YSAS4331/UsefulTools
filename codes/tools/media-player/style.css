@@ -1,3 +1,4 @@
+#tool.media-tool { padding:1rem; }
 .media-tool { display:flex; flex-direction:column; gap:1rem; color:var(--text-primary); }
 .media-tabs,.content-tabs { display:flex; gap:.25rem; padding:.25rem; border:1px solid var(--border-color); border-radius:var(--radius); background:var(--bg); width:fit-content; max-width:100%; }
 .media-tab,.content-tab { border:0!important; box-shadow:none!important; background:transparent!important; color:var(--text-secondary)!important; padding:.65rem 1rem!important; border-radius:10px!important; white-space:nowrap; }
@@ -89,6 +90,7 @@
   .media-stage { max-width:360px; }
 }
 @media (max-width:520px) {
+  #tool.media-tool { padding:.8rem; }
   .media-tool { gap:.8rem; }
   #upload-container { min-height:8rem; }
   .media-stage { max-width:min(100%,360px); }
