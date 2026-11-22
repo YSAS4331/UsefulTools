@@ -85,6 +85,7 @@ class Side extends HTMLElement {
   <div id="searchbar"></div>
   <section class="sidebar-favorites" aria-label="お気に入り">
     <ui-collapse label="お気に入り" duration="240ms" easing="ease" open>
+      <span slot="label"><i data-lucide="heart" aria-hidden="true"></i>お気に入り</span>
       <nav class="sidebar-favorite-list" aria-live="polite">
         <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
       </nav>
