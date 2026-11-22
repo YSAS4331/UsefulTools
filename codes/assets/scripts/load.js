@@ -18,36 +18,44 @@ const setupIcons = () => {
   createIcons({ icons });
 };
 
-window.addEventListener("spa:router", (e) => {
-  if (e.detail?.type === "after") {
-    setupIcons();
-  }
+const setupCommonStorage = () => {
+  const cs = window.spaRouter?.commonStorage;
+  if (!cs) return false;
 
-  if (e.detail?.type === "setup-ok") {
-    const cs = window.spaRouter.commonStorage;
+  cs.set("createIcons", createIcons);
+  cs.set("lucideIcons", icons);
+  cs.set("LibDB", LibDB);
+  cs.set("LibDBError", LibDBError);
 
-    cs.set("createIcons", createIcons);
-    cs.set("lucideIcons", icons);
-    cs.set("LibDB", LibDB);
-    cs.set("LibDBError", LibDBError);
-
-    const toolsPromise = fetch("/assets/tools.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`tools.jsonの読み込みに失敗しました: HTTP ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((tools) => {
-        cs.set("tools", tools);
-        return tools;
-      });
-
-    cs.set("toolsPromise", toolsPromise);
-    toolsPromise.catch((error) => {
-      console.error("[tools] ツール一覧の読み込みに失敗しました。", error);
+  const toolsPromise = fetch("/assets/tools.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`tools.jsonの読み込みに失敗しました: HTTP ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((tools) => {
+      cs.set("tools", tools);
+      return tools;
     });
-  }
-});
+
+  cs.set("toolsPromise", toolsPromise);
+  toolsPromise.catch((error) => {
+    console.error("[tools] ツール一覧の読み込みに失敗しました。", error);
+  });
+
+  return true;
+};
+
+if (!setupCommonStorage()) {
+  window.addEventListener("spa:router", (e) => {
+    if (e.detail?.type === "setup-ok") setupCommonStorage();
+    if (e.detail?.type === "after") setupIcons();
+  });
+} else {
+  window.addEventListener("spa:router", (e) => {
+    if (e.detail?.type === "after") setupIcons();
+  });
+}
 
 setupIcons();
