@@ -94,7 +94,13 @@ class Side extends HTMLElement {
     this.handleRouterEvent = (event) => {
       if (event.detail?.type === 'setup-ok') this.setupFavorites();
     };
+    this.handleStorageEvent = (event) => {
+      if (['LibDB', 'toolsPromise', 'favoriteDBPromise'].includes(event.detail?.key)) {
+        this.setupFavorites();
+      }
+    };
     window.addEventListener('spa:router', this.handleRouterEvent);
+    window.addEventListener('spa:storage', this.handleStorageEvent);
     this.setupFavorites();
 
     this.mediaQuery = window.matchMedia('(max-width: 600px)');
@@ -122,6 +128,7 @@ class Side extends HTMLElement {
   async setupFavorites() {
     const storage = window.spaRouter?.commonStorage;
     if (!storage || !this.favoriteList || this.favoriteUnsubscribe) return;
+    if (!storage.get('LibDB') || !storage.get('toolsPromise')) return;
 
     const token = ++this.favoriteInitToken;
 
@@ -287,6 +294,7 @@ class Side extends HTMLElement {
     this.favoriteUnsubscribe?.();
     this.favoriteUnsubscribe = null;
     window.removeEventListener('spa:router', this.handleRouterEvent);
+    window.removeEventListener('spa:storage', this.handleStorageEvent);
     window.removeEventListener('touchstart', this.handleTouchStart);
     window.removeEventListener('touchmove', this.handleTouchMove);
     window.removeEventListener('touchend', this.handleTouchEnd);
