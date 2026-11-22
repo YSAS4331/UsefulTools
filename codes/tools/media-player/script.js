@@ -20,7 +20,8 @@ const init = () => {
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
-  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);\n  const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
+  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
+  const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
   const entries=new Map(), artworks=new Map(), lyricFiles=new Map(), listeners=[], objectUrls=new Set();
   let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
@@ -147,7 +148,8 @@ const init = () => {
     const files=[...fileList],mediaFiles=files.filter(file=>file.type.startsWith("audio/")||file.type.startsWith("video/"));
     for(const file of files){
       const ext=file.name.split(".").pop().toLowerCase(),base=baseName(file.name);
-      if(file.type.startsWith("image/"))artworks.set(base,file);\n      if(ext==="lrc")lyricFiles.set(base,file);
+      if(file.type.startsWith("image/"))artworks.set(base,file);
+      if(ext==="lrc")lyricFiles.set(base,file);
     }
     let firstAdded=null;
     for(const file of mediaFiles){
