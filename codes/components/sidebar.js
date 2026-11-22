@@ -176,34 +176,75 @@ class Side extends HTMLElement {
       if (token !== this.favoriteInitToken || !this.isConnected) return;
 
       const favorites = db.store('favorite');
+      const nodes = new Map();
+      let emptyMessage = null;
+
       const render = async () => {
         const saved = await favorites.getAll();
         if (token !== this.favoriteInitToken || !this.isConnected) return;
 
         saved.sort((a, b) => (b.addedAt ?? 0) - (a.addedAt ?? 0));
-        this.favoriteList.replaceChildren();
+        const currentPath = location.pathname.replace(/\\/+$/, '') || '/';
+        const activeIds = new Set(saved.map((favorite) => String(favorite.id)));
+
+        // Remove only entries that no longer exist.
+        for (const [id, link] of nodes) {
+          if (!activeIds.has(id)) {
+            link.remove();
+            nodes.delete(id);
+          }
+        }
 
         if (!saved.length) {
-          const empty = document.createElement('span');
-          empty.className = 'sidebar-favorite-empty';
-          empty.textContent = 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。';
-          this.favoriteList.append(empty);
+          if (!emptyMessage) {
+            emptyMessage = document.createElement('span');
+            emptyMessage.className = 'sidebar-favorite-empty';
+            emptyMessage.textContent = 'お気に入りはまだありません。\\n気に入ったツールを追加すると、ここに表示されます。';
+          }
+          if (this.favoriteList.firstElementChild !== emptyMessage) {
+            this.favoriteList.replaceChildren(emptyMessage);
+          }
           return;
         }
 
-        const currentPath = location.pathname.replace(/\/+$/, '') || '/';
-        for (const favorite of saved) {
-          const link = document.createElement('a');
-          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\/+$/, '') || '/';
-          link.href = favorite.url;
-          link.title = favorite.description || favorite.title || favorite.key || '';
-          if (favoritePath === currentPath) link.setAttribute('aria-current', 'page');
+        emptyMessage?.remove();
+        for (let index = 0; index < saved.length; index++) {
+          const favorite = saved[index];
+          const id = String(favorite.id);
+          let link = nodes.get(id);
 
-          const title = document.createElement('span');
-          title.className = 'sidebar-favorite-title';
-          title.textContent = favorite.title || favorite.key || '名称未設定';
-          link.append(title);
-          this.favoriteList.append(link);
+          // Create DOM only for newly added favorites.
+          if (!link) {
+            link = document.createElement('a');
+            const title = document.createElement('span');
+            title.className = 'sidebar-favorite-title';
+            link.append(title);
+            nodes.set(id, link);
+          }
+
+          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\\/+$/, '') || '/';
+          const title = favorite.title || favorite.key || '名称未設定';
+          const description = favorite.description || favorite.title || favorite.key || '';
+
+          if (link.getAttribute('href') !== favorite.url) link.href = favorite.url;
+          if (link.title !== description) link.title = description;
+          if (link.firstElementChild.textContent !== title) {
+            link.firstElementChild.textContent = title;
+          }
+
+          if (favoritePath === currentPath) {
+            if (link.getAttribute('aria-current') !== 'page') {
+              link.setAttribute('aria-current', 'page');
+            }
+          } else {
+            link.removeAttribute('aria-current');
+          }
+
+          // Move a node only when its sort position actually changed.
+          const current = this.favoriteList.children[index];
+          if (current !== link) {
+            this.favoriteList.insertBefore(link, current || null);
+          }
         }
       };
 
