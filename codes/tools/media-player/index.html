@@ -4,7 +4,7 @@
   <title>メディアプレイヤー - UsefulTools</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="パソコンやスマホにある音声・動画ファイルをアップロードして、Web上で再生できます。バックグラウンド再生に対応しています。">
+  <meta name="description" content="端末内の音声・動画ファイルをブラウザ上で再生できます。">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/assets/styles/variable.css">
   <link rel="stylesheet" href="/assets/styles/common.css">
@@ -27,11 +27,8 @@
       </script>
       <article class="tool-container">
         <header class="tool-header">
-          <h1>
-            <i class="tool-icon" data-lucide="audio-lines"></i>
-            <span class="tool-name">メディアプレイヤー</span>
-          </h1>
-          <p class="tool-lead">パソコンやスマホにある音声・動画ファイルをアップロードして、Web上で再生できます。バックグラウンド再生にも対応しています。</p>
+          <h1><i class="tool-icon" data-lucide="audio-lines"></i><span class="tool-name">メディアプレイヤー</span></h1>
+          <p class="tool-lead">端末内の音声・動画ファイルをブラウザ上で再生できます。</p>
           <div class="tool-buttons">
             <button class="tool-share"><i data-lucide="share-2"></i>シェアする</button>
             <button class="tool-favorite"><i data-lucide="heart-plus"></i>お気に入り</button>
@@ -39,7 +36,7 @@
         </header>
 
         <div id="tool" class="media-tool">
-          <input type="file" id="upload-file" accept="audio/*,video/*" hidden multiple>
+          <input type="file" id="upload-file" accept="audio/*,video/*,image/*,.lrc,.txt" hidden multiple>
           <div class="media-tabs" role="tablist" aria-label="表示切り替え">
             <button class="media-tab is-active" id="tab-player" type="button" role="tab" aria-selected="true" aria-controls="panel-player">プレイヤー</button>
             <button class="media-tab" id="tab-library" type="button" role="tab" aria-selected="false" aria-controls="panel-library">ライブラリ <span id="file-count">0</span></button>
@@ -51,25 +48,22 @@
               <p>ファイルをアップロードします</p>
               <p class="sub-text">または、ファイルをドラッグ&amp;ドロップ</p>
             </label>
+
             <div class="player-layout">
-              <div class="player-main">
+              <section class="player-main" aria-label="再生中のメディア">
                 <div class="media-stage" id="media-stage">
+                  <img id="artwork-image" alt="アートワーク" hidden>
+                  <div class="audio-visual" id="audio-visual"><i data-lucide="music-2"></i></div>
                   <video id="video-player" playsinline preload="metadata" hidden></video>
-                  <div class="audio-visual" id="audio-visual">
-                    <div class="visual-disc"><span>♫</span></div>
-                    <p>YOUR MEDIA PLAYER</p>
-                  </div>
                   <div class="stage-empty" id="stage-empty">
-                    <span class="stage-empty-icon">♫</span>
+                    <i data-lucide="music-2"></i>
                     <strong>再生するファイルを選択</strong>
-                    <span>ライブラリにファイルを追加してください</span>
-                    <button type="button" class="primary-button" data-open-files>ファイルを追加</button>
+                    <span>ファイルを追加すると、ここに表示されます</span>
                   </div>
                 </div>
 
                 <div class="now-playing">
                   <div class="track-copy">
-                    <span class="eyebrow">NOW PLAYING</span>
                     <h2 id="track-title">再生待ち</h2>
                     <p id="track-meta">ファイルが選択されていません</p>
                   </div>
@@ -83,16 +77,14 @@
                     <span id="duration">0:00</span>
                   </div>
                   <div class="control-row">
-                    <button type="button" class="text-control" id="shuffle-button" aria-pressed="false" title="シャッフル">シャッフル</button>
-                    <div class="transport-controls">
-                      <button type="button" class="transport-button" id="previous-button" aria-label="前のファイル" disabled>⏮</button>
-                      <button type="button" class="play-button" id="play-button" aria-label="再生" disabled>▶</button>
-                      <button type="button" class="transport-button" id="next-button" aria-label="次のファイル" disabled>⏭</button>
-                    </div>
-                    <button type="button" class="text-control" id="repeat-button" aria-pressed="false" title="リピート">リピート</button>
+                    <button type="button" class="icon-control" id="shuffle-button" aria-label="シャッフル" aria-pressed="false"><i data-lucide="shuffle"></i></button>
+                    <button type="button" class="transport-button" id="previous-button" aria-label="前のファイル" disabled><i data-lucide="skip-back"></i></button>
+                    <button type="button" class="play-button" id="play-button" aria-label="再生" disabled><i data-lucide="play"></i></button>
+                    <button type="button" class="transport-button" id="next-button" aria-label="次のファイル" disabled><i data-lucide="skip-forward"></i></button>
+                    <button type="button" class="icon-control" id="repeat-button" aria-label="リピート" aria-pressed="false"><i data-lucide="repeat-1"></i></button>
                   </div>
                   <div class="extra-controls">
-                    <label class="volume-control" for="volume-bar"><span>音量</span><input id="volume-bar" class="range-control" type="range" min="0" max="1" step="0.01" value="1"></label>
+                    <label class="volume-control" for="volume-bar"><i data-lucide="volume-2"></i><input id="volume-bar" class="range-control" type="range" min="0" max="1" step="0.01" value="1"></label>
                     <label class="speed-control" for="speed-select">速度
                       <select id="speed-select">
                         <option value="0.5">0.5x</option><option value="0.75">0.75x</option><option value="1" selected>1.0x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="1.75">1.75x</option><option value="2">2.0x</option>
@@ -100,29 +92,35 @@
                     </label>
                   </div>
                 </div>
-              </div>
+              </section>
 
-              <aside class="queue-panel">
-                <div class="queue-heading">
-                  <div><span class="eyebrow">UP NEXT</span><h2>再生キュー</h2></div>
-                  <button type="button" class="subtle-button" id="clear-queue-button">すべて削除</button>
+              <section class="content-section">
+                <div class="content-tabs" role="tablist" aria-label="コンテンツ">
+                  <button type="button" class="content-tab is-active" data-content-tab="playlist" aria-selected="true">プレイリスト</button>
+                  <button type="button" class="content-tab" data-content-tab="lyrics" aria-selected="false">歌詞</button>
+                  <button type="button" class="content-tab" data-content-tab="related" aria-selected="false">関連</button>
                 </div>
-                <ol id="queue-list" class="queue-list">
-                  <li class="queue-empty">ここに追加したファイルが表示されます</li>
-                </ol>
-                <button type="button" class="add-files-button" data-open-files>＋ ファイルを追加</button>
-              </aside>
+                <section class="content-panel" data-content-panel="playlist">
+                  <div class="section-heading"><h3>次に再生</h3><button type="button" class="subtle-button" id="clear-queue-button">すべて削除</button></div>
+                  <ol id="queue-list" class="queue-list"><li class="queue-empty">ファイルを追加してください</li></ol>
+                  <button type="button" class="add-files-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
+                </section>
+                <section class="content-panel" data-content-panel="lyrics" hidden>
+                  <div id="lyrics-content" class="lyrics-content"><p class="content-empty">対応する .lrc ファイルを一緒に追加すると、ここに歌詞が表示されます。</p></div>
+                </section>
+                <section class="content-panel" data-content-panel="related" hidden>
+                  <div id="related-list" class="related-list"><p class="content-empty">関連するファイルはここに表示されます。</p></div>
+                </section>
+              </section>
             </div>
           </section>
 
           <section id="panel-library" class="media-panel" role="tabpanel" aria-labelledby="tab-library" hidden>
             <div class="library-heading">
-              <div><span class="eyebrow">YOUR FILES</span><h2>メディアライブラリ</h2><p>追加したファイルはこのページを開いている間だけ保持されます。</p></div>
-              <button type="button" class="primary-button" data-open-files>＋ ファイルを追加</button>
+              <div><h2>メディアライブラリ</h2><p>追加したファイルは、このページを開いている間だけ保持されます。</p></div>
+              <button type="button" class="primary-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
             </div>
-            <ol id="files" class="library-list">
-              <li class="library-empty">まだファイルがありません</li>
-            </ol>
+            <ol id="files" class="library-list"><li class="library-empty">まだファイルがありません</li></ol>
           </section>
           <audio id="audio-player" preload="metadata"></audio>
         </div>
@@ -130,11 +128,11 @@
         <footer class="tool-details">
           <section>
             <h2><i data-lucide="info"></i>このツールについて</h2>
-            <p>端末内の音声・動画ファイルをブラウザ上で再生できるメディアプレイヤーです。ファイルはサーバーにアップロードされず、お使いのブラウザ内で処理されます。</p>
+            <p>端末内の音声・動画ファイルをブラウザ上で再生できます。ファイルはサーバーにアップロードされず、ブラウザ内で処理されます。</p>
           </section>
           <section>
             <h3>使い方</h3>
-            <p>「ファイルを追加」からファイルを選択するか、ライブラリにドラッグ＆ドロップしてください。再生キューからファイルを選ぶと再生できます。バックグラウンド再生の可否は、ブラウザや端末の設定に依存します。</p>
+            <p>音声・動画ファイルに加えて、同じ名前の画像ファイルや .lrc ファイルを一緒に選択すると、アートワークや歌詞を表示できます。対応状況はファイル形式やブラウザに依存します。</p>
           </section>
         </footer>
       </article>
