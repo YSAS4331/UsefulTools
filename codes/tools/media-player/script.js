@@ -20,7 +20,7 @@ const init = () => {
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
-  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
+  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);\n  const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
   const entries=new Map(), artworks=new Map(), lyricFiles=new Map(), listeners=[], objectUrls=new Set();
   let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
@@ -56,7 +56,7 @@ const init = () => {
     playButton.innerHTML=playing?'<i data-lucide="pause"></i>':'<i data-lucide="play"></i>';
     playButton.setAttribute("aria-label",playing?"一時停止":"再生");
     indicator.classList.toggle("is-playing",playing);
-    if(window.lucide)window.lucide.createIcons({root:playButton});
+    createIcons?.({icons:lucideIcons});
   };
   const updateProgress=()=>{
     const active=media();
