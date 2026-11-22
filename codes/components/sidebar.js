@@ -109,8 +109,7 @@ class Side extends HTMLElement {
 }
 </style>
 <aside class="sidebar">
-  <a href="/">ホーム</a>
-
+  <div id="searchbar"></div>
   <section class="sidebar-favorites" aria-label="お気に入り">
     <h2>お気に入り</h2>
     <nav class="sidebar-favorite-list" aria-live="polite">
