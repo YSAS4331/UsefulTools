@@ -184,7 +184,7 @@ class Side extends HTMLElement {
         if (token !== this.favoriteInitToken || !this.isConnected) return;
 
         saved.sort((a, b) => (b.addedAt ?? 0) - (a.addedAt ?? 0));
-        const currentPath = location.pathname.replace(/\\/+$/, '') || '/';
+        const currentPath = location.pathname.replace(/\/+$/, '') || '/';
         const activeIds = new Set(saved.map((favorite) => String(favorite.id)));
 
         // Remove only entries that no longer exist.
@@ -199,7 +199,7 @@ class Side extends HTMLElement {
           if (!emptyMessage) {
             emptyMessage = document.createElement('span');
             emptyMessage.className = 'sidebar-favorite-empty';
-            emptyMessage.textContent = 'お気に入りはまだありません。\\n気に入ったツールを追加すると、ここに表示されます。';
+            emptyMessage.textContent = 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。';
           }
           if (this.favoriteList.firstElementChild !== emptyMessage) {
             this.favoriteList.replaceChildren(emptyMessage);
@@ -222,7 +222,7 @@ class Side extends HTMLElement {
             nodes.set(id, link);
           }
 
-          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\\/+$/, '') || '/';
+          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\/+$/, '') || '/';
           const title = favorite.title || favorite.key || '名称未設定';
           const description = favorite.description || favorite.title || favorite.key || '';
 
