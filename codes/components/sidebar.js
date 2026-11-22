@@ -157,6 +157,7 @@ class Side extends HTMLElement {
   white-space: nowrap;
 }
 .sidebar-favorite-empty {
+  white-space: pre-line;
   margin: 2px 4px;
   padding: 17px 12px;
   border: 1px dashed var(--glass-border-2);
