@@ -92,7 +92,7 @@ const init = () => {
       const name=document.createElement("strong");name.textContent=entry.file.name;
       const meta=document.createElement("small");meta.textContent=(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size);copy.append(name,meta);
       const actions=document.createElement("span");actions.className="library-actions";
-      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$(".content-tab",root).find(tab=>tab.dataset.contentTab==="playlist")?.click();});
+      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$$(".content-tab",root).find(tab=>tab.dataset.contentTab==="playlist")?.click();});
       const remove=document.createElement("button");remove.type="button";remove.className="small-action";remove.textContent="削除";remove.addEventListener("click",()=>removeEntry(id));
       actions.append(play,remove);li.append(icon,copy,actions);library.append(li);
     }
@@ -159,7 +159,7 @@ const init = () => {
   listen(volume,"input",()=>{audio.volume=Number(volume.value);video.volume=Number(volume.value);});
   listen(speed,"change",()=>{audio.playbackRate=Number(speed.value);video.playbackRate=Number(speed.value);});
   listen($("#clear-queue-button",root),"click",()=>{for(const id of [...entries.keys()])removeEntry(id);});
-  for(const tab of $$(".content-tab",root))listen(tab,"click",()=>{$$(".content-tab",root).forEach(item=>{const active=item===tab;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});$(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==tab.dataset.contentTab);if(tab.dataset.contentTab==="lyrics"){activeLyricIndex=-1;updateLyrics();}});
+  for(const tab of $$(".content-tab",root))listen(tab,"click",()=>{$$(".content-tab",root).forEach(item=>{const active=item===tab;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});$$(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==tab.dataset.contentTab);if(tab.dataset.contentTab==="lyrics"){activeLyricIndex=-1;updateLyrics();}});
   for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   if(upload){
