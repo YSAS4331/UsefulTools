@@ -43,12 +43,6 @@
           </div>
 
           <section id="panel-player" class="media-panel" role="tabpanel" aria-labelledby="tab-player">
-            <label for="upload-file" id="upload-container">
-              <i data-lucide="upload"></i>
-              <p>ファイルをアップロードします</p>
-              <p class="sub-text">または、ファイルをドラッグ&amp;ドロップ</p>
-            </label>
-
             <div class="player-layout">
               <section class="player-main" aria-label="再生中のメディア">
                 <div class="media-stage" id="media-stage">
@@ -98,24 +92,25 @@
                 <div class="content-tabs" role="tablist" aria-label="コンテンツ">
                   <button type="button" class="content-tab is-active" data-content-tab="playlist" aria-selected="true">プレイリスト</button>
                   <button type="button" class="content-tab" data-content-tab="lyrics" aria-selected="false">歌詞</button>
-                  <button type="button" class="content-tab" data-content-tab="related" aria-selected="false">関連</button>
                 </div>
                 <section class="content-panel" data-content-panel="playlist">
                   <div class="section-heading"><h3>次に再生</h3><button type="button" class="subtle-button" id="clear-queue-button">すべて削除</button></div>
                   <ol id="queue-list" class="queue-list"><li class="queue-empty">ファイルを追加してください</li></ol>
-                  <button type="button" class="add-files-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
                 </section>
                 <section class="content-panel" data-content-panel="lyrics" hidden>
                   <div id="lyrics-content" class="lyrics-content"><p class="content-empty">対応する .lrc ファイルを一緒に追加すると、ここに歌詞が表示されます。</p></div>
-                </section>
-                <section class="content-panel" data-content-panel="related" hidden>
-                  <div id="related-list" class="related-list"><p class="content-empty">関連するファイルはここに表示されます。</p></div>
                 </section>
               </section>
             </div>
           </section>
 
           <section id="panel-library" class="media-panel" role="tabpanel" aria-labelledby="tab-library" hidden>
+            <label for="upload-file" id="upload-container">
+              <i data-lucide="upload"></i>
+              <p>ファイルをアップロードします</p>
+              <p class="sub-text">または、ファイルをドラッグ&amp;ドロップ</p>
+            </label>
+
             <div class="library-heading">
               <div><h2>メディアライブラリ</h2><p>追加したファイルは、このページを開いている間だけ保持されます。</p></div>
               <button type="button" class="primary-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
