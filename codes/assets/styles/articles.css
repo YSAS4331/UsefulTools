@@ -21,13 +21,13 @@ article > header p {
   color: var(--text-secondary);
 }
 
-section {
+article > section {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-section h2 {
+article > section h2 {
   margin: 0;
   padding-left: 14px;
 
@@ -38,22 +38,22 @@ section h2 {
   color: var(--text-primary);
 }
 
-section :is(ol, ul) {
+article > section :is(ol, ul) {
   margin: 0;
   padding-left: 1.6rem;
 }
 
-section li + li {
+article > section li + li {
   margin-top: 10px;
 }
 
-section li,
-section p {
+article > section li,
+article > section p {
   line-height: 1.9;
   color: var(--text-secondary);
 }
 
-section p {
+article > section p {
   margin: 0;
 }
 
@@ -72,7 +72,7 @@ article > footer {
 }
 
 @media (max-width: 700px) {
-  main {
+  main:has(article) {
     padding: 24px 16px 48px;
   }
 
@@ -80,7 +80,7 @@ article > footer {
     gap: 24px;
   }
 
-  section h2 {
+  article > section h2 {
     font-size: 1.2rem;
   }
 }
