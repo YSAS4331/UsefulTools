@@ -26,7 +26,8 @@ class UICollapse extends HTMLElement {
             width: 100%;
             padding: 0 .25rem 0 .75rem;
             border: 0;
-            border-left: 3px solid var(--accent);
+            position: relative;
+            border-left: 0;
             border-radius: 0;
             background: transparent;
             color: var(--text-secondary);
@@ -37,13 +38,25 @@ class UICollapse extends HTMLElement {
             cursor: pointer;
           }
 
+          .toggle::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 1rem;
+            border-radius: 2px;
+            background: var(--accent);
+            transform: translateY(-50%);
+          }
+
           .label {
             display: flex;
             align-items: center;
             min-width: 0;
           }
 
-          .label ::slotted(*) {
+          slot[name="label"]::slotted(*) {
             display: inline-flex;
             align-items: center;
             gap: .4rem;
