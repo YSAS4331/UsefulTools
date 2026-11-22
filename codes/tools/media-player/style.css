@@ -220,23 +220,29 @@
 .library-heading p { margin-top: .35rem; color: var(--text-tertiary); font-size: .8rem; }
 #upload-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .45rem;
-  min-height: 150px;
-  padding: 1.5rem;
+  flex-direction: column;
+  width: 100%;
+  min-height: 10rem;
+  gap: .35rem;
+  padding: 1rem;
+  border-radius: var(--radius);
   border: 2px dashed var(--border-color);
-  border-radius: 13px;
   color: var(--text-secondary);
-  background: var(--bg);
+  background: transparent;
   cursor: pointer;
+  margin-bottom: 1rem;
   text-align: center;
-  transition: border-color .2s, background .2s;
+  transition: border-color .2s, background-color .2s;
 }
-#upload-container:hover, #upload-container.dragover { border-color: var(--accent-strong); background: color-mix(in srgb, var(--accent) 7%, var(--bg)); }
-.upload-icon { font-size: 1.8rem; color: var(--accent-strong); }
-#upload-container span:not(.upload-icon), #upload-container small { color: var(--text-tertiary); font-size: .78rem; }
+#upload-container:is(:hover, .dragover) {
+  border-color: var(--accent-border);
+  background: var(--bg-hover);
+}
+#upload-container i { color: var(--accent-strong); }
+#upload-container p { margin: 0; }
+#upload-container .sub-text { color: var(--text-tertiary); font-size: .85rem; }
 .library-list { margin-top: 1rem; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
 .library-item { display: flex; align-items: center; gap: .8rem; padding: .75rem .9rem; border-bottom: 1px solid var(--border-color); }
 .library-item:last-child { border-bottom: 0; }
