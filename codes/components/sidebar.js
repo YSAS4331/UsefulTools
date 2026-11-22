@@ -6,215 +6,108 @@ class Side extends HTMLElement {
   width: 100%;
   height: 100%;
   min-height: 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  padding: 22px 16px 16px;
+  padding: 24px 0;
   overflow: hidden;
   color: var(--text-primary);
-  background: rgba(255, 255, 255, .58);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  background: var(--glass-bg-3);
   backdrop-filter: blur(28px) saturate(180%);
-  border-right: 1px solid var(--glass-border-2);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-right: 1px solid var(--border-color);
   box-shadow: var(--glass-inner-shadow);
 }
 
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 2px 8px 22px;
+.sidebar > a {
+  display: block;
+  width: 100%;
+  padding: 0 24px 22px;
   color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -.025em;
   text-decoration: none;
 }
-.sidebar-brand:hover {
+.sidebar > a:hover {
   text-decoration: none;
-}
-.sidebar-brand-mark {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 20px;
-  font-weight: 800;
-  background: linear-gradient(145deg, #4ade80, #22c55e);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, .22);
-}
-.sidebar-brand-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.sidebar-brand-name {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -.035em;
-  line-height: 1.2;
-}
-.sidebar-brand-caption {
-  color: var(--text-tertiary);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .08em;
-}
-
-.sidebar-divider {
-  height: 1px;
-  flex: 0 0 1px;
-  margin: 0 8px;
-  background: var(--glass-border-2);
 }
 
 .sidebar-favorites {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  width: 100%;
   min-height: 0;
-  padding: 22px 4px 14px;
+  flex: 1;
+  box-sizing: border-box;
+  padding: 24px 16px;
 }
-.sidebar-section-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 8px 12px;
+.sidebar-favorites h2 {
+  margin: 0 0 12px;
   color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .045em;
-}
-.sidebar-section-icon {
-  display: grid;
-  place-items: center;
-  width: 25px;
-  height: 25px;
-  border: 1px solid rgba(34, 197, 94, .16);
-  border-radius: 8px;
-  color: var(--accent-strong);
-  background: rgba(74, 222, 128, .10);
   font-size: 13px;
+  font-weight: 650;
 }
 .sidebar-favorite-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-height: 0;
+  display: grid;
+  gap: 6px;
+  max-height: 100%;
   overflow-y: auto;
-  overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--glass-border-2) transparent;
 }
 .sidebar-favorite-list a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  padding: 10px 11px;
-  border: 1px solid transparent;
-  border-radius: 11px;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 550;
-  line-height: 1.4;
-  text-decoration: none;
-  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
-}
-.sidebar-favorite-list a::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
-  border-radius: 50%;
-  background: #b8c5bc;
-  transition: background .18s ease, box-shadow .18s ease;
-}
-.sidebar-favorite-list a:hover {
-  border-color: rgba(34, 197, 94, .15);
-  background: rgba(74, 222, 128, .09);
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.sidebar-favorite-list a:hover::before {
-  background: var(--accent-strong);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, .12);
-}
-.sidebar-favorite-list a[aria-current="page"] {
-  border-color: rgba(34, 197, 94, .22);
-  background: rgba(74, 222, 128, .13);
-  color: #16803d;
-  font-weight: 700;
-}
-.sidebar-favorite-list a[aria-current="page"]::before {
-  background: var(--accent-strong);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, .14);
-}
-.sidebar-favorite-title {
-  min-width: 0;
+  display: block;
   overflow: hidden;
+  padding: 9px 10px;
+  border-radius: 9px;
+  color: var(--text-primary);
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-decoration: none;
+  transition: background-color .18s ease, color .18s ease;
+}
+.sidebar-favorite-list a:hover {
+  background: var(--glass-bg-2);
+  text-decoration: none;
+}
+.sidebar-favorite-list a[aria-current="page"] {
+  background: rgba(0, 0, 0, .045);
+  box-shadow: inset 2px 0 var(--accent-border-strong);
+  font-weight: 650;
 }
 .sidebar-favorite-empty {
-  white-space: pre-line;
-  margin: 2px 4px;
-  padding: 17px 12px;
-  border: 1px dashed var(--glass-border-2);
-  border-radius: 12px;
   color: var(--text-tertiary);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
-  text-align: center;
-  background: rgba(255, 255, 255, .22);
 }
 
 .sidebar footer {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 14px 4px 0;
-  border-top: 1px solid var(--glass-border-2);
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  justify-items: center;
+  width: 100%;
 }
 .sidebar footer a {
-  display: block;
-  padding: 7px 10px;
-  border-radius: 8px;
   color: var(--text-tertiary);
-  font-size: 11px;
-  font-weight: 550;
   text-decoration: none;
-  transition: background .18s ease, color .18s ease;
+  font-size: 14px;
 }
 .sidebar footer a:hover {
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, .38);
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 @media (max-width: 600px) {
   .sidebar {
-    padding: 18px 16px 14px;
-    background: rgba(250, 252, 250, .94);
+    background: var(--bg-2);
   }
 }
 </style>
 <aside class="sidebar">
-  <a class="sidebar-brand" href="/" aria-label="UsefulTools ホーム">
-    <span class="sidebar-brand-mark" aria-hidden="true">U</span>
-    <span class="sidebar-brand-copy">
-      <span class="sidebar-brand-name">UsefulTools</span>
-      <span class="sidebar-brand-caption">TOOLS FOR EVERYDAY</span>
-    </span>
-  </a>
-
-  <div class="sidebar-divider"></div>
+  <a href="/">UsefulTools</a>
 
   <section class="sidebar-favorites" aria-label="お気に入り">
-    <h2 class="sidebar-section-heading">
-      <span class="sidebar-section-icon" aria-hidden="true">★</span>
-      お気に入り
-    </h2>
+    <h2>お気に入り</h2>
     <nav class="sidebar-favorite-list" aria-live="polite">
       <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
     </nav>
