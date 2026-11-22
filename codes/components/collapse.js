@@ -24,7 +24,9 @@ class UICollapse extends HTMLElement {
             justify-content: space-between;
             gap: .75rem;
             width: 100%;
-            padding: 0 .25rem 0 .75rem;
+            min-height: 2.5rem;
+            box-sizing: border-box;
+            padding: .5rem .25rem .5rem .75rem;
             border: 0;
             position: relative;
             border-left: 0;
@@ -154,7 +156,7 @@ class UICollapse extends HTMLElement {
     const duration = this.getAttribute('duration') || '240ms';
     const easing = this.getAttribute('easing') || 'ease';
 
-    this.style.setProperty('--collapse-duration', /^\d+(\.\d+)?$/.test(duration) ? `${duration}ms` : duration);
+    this.style.setProperty('--collapse-duration', /^\\d+(\\.\\d+)?$/.test(duration) ? `${duration}ms` : duration);
     this.style.setProperty('--collapse-easing', easing);
 
     const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
