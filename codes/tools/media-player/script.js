@@ -172,6 +172,10 @@ const init = () => {
     $(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==view);
     if(view==="lyrics"){activeLyricIndex=-1;updateLyrics();}
   };
+  listen($(".view-handle",root),"click",()=>switchView("player"));
+  let touchStartY=0;
+  listen($(".content-section",root),"touchstart",event=>{touchStartY=event.touches[0]?.clientY||0;},{passive:true});
+  listen($(".content-section",root),"touchend",event=>{const endY=event.changedTouches[0]?.clientY||0;if(endY-touchStartY>90)switchView("player");},{passive:true});
   for(const tab of $(".content-tab[data-content-tab]",root))listen(tab,"click",()=>switchView(tab.dataset.contentTab));
   listen(miniPlay,"click",()=>isPlaying()?pauseAll():play());
   listen(miniNext,"click",()=>move(1));
