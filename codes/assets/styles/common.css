@@ -25,7 +25,6 @@ main {
   min-height: 100%;
   padding: 2rem;
   overflow-y: auto;
-
   background: var(--bg);
 }
 
@@ -74,7 +73,7 @@ app-sidebar {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg,#ff416c 0,#8a2387 50%,#1d9bf0 100%);
+  background: var(--text-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
