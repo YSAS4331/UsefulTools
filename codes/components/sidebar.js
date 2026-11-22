@@ -143,7 +143,7 @@ class Side extends HTMLElement {
         storage.set('favoriteDBPromise', dbPromise);
       }
 
-      const [registry, db] = await Promise.all([toolsPromise, dbPromise]);
+      const [, db] = await Promise.all([toolsPromise, dbPromise]);
       if (token !== this.favoriteInitToken || !this.isConnected) return;
 
       const favorites = db.store('favorite');
