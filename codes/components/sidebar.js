@@ -1,92 +1,231 @@
 class Side extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = `
+    this.innerHTML = \`
 <style>
 .sidebar {
   width: 100%;
   height: 100%;
-
-  background: var(--glass-bg-3);
-  backdrop-filter: blur(28px) saturate(180%);
-
-  border-right: 1px solid var(--accent-border);
-
-  box-shadow:
-    var(--glass-inner-shadow),
-    inset 0 0 14px rgba(255, 255, 255, 0.35);
-
-  box-sizing: border-box;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  padding: 24px 0;
-}
-.sidebar-favorites {
-  width: 100%;
   box-sizing: border-box;
-  padding: 24px 16px;
-}
-.sidebar-favorites h2 {
-  margin: 0 0 12px;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 600;
-}
-.sidebar-favorite-list {
-  display: grid;
-  gap: 6px;
-}
-.sidebar-favorite-list a {
-  display: block;
+  padding: 22px 16px 16px;
   overflow: hidden;
-  padding: 9px 10px;
-  border-radius: 10px;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, .58);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border-right: 1px solid var(--glass-border-2);
+  box-shadow: var(--glass-inner-shadow);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 2px 8px 22px;
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 14px;
+}
+.sidebar-brand:hover {
+  text-decoration: none;
+}
+.sidebar-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(145deg, #4ade80, #22c55e);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, .22);
+}
+.sidebar-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sidebar-brand-name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.2;
+}
+.sidebar-brand-caption {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+
+.sidebar-divider {
+  height: 1px;
+  flex: 0 0 1px;
+  margin: 0 8px;
+  background: var(--glass-border-2);
+}
+
+.sidebar-favorites {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 22px 4px 14px;
+}
+.sidebar-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 8px 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .045em;
+}
+.sidebar-section-icon {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(34, 197, 94, .16);
+  border-radius: 8px;
+  color: var(--accent-strong);
+  background: rgba(74, 222, 128, .10);
+  font-size: 13px;
+}
+.sidebar-favorite-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--glass-border-2) transparent;
+}
+.sidebar-favorite-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+.sidebar-favorite-list a::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: #b8c5bc;
+  transition: background .18s ease, box-shadow .18s ease;
+}
+.sidebar-favorite-list a:hover {
+  border-color: rgba(34, 197, 94, .15);
+  background: rgba(74, 222, 128, .09);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.sidebar-favorite-list a:hover::before {
+  background: var(--accent-strong);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, .12);
+}
+.sidebar-favorite-list a[aria-current="page"] {
+  border-color: rgba(34, 197, 94, .22);
+  background: rgba(74, 222, 128, .13);
+  color: #16803d;
+  font-weight: 700;
+}
+.sidebar-favorite-list a[aria-current="page"]::before {
+  background: var(--accent-strong);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, .14);
+}
+.sidebar-favorite-title {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.sidebar-favorite-list a:hover {
-  background: var(--glass-bg-2);
-}
 .sidebar-favorite-empty {
+  margin: 2px 4px;
+  padding: 17px 12px;
+  border: 1px dashed var(--glass-border-2);
+  border-radius: 12px;
   color: var(--text-tertiary);
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+  background: rgba(255, 255, 255, .22);
 }
+
 .sidebar footer {
-  margin-top: auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  justify-items: center;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 4px 0;
+  border-top: 1px solid var(--glass-border-2);
 }
 .sidebar footer a {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 8px;
   color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 550;
   text-decoration: none;
-  font-size: 14px;
+  transition: background .18s ease, color .18s ease;
 }
 .sidebar footer a:hover {
-  text-decoration: underline;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, .38);
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    padding: 18px 16px 14px;
+    background: rgba(250, 252, 250, .94);
+  }
 }
 </style>
 <aside class="sidebar">
-  <a href="/">UsefulTools</a>
+  <a class="sidebar-brand" href="/" aria-label="UsefulTools ホーム">
+    <span class="sidebar-brand-mark" aria-hidden="true">U</span>
+    <span class="sidebar-brand-copy">
+      <span class="sidebar-brand-name">UsefulTools</span>
+      <span class="sidebar-brand-caption">TOOLS FOR EVERYDAY</span>
+    </span>
+  </a>
+
+  <div class="sidebar-divider"></div>
+
   <section class="sidebar-favorites" aria-label="お気に入り">
-    <h2>お気に入り</h2>
+    <h2 class="sidebar-section-heading">
+      <span class="sidebar-section-icon" aria-hidden="true">★</span>
+      お気に入り
+    </h2>
     <nav class="sidebar-favorite-list" aria-live="polite">
-      <span class="sidebar-favorite-empty">読み込み中...</span>
+      <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
     </nav>
   </section>
+
   <footer>
     <a href="/terms/">利用規約</a>
     <a href="/privacy/">プライバシーポリシー</a>
     <a href="/sitemap/">サイトマップ</a>
   </footer>
 </aside>
-    `;
+    \`;
 
     this.favoriteList = this.querySelector('.sidebar-favorite-list');
     this.favoriteInitToken = 0;
@@ -166,16 +305,23 @@ class Side extends HTMLElement {
         if (!saved.length) {
           const empty = document.createElement('span');
           empty.className = 'sidebar-favorite-empty';
-          empty.textContent = 'お気に入りはありません';
+          empty.textContent = 'お気に入りはまだありません。\\n気に入ったツールを追加すると、ここに表示されます。';
           this.favoriteList.append(empty);
           return;
         }
 
+        const currentPath = location.pathname.replace(/\\/+$/, '') || '/';
         for (const favorite of saved) {
           const link = document.createElement('a');
+          const favoritePath = new URL(favorite.url, location.origin).pathname.replace(/\\/+$/, '') || '/';
           link.href = favorite.url;
-          link.textContent = favorite.title || favorite.key || '名称未設定';
-          link.title = favorite.description || link.textContent;
+          link.title = favorite.description || favorite.title || favorite.key || '';
+          if (favoritePath === currentPath) link.setAttribute('aria-current', 'page');
+
+          const title = document.createElement('span');
+          title.className = 'sidebar-favorite-title';
+          title.textContent = favorite.title || favorite.key || '名称未設定';
+          link.append(title);
           this.favoriteList.append(link);
         }
       };
@@ -233,7 +379,6 @@ class Side extends HTMLElement {
     const diffX = touch.clientX - this.startX;
     const diffY = touch.clientY - this.startY;
 
-    // スワイプ方向を判定
     if (!this.isHorizontal) {
       const threshold = this.width * 0.02;
 
@@ -260,7 +405,7 @@ class Side extends HTMLElement {
       Math.min(0, base + diffX)
     );
 
-    this.style.transform = `translateX(${moveX}px)`;
+    this.style.transform = \`translateX(\${moveX}px)\`;
 
     if (this.isHorizontal && e.cancelable) {
       e.preventDefault();
