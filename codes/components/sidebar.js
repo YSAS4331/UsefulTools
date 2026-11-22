@@ -23,14 +23,6 @@ class Side extends HTMLElement {
   box-sizing: border-box;
   padding: 20px 16px;
 }
-.sidebar-favorites h2 {
-  margin: 0 0 12px;
-  padding-left: .75rem;
-  border-left: 3px solid var(--accent);
-  color: var(--text-secondary);
-  font-size: .85rem;
-  font-weight: 700;
-}
 .sidebar-favorite-list {
   display: grid;
   gap: .4rem;
@@ -96,10 +88,11 @@ class Side extends HTMLElement {
 <aside class="sidebar">
   <div id="searchbar"></div>
   <section class="sidebar-favorites" aria-label="お気に入り">
-    <h2>お気に入り</h2>
-    <nav class="sidebar-favorite-list" aria-live="polite">
-      <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
-    </nav>
+    <ui-collapse label="お気に入り" duration="240ms" easing="ease" open>
+      <nav class="sidebar-favorite-list" aria-live="polite">
+        <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
+      </nav>
+    </ui-collapse>
   </section>
 
   <footer>
