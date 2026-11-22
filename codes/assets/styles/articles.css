@@ -57,7 +57,7 @@ article > section p {
   margin: 0;
 }
 
-::marker {
+article > section ::marker {
   color: var(--accent-strong);
   font-weight: 600;
 }
