@@ -22,7 +22,7 @@ const init = () => {
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
   const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
   const entries=new Map(), artworks=new Map(), lyricFiles=new Map(), listeners=[], objectUrls=new Set();
-  let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[];
+  let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
   const currentEntry=()=>entries.get(currentId);
   const media=()=>currentEntry()?.kind==="video"?video:audio;
@@ -38,6 +38,7 @@ const init = () => {
     return lines.sort((a,b)=>a.time-b.time);
   };
   const showLyrics=()=>{
+    activeLyricIndex=-1;
     lyricsContent.replaceChildren();
     if(!currentLyrics.length){const p=document.createElement("p");p.className="content-empty";p.textContent="対応する .lrc ファイルがありません。音声ファイルと同じ名前の .lrc を一緒に追加してください。";lyricsContent.append(p);return;}
     currentLyrics.forEach((line,index)=>{const p=document.createElement("p");p.className="lyric-line";p.dataset.index=index;p.textContent=line.text;lyricsContent.append(p);});
@@ -47,9 +48,8 @@ const init = () => {
     const time=media()?.currentTime||0;
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
-    $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
-    const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;
-    activeLine?.scrollIntoView({block:"center",behavior:"smooth"});
+    $(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
+    if(active!==activeLyricIndex){activeLyricIndex=active;const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;activeLine?.scrollIntoView({block:"center",behavior:"smooth"});}
   };
   const updatePlaybackState=()=>{
     const playing=isPlaying();
