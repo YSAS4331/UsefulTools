@@ -171,7 +171,7 @@ function ensureProgressEl() {
     left: "0",
     height: "5px",
     width: "0%",
-    background: "var(--spa-progress-color, #2563eb)",
+    background: "var(--spa-progress-color)",
     zIndex: "9999",
     transition: "width 200ms ease-out, opacity 200ms ease-out",
     opacity: "0",
