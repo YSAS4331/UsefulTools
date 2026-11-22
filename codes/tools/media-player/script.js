@@ -154,8 +154,7 @@ const init = () => {
       const id=nextId++,base=baseName(file.name),artworkFile=artworks.get(base),lyricFile=lyricFiles.get(base);
       const entry={id,file,kind:file.type.startsWith("video/")?"video":"audio",url:makeUrl(file),artwork:null,artworkUrl:null,lyrics:[]};
       if(entry.kind==="audio"&&artworkFile?.type.startsWith("image/")){entry.artwork=artworkFile;entry.artworkUrl=makeUrl(artworkFile);}
-      const lyricFile=sidecars.get(base);
-      if(entry.kind==="audio"&&lyricFile&&(lyricFile.name.toLowerCase().endsWith(".lrc")||lyricFile.type==="text/plain")){
+      if(entry.kind==="audio"&&lyricFile){
         const reader=new FileReader();reader.onload=()=>{if(!entries.has(id))return;entry.lyrics=parseLrc(String(reader.result||""));if(id===currentId){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}};
         reader.readAsText(lyricFile);
       }
