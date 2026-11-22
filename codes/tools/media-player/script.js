@@ -49,7 +49,7 @@ const init = () => {
     const time=media()?.currentTime||0;
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
-    $(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
+    $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
     if(active!==activeLyricIndex){activeLyricIndex=active;const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;activeLine?.scrollIntoView({block:"center",behavior:"smooth"});}
   };
   const updatePlaybackState=()=>{
