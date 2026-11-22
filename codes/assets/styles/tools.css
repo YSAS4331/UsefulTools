@@ -151,3 +151,9 @@
     font-size: 1.15rem
   }
 }
+
+
+.tool-buttons .tool-favorite.is-favorite {
+  border-color: var(--accent-border-strong);
+  color: var(--accent-strong);
+}
