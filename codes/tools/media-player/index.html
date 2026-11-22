@@ -88,11 +88,6 @@
                 <button type="button" id="mini-play-button" aria-label="再生"><i data-lucide="play"></i></button>
                 <button type="button" id="mini-next-button" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
               </section>
-              <nav class="view-navigation" aria-label="プレイヤー表示">
-                <button type="button" class="content-tab" data-content-tab="playlist">プレイリスト</button>
-                <button type="button" class="content-tab" data-content-tab="lyrics">歌詞</button>
-                <button type="button" class="content-tab" data-content-tab="library">ライブラリ <span class="nav-file-count">0</span></button>
-              </nav>
               <section class="content-section">
                 <section class="content-panel" data-content-panel="playlist" hidden>
                   <div class="section-heading"><h3>次に再生</h3><button type="button" class="subtle-button" id="clear-queue-button">すべて削除</button></div>
@@ -114,6 +109,11 @@
                   <ol id="files" class="library-list"><li class="library-empty">まだファイルがありません</li></ol>
                 </section>
               </section>
+              <nav class="view-navigation" aria-label="プレイヤー表示">
+                <button type="button" class="content-tab" data-content-tab="playlist">プレイリスト</button>
+                <button type="button" class="content-tab" data-content-tab="lyrics">歌詞</button>
+                <button type="button" class="content-tab" data-content-tab="library">ライブラリ <span class="nav-file-count">0</span></button>
+              </nav>
             </div>
           <audio id="audio-player" preload="metadata"></audio>
         </div>
