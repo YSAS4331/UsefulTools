@@ -69,7 +69,9 @@ class UICollapse extends HTMLElement {
           }
 
           .content {
-            padding-top: .75rem;
+            margin-left: .75rem;
+            padding: .75rem 0 0 .75rem;
+            border-left: 1px solid var(--border-color);
           }
 
           @media (prefers-reduced-motion: reduce) {
