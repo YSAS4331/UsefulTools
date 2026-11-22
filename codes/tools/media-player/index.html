@@ -37,12 +37,6 @@
 
         <div id="tool" class="media-tool">
           <input type="file" id="upload-file" accept="audio/*,video/*,image/*,.lrc" hidden multiple>
-          <div class="media-tabs" role="tablist" aria-label="表示切り替え">
-            <button class="media-tab is-active" id="tab-player" type="button" role="tab" aria-selected="true" aria-controls="panel-player">プレイヤー</button>
-            <button class="media-tab" id="tab-library" type="button" role="tab" aria-selected="false" aria-controls="panel-library">ライブラリ <span id="file-count">0</span></button>
-          </div>
-
-          <section id="panel-player" class="media-panel" role="tabpanel" aria-labelledby="tab-player">
             <div class="player-layout">
               <section class="player-main" aria-label="再生中のメディア">
                 <div class="media-stage" id="media-stage">
@@ -92,6 +86,7 @@
                 <div class="content-tabs" role="tablist" aria-label="コンテンツ">
                   <button type="button" class="content-tab is-active" data-content-tab="playlist" aria-selected="true">プレイリスト</button>
                   <button type="button" class="content-tab" data-content-tab="lyrics" aria-selected="false">歌詞</button>
+                  <button type="button" class="content-tab" data-content-tab="library" aria-selected="false">ライブラリ <span id="file-count">0</span></button>
                 </div>
                 <section class="content-panel" data-content-panel="playlist">
                   <div class="section-heading"><h3>次に再生</h3><button type="button" class="subtle-button" id="clear-queue-button">すべて削除</button></div>
@@ -100,22 +95,20 @@
                 <section class="content-panel" data-content-panel="lyrics" hidden>
                   <div id="lyrics-content" class="lyrics-content"><p class="content-empty">対応する .lrc ファイルを一緒に追加すると、ここに歌詞が表示されます。</p></div>
                 </section>
+                <section class="content-panel" data-content-panel="library" hidden>
+                  <label for="upload-file" id="upload-container">
+                    <i data-lucide="upload"></i>
+                    <p>ファイルをアップロードします</p>
+                    <p class="sub-text">または、ファイルをドラッグ&amp;ドロップ</p>
+                  </label>
+                  <div class="library-heading">
+                    <div><h3>メディアライブラリ</h3><p>追加したファイルは、このページを開いている間だけ保持されます。</p></div>
+                    <button type="button" class="primary-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
+                  </div>
+                  <ol id="files" class="library-list"><li class="library-empty">まだファイルがありません</li></ol>
+                </section>
               </section>
             </div>
-          </section>
-
-          <section id="panel-library" class="media-panel" role="tabpanel" aria-labelledby="tab-library" hidden>
-            <label for="upload-file" id="upload-container">
-              <i data-lucide="upload"></i>
-              <p>ファイルをアップロードします</p>
-              <p class="sub-text">または、ファイルをドラッグ&amp;ドロップ</p>
-            </label>
-
-            <div class="library-heading">
-              <div><h2>メディアライブラリ</h2><p>追加したファイルは、このページを開いている間だけ保持されます。</p></div>
-              <button type="button" class="primary-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
-            </div>
-            <ol id="files" class="library-list"><li class="library-empty">まだファイルがありません</li></ol>
           </section>
           <audio id="audio-player" preload="metadata"></audio>
         </div>
