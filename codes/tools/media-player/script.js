@@ -16,11 +16,11 @@ const init = () => {
   if (!root || !input) return;
   const audio=$("#audio-player",root), video=$("#video-player",root), artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
-  const lyricsContent=$("#lyrics-content",root), count=$("#file-count",root);
+  const lyricsContent=$("#lyrics-content",root), count=$("#file-count",root), miniCount=$(".nav-file-count",root);
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
-  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
+  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);\n  const miniTitle=$("#mini-track-title",root),miniMeta=$("#mini-track-meta",root),miniArtwork=$("#mini-artwork-image",root),miniArtworkIcon=$("#mini-artwork-icon",root),miniPlay=$("#mini-play-button",root),miniNext=$("#mini-next-button",root);
   const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
   const entries=new Map(), artworks=new Map(), lyricFiles=new Map(), listeners=[], objectUrls=new Set();
   let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
@@ -56,7 +56,7 @@ const init = () => {
     const playing=isPlaying();
     playButton.innerHTML=playing?'<i data-lucide="pause"></i>':'<i data-lucide="play"></i>';
     playButton.setAttribute("aria-label",playing?"一時停止":"再生");
-    indicator.classList.toggle("is-playing",playing);
+    indicator.classList.toggle("is-playing",playing);\n    if(miniPlay){miniPlay.innerHTML=playing?"<i data-lucide=\"pause\"></i>":"<i data-lucide=\"play\"></i>";miniPlay.setAttribute("aria-label",playing?"一時停止":"再生");}
     createIcons?.({icons:lucideIcons});
   };
   const updateProgress=()=>{
@@ -80,7 +80,7 @@ const init = () => {
       const remove=document.createElement("button");remove.type="button";remove.className="remove-file";remove.textContent="×";remove.setAttribute("aria-label",entry.file.name+"を削除");remove.addEventListener("click",()=>removeEntry(id));
       li.append(select,remove);queue.append(li);
     }
-    count.textContent=String(entries.size);previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;$("#clear-queue-button",root).disabled=!entries.size;
+    count.textContent=String(entries.size);if(miniCount)miniCount.textContent=String(entries.size);previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;$("#clear-queue-button",root).disabled=!entries.size;
   };
   const renderLibrary=()=>{
     library.replaceChildren();
@@ -92,7 +92,7 @@ const init = () => {
       const name=document.createElement("strong");name.textContent=entry.file.name;
       const meta=document.createElement("small");meta.textContent=(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size);copy.append(name,meta);
       const actions=document.createElement("span");actions.className="library-actions";
-      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);$$(".content-tab",root).find(tab=>tab.dataset.contentTab==="playlist")?.click();});
+      const play=document.createElement("button");play.type="button";play.className="small-action";play.textContent="再生";play.addEventListener("click",()=>{selectEntry(id,true);switchView("playlist");});
       const remove=document.createElement("button");remove.type="button";remove.className="small-action";remove.textContent="削除";remove.addEventListener("click",()=>removeEntry(id));
       actions.append(play,remove);li.append(icon,copy,actions);library.append(li);
     }
@@ -101,7 +101,7 @@ const init = () => {
   const updateTrack=()=>{
     const entry=currentEntry();
     trackTitle.textContent=entry?entry.file.name.replace(/\.[^.]+$/,""):"再生待ち";
-    trackMeta.textContent=entry?(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size):"ファイルが選択されていません";
+    trackMeta.textContent=entry?(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size):"ファイルが選択されていません";\n    if(miniTitle)miniTitle.textContent=entry?entry.file.name.replace(/\\.[^.]+$/, ""):"再生待ち";\n    if(miniMeta)miniMeta.textContent=entry?(entry.kind==="video"?"動画":"音声"):"ファイルが選択されていません";\n    if(miniArtwork){miniArtwork.hidden=!entry?.artworkUrl;if(entry?.artworkUrl)miniArtwork.src=entry.artworkUrl;else miniArtwork.removeAttribute("src");}\n    if(miniArtworkIcon)miniArtworkIcon.hidden=!!entry?.artworkUrl;\n    if(miniPlay)miniPlay.disabled=!entry;if(miniNext)miniNext.disabled=entries.size<2;
     stageEmpty.hidden=!!entry;audioVisual.hidden=!entry||entry.kind==="video"||!!entry.artwork;video.hidden=!entry||entry.kind!=="video";
     artwork.hidden=!entry||entry.kind!=="audio"||!entry.artwork;
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
@@ -159,7 +159,16 @@ const init = () => {
   listen(volume,"input",()=>{audio.volume=Number(volume.value);video.volume=Number(volume.value);});
   listen(speed,"change",()=>{audio.playbackRate=Number(speed.value);video.playbackRate=Number(speed.value);});
   listen($("#clear-queue-button",root),"click",()=>{for(const id of [...entries.keys()])removeEntry(id);});
-  for(const tab of $$(".content-tab",root))listen(tab,"click",()=>{$$(".content-tab",root).forEach(item=>{const active=item===tab;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});$$(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==tab.dataset.contentTab);if(tab.dataset.contentTab==="lyrics"){activeLyricIndex=-1;updateLyrics();}});
+  const switchView=view=>{
+    root.dataset.view=view;
+    $(".content-tab[data-content-tab]",root).forEach(item=>{const active=item.dataset.contentTab===view;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});
+    $(".content-panel",root).forEach(panel=>panel.hidden=panel.dataset.contentPanel!==view);
+    if(view==="lyrics"){activeLyricIndex=-1;updateLyrics();}
+  };
+  for(const tab of $(".content-tab[data-content-tab]",root))listen(tab,"click",()=>switchView(tab.dataset.contentTab));
+  listen(miniPlay,"click",()=>isPlaying()?pauseAll():play());
+  listen(miniNext,"click",()=>move(1));
+  switchView("player");
   for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   if(upload){
