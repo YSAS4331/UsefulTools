@@ -44,7 +44,7 @@ class Side extends HTMLElement {
 }
 .sidebar-favorite-list a:hover {
   color: var(--text-primary);
-  background: #f0f0f0;
+  background: var(--bg-hover);
   text-decoration: none;
 }
 .sidebar-favorite-list a[aria-current="page"] {
