@@ -86,7 +86,7 @@ const init = () => {
   };
   const updateProgress=()=>{
     const active=media();
-    if(!active||!Number.isFinite(active.duration)){currentTime.textContent=formatTime(active?.currentTime||0);duration.textContent="0:00";if(!seeking)seek.value="0";updateLyrics();return;}
+    if(!active||!Number.isFinite(active.duration)){currentTime.textContent=formatTime(active?.currentTime||0);duration.textContent="0:00";if(!seeking)seek.value="0";updateLyrics();updateMetadata();return;}
     currentTime.textContent=formatTime(active.currentTime);duration.textContent=formatTime(active.duration);
     if(!seeking)seek.value=String(active.duration?active.currentTime/active.duration*1000:0);
     updateLyrics();updateMetadata();
@@ -124,15 +124,17 @@ const init = () => {
   };
   const render=()=>{renderQueue();renderLibrary();};
   const updateMetadata=()=>{
-  const metadata=$("#metadata-list",root);
-  if(metadata){
+    const entry=currentEntry();
+    const metadata=$("#metadata-list",root);
+    if(!metadata)return;
+    const active=media();
     const rows=[
       ["ファイル名",entry?.file.name||"未選択"],
       ["メディア種別",entry?(entry.kind==="video"?"動画":"音声"):"—"],
       ["ファイル形式",entry?.file.type||"不明"],
       ["ファイルサイズ",entry?formatSize(entry.file.size):"—"],
       ["最終更新",entry?new Date(entry.file.lastModified).toLocaleString():"—"],
-      ["再生時間",entry&&Number.isFinite(media()?.duration)&&media().duration>0?formatTime(media().duration):"読み込み待ち"],
+      ["再生時間",entry&&Number.isFinite(active?.duration)&&active.duration>0?formatTime(active.duration):"読み込み待ち"],
       ["映像サイズ",entry?.kind==="video"&&video.videoWidth?video.videoWidth+" × "+video.videoHeight:"—"],
       ["ジャケット",entry?.artworkUrl?"あり":"なし"],
       ["歌詞ファイル",entry?.lyrics?.length?"あり":"なし"]
@@ -142,8 +144,6 @@ const init = () => {
       const row=document.createElement("div"),term=document.createElement("dt"),description=document.createElement("dd");
       term.textContent=label;description.textContent=value;row.append(term,description);metadata.append(row);
     }
-  }
-
   };
   const updateTrack=()=>{
     const entry=currentEntry();
