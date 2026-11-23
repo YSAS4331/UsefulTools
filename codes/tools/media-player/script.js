@@ -269,7 +269,7 @@ const init = () => {
   engine.volume=Number(volume.value);
   engine.playbackRate=Number(speed.value);
   switchView("player");
-  for(const button of $("[data-open-files]",root))listen(button,"click",()=>input.click());
+  for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   if(upload){
     const prevent=event=>{event.preventDefault();event.stopPropagation();};
