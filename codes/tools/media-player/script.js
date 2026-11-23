@@ -15,14 +15,15 @@ if (!customElements.get("media-engine")) {
       if (this.audio) return;
       Object.assign(this.style, {
         position: "fixed",
-        left: "-2px",
-        top: "-2px",
-        width: "1px",
-        height: "1px",
-        overflow: "hidden",
-        opacity: "0",
+        display: "block",
+        left: "12px",
+        right: "12px",
+        bottom: "calc(12px + env(safe-area-inset-bottom))",
+        width: "auto",
+        height: "auto",
+        overflow: "visible",
         pointerEvents: "none",
-        zIndex: "-1"
+        zIndex: "1000"
       });
       this.entries = new Map();
       this.artworks = new Map();
@@ -51,11 +52,12 @@ if (!customElements.get("media-engine")) {
         <button type="button" class="global-mini-play" aria-label="再生">▶</button>
         <button type="button" class="global-mini-next" aria-label="次の曲">⏭</button>
         <button type="button" class="global-mini-toggle" aria-label="閉じる">⌄</button>`;
-      document.body.append(this.globalMini);
+      this.append(this.globalMini);
       const globalStyle = document.createElement("style");
       globalStyle.id = "global-media-mini-style";
       globalStyle.textContent = `
-        .global-media-mini{position:fixed;z-index:1000;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-2);color:var(--text-primary);box-shadow:0 4px 24px #0002;font:inherit}
+        media-engine{box-sizing:border-box}
+        .global-media-mini{display:none;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-2);color:var(--text-primary);box-shadow:0 4px 24px #0002;font:inherit;pointer-events:auto}
         .global-media-mini.is-visible{display:flex}
         .global-media-mini button{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;padding:0;border:0;border-radius:10px;background:transparent;color:inherit}
         .global-media-mini .global-mini-open{display:flex;flex:1;min-width:0;justify-content:flex-start;gap:10px;text-align:left}
@@ -66,10 +68,11 @@ if (!customElements.get("media-engine")) {
         .global-mini-copy strong{font-size:.85rem;font-weight:650}
         .global-mini-copy small{font-size:.72rem;color:var(--text-tertiary)}
         .global-media-mini .global-mini-toggle{font-size:1.2rem}
-        .global-media-mini.is-collapsed{left:auto;right:12px;width:54px;height:46px;justify-content:center;padding:4px}
         .global-media-mini.is-collapsed .global-mini-open,.global-media-mini.is-collapsed .global-mini-play,.global-media-mini.is-collapsed .global-mini-next{display:none}
         .global-media-mini.is-collapsed .global-mini-toggle{width:100%;height:100%}
-        @media(min-width:700px){.global-media-mini{left:auto;width:min(420px,calc(100vw - 24px))}}
+        media-engine.is-mini-collapsed{left:auto!important;right:12px!important;width:54px!important;height:46px!important}
+        media-engine.is-mini-collapsed .global-media-mini{height:100%;justify-content:center;padding:4px}
+        @media(min-width:700px){media-engine{left:auto!important;right:12px!important;width:min(420px,calc(100vw - 24px))!important}}
       `;
       if (!document.getElementById("global-media-mini-style")) document.head.append(globalStyle);
       this.globalMini.querySelector(".global-mini-open").addEventListener("click", () => window.spaRouter?.navigate("/tools/media-player/"));
@@ -81,6 +84,7 @@ if (!customElements.get("media-engine")) {
       this.globalMini.querySelector(".global-mini-toggle").addEventListener("click", () => {
         this.globalMini.classList.toggle("is-collapsed");
         const collapsed = this.globalMini.classList.contains("is-collapsed");
+        this.classList.toggle("is-mini-collapsed", collapsed);
         this.globalMini.querySelector(".global-mini-toggle").textContent = collapsed ? "⌃" : "⌄";
         this.globalMini.querySelector(".global-mini-toggle").setAttribute("aria-label", collapsed ? "ミニプレーヤーを開く" : "閉じる");
       });
