@@ -323,6 +323,8 @@
   opacity: .58;
   transition: opacity .2s,color .2s;
 }
+.artwork-lyrics.is-shifting { animation: artwork-lyrics-shift .22s ease-out; }
+@keyframes artwork-lyrics-shift { from { transform: translateY(.8rem); opacity: .55; } to { transform: translateY(0); opacity: 1; } }
 .artwork-lyrics-line.is-current {
   color: var(--text-primary);
   font-size: .92rem;
