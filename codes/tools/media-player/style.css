@@ -331,3 +331,9 @@
 /* Metadata view shares the tab content layout. */
 #tool.media-tool[data-view="info"] .content-section { display:block; }
 #tool.media-tool[data-view="info"] .content-panel { display:block; }
+
+
+/* The persistent video element must stay hidden while parked in the media engine. */
+media-engine > video[hidden] {
+  display: none !important;
+}
