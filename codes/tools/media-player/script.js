@@ -23,6 +23,18 @@ const init = () => {
   const audio = engine.audio, video = engine.video;
   const stage = $("#media-stage", root);
   stage.append(video);
+  const updateVideoStageSize = () => {
+    if (!video.videoWidth || !video.videoHeight || currentEntry()?.kind !== "video") return;
+    const ratio = video.videoWidth / video.videoHeight;
+    const availableWidth = stage.parentElement?.clientWidth || root.clientWidth;
+    const maxHeight = window.innerHeight * 0.65;
+    const width = Math.min(availableWidth, maxHeight * ratio);
+    const height = width / ratio;
+    stage.style.width = `${width}px`;
+    stage.style.height = `${height}px`;
+    stage.style.setProperty("--video-ratio", String(ratio));
+  };
+  listen(window, "resize", updateVideoStageSize);
   const artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
   const lyricsContent=$("#lyrics-content",root), artworkLyrics=$("#artwork-lyrics",root), count=$(".nav-file-count",root);
@@ -167,7 +179,7 @@ const init = () => {
   const selectEntry=(id,autoplay=false)=>{
     const entry=entries.get(id);if(!entry)return;
     if(shuffle)engine.shuffleBag=engine.shuffleBag.filter(item=>item!==id);
-    pauseAll();currentId=id;engine.currentId=id;$("#media-stage",root).style.removeProperty("--video-ratio");audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();
+    pauseAll();currentId=id;engine.currentId=id;stage.style.removeProperty("--video-ratio");stage.style.removeProperty("width");stage.style.removeProperty("height");audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();
     const active=entry.kind==="video"?video:audio;active.src=entry.url;active.playbackRate=Number(speed.value);active.volume=Number(volume.value);engine.playbackRate=Number(speed.value);engine.volume=Number(volume.value);active.load();
     updateTrack();if(autoplay)play();
   };
@@ -277,7 +289,7 @@ const init = () => {
   listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
 
   for(const active of [audio,video]){
-    listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",()=>{if(active===video&&currentEntry()?.kind==="video"&&video.videoWidth&&video.videoHeight)$("#media-stage",root).style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));updateProgress();});listen(active,"durationchange",updateProgress);
+    listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",()=>{if(active===video)updateVideoStageSize();updateProgress();});listen(active,"durationchange",updateProgress);
     listen(active,"play",updatePlaybackState);listen(active,"pause",updatePlaybackState);
     listen(active,"error",()=>{trackMeta.textContent="このファイルを再生できません。形式に対応しているか確認してください。";updatePlaybackState();});
   }
