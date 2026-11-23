@@ -89,7 +89,7 @@ const init = () => {
     if(!active||!Number.isFinite(active.duration)){currentTime.textContent=formatTime(active?.currentTime||0);duration.textContent="0:00";if(!seeking)seek.value="0";updateLyrics();return;}
     currentTime.textContent=formatTime(active.currentTime);duration.textContent=formatTime(active.duration);
     if(!seeking)seek.value=String(active.duration?active.currentTime/active.duration*1000:0);
-    updateLyrics();
+    updateLyrics();updateMetadata();
   };
   const renderQueue=()=>{
     queue.replaceChildren();
@@ -123,6 +123,28 @@ const init = () => {
     }
   };
   const render=()=>{renderQueue();renderLibrary();};
+  const updateMetadata=()=>{
+  const metadata=$("#metadata-list",root);
+  if(metadata){
+    const rows=[
+      ["ファイル名",entry?.file.name||"未選択"],
+      ["メディア種別",entry?(entry.kind==="video"?"動画":"音声"):"—"],
+      ["ファイル形式",entry?.file.type||"不明"],
+      ["ファイルサイズ",entry?formatSize(entry.file.size):"—"],
+      ["最終更新",entry?new Date(entry.file.lastModified).toLocaleString():"—"],
+      ["再生時間",entry&&Number.isFinite(media()?.duration)&&media().duration>0?formatTime(media().duration):"読み込み待ち"],
+      ["映像サイズ",entry?.kind==="video"&&video.videoWidth?video.videoWidth+" × "+video.videoHeight:"—"],
+      ["ジャケット",entry?.artworkUrl?"あり":"なし"],
+      ["歌詞ファイル",entry?.lyrics?.length?"あり":"なし"]
+    ];
+    metadata.replaceChildren();
+    for(const [label,value] of rows){
+      const row=document.createElement("div"),term=document.createElement("dt"),description=document.createElement("dd");
+      term.textContent=label;description.textContent=value;row.append(term,description);metadata.append(row);
+    }
+  }
+
+  };
   const updateTrack=()=>{
     const entry=currentEntry();
     trackTitle.textContent=entry?entry.file.name.replace(/\.[^.]+$/,""):"再生待ち";
@@ -136,26 +158,7 @@ const init = () => {
     artwork.hidden=!entry||entry.kind!=="audio"||!entry.artwork;
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
     if(entry?.kind==="video"&&video.videoWidth&&video.videoHeight)stage.style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));
-    const metadata=$("#metadata-list",root);
-    if(metadata){
-      const rows=[
-        ["ファイル名",entry?.file.name||"未選択"],
-        ["メディア種別",entry?(entry.kind==="video"?"動画":"音声"):"—"],
-        ["ファイル形式",entry?.file.type||"不明"],
-        ["ファイルサイズ",entry?formatSize(entry.file.size):"—"],
-        ["最終更新",entry?new Date(entry.file.lastModified).toLocaleString():"—"],
-        ["再生時間",entry&&Number.isFinite(media()?.duration)&&media().duration>0?formatTime(media().duration):"読み込み待ち"],
-        ["映像サイズ",entry?.kind==="video"&&video.videoWidth?video.videoWidth+" × "+video.videoHeight:"—"],
-        ["ジャケット",entry?.artworkUrl?"あり":"なし"],
-        ["歌詞ファイル",entry?.lyrics?.length?"あり":"なし"]
-      ];
-      metadata.replaceChildren();
-      for(const [label,value] of rows){
-        const row=document.createElement("div"),term=document.createElement("dt"),description=document.createElement("dd");
-        term.textContent=label;description.textContent=value;row.append(term,description);metadata.append(row);
-      }
-    }
-
+    updateMetadata();
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
     currentLyrics=entry?.lyrics||[];showLyrics();engine.updateSession?.(entry);updateProgress();updatePlaybackState();render();
   };
