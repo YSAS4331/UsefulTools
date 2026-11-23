@@ -447,3 +447,66 @@ media-engine > audio {
     display: contents !important;
   }
 }
+
+
+/* Desktop fullscreen keeps the same two-column player layout. */
+@container media-tool (min-width: 820px) {
+  #tool.fullscreen-active.media-tool .player-layout {
+    display: grid;
+    grid-template-columns: minmax(230px, .78fr) minmax(0, 1.22fr);
+    grid-template-areas:
+      "media nav"
+      "media content"
+      "lyrics content"
+      "now content"
+      "playback content";
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: 1.5rem;
+    row-gap: .75rem;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+    margin: 0;
+    gap: .75rem 1.5rem;
+  }
+
+  #tool.fullscreen-active.media-tool .player-main {
+    display: contents !important;
+  }
+
+  #tool.fullscreen-active.media-tool .mini-player {
+    display: none !important;
+  }
+
+  #tool.fullscreen-active.media-tool .view-navigation {
+    grid-area: nav;
+    order: initial;
+    position: static;
+    align-self: start;
+    margin: 0;
+    flex: initial;
+  }
+
+  #tool.fullscreen-active.media-tool .content-section {
+    grid-area: content;
+    order: initial;
+    display: block !important;
+    align-self: stretch;
+    min-height: 0;
+    height: 100%;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #tool.fullscreen-active.media-tool .media-stage {
+    align-self: start;
+  }
+
+  #tool.fullscreen-active.media-tool .now-playing,
+  #tool.fullscreen-active.media-tool .playback,
+  #tool.fullscreen-active.media-tool .artwork-lyrics {
+    min-width: 0;
+  }
+}
