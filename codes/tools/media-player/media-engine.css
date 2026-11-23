@@ -243,3 +243,69 @@ global-media-mini.is-expanded { width:100%; }
   #tool.media-tool .view-navigation { gap:.35rem; }
   #tool.media-tool .view-navigation .content-tab { flex:0 0 auto; padding:.65rem .8rem!important; }
 }
+
+
+/* Match the global mini-player artwork to the compact, circular player layout. */
+.global-media-mini {
+  align-items: center!important;
+}
+.global-media-mini > .mini-artwork {
+  position: relative!important;
+  display: flex!important;
+  flex: 0 0 2.75rem!important;
+  width: 2.75rem!important;
+  height: 2.75rem!important;
+  min-width: 2.75rem!important;
+  min-height: 2.75rem!important;
+  align-self: center!important;
+  align-items: center!important;
+  justify-content: center!important;
+  margin: 0!important;
+  padding: 0!important;
+  overflow: hidden!important;
+  border-radius: 50%!important;
+  line-height: 0!important;
+}
+.global-media-mini > .mini-artwork img {
+  position: absolute!important;
+  inset: 0!important;
+  display: block!important;
+  width: 100%!important;
+  height: 100%!important;
+  min-width: 100%!important;
+  min-height: 100%!important;
+  max-width: none!important;
+  max-height: none!important;
+  margin: 0!important;
+  padding: 0!important;
+  border: 0!important;
+  border-radius: 50%!important;
+  object-fit: cover!important;
+  object-position: center!important;
+}
+.global-media-mini > .mini-artwork > i,
+.global-media-mini > .mini-artwork > svg {
+  position: relative!important;
+  flex: 0 0 auto!important;
+  width: 1.35rem!important;
+  height: 1.35rem!important;
+  margin: 0!important;
+  transform: none!important;
+}
+.global-media-mini > .mini-track {
+  align-self: center!important;
+  justify-content: center!important;
+  min-height: 2.75rem;
+  margin: 0!important;
+  padding: 0!important;
+  line-height: 1.25;
+}
+.global-media-mini > button {
+  align-self: center!important;
+  margin-block: 0!important;
+}
+.global-media-mini.is-expanded > .mini-artwork {
+  width: 2.75rem!important;
+  height: 2.75rem!important;
+  flex-basis: 2.75rem!important;
+}
