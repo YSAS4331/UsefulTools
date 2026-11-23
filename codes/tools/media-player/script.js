@@ -58,10 +58,14 @@ if (!customElements.get("media-engine")) {
       globalStyle.id = "global-media-mini-style";
       globalStyle.textContent = `
         media-engine{box-sizing:border-box}
-        .global-media-mini{position:relative!important;display:none!important;width:100%;max-width:none!important;box-sizing:border-box;margin:0;padding:.35rem .55rem .35rem .4rem;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002;color:var(--text-primary);pointer-events:auto}
+        .global-media-mini{position:relative!important;display:none!important;align-items:center;gap:.55rem;width:100%;min-height:4rem;max-width:none!important;box-sizing:border-box;margin:0;padding:.35rem .55rem .35rem .4rem;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002;color:var(--text-primary);pointer-events:auto}
         .global-media-mini.is-visible{display:flex!important}
-        .global-media-mini .mini-artwork{flex-basis:3.25rem;width:3.25rem;height:3.25rem}
-        .global-media-mini .mini-track{display:flex;flex:1;flex-direction:column;min-width:0;gap:.2rem}
+        .global-media-mini .mini-artwork{flex:0 0 2.75rem;width:2.75rem;height:2.75rem}
+        .global-media-mini .mini-track{display:flex;flex:1 1 auto;width:0;flex-direction:column;min-width:0;gap:.2rem;cursor:pointer}
+        .global-media-mini .mini-artwork{cursor:pointer}
+        .global-media-mini.is-collapsed>:not(.global-mini-toggle){display:none!important}
+        .global-media-mini.is-collapsed{min-height:48px;width:48px;padding:0}
+        .global-media-mini.is-collapsed .global-mini-toggle{flex:1;width:100%;height:100%}
         .global-media-mini .mini-track strong,.global-media-mini .mini-track span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .global-media-mini .mini-track span{color:var(--text-tertiary);font-size:.85rem}
         .global-media-mini button{display:grid!important;place-items:center;flex:0 0 2.5rem;width:2.5rem;height:2.5rem;padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important;color:var(--text-primary)!important}
@@ -74,7 +78,7 @@ if (!customElements.get("media-engine")) {
       `;
       if (!document.getElementById("global-media-mini-style")) document.head.append(globalStyle);
       this.globalMini.addEventListener("click", event => {
-        if (event.target.closest("button")) return;
+        if (!event.target.closest(".mini-track, .mini-artwork")) return;
         window.spaRouter?.navigate("/tools/media-player/");
       });
       this.globalMini.querySelector(".global-mini-play").addEventListener("click", () => {
