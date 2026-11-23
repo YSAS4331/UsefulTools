@@ -155,7 +155,7 @@ if (!customElements.get("media-engine")) {
       });
       this.globalMini.querySelector(".global-mini-play").addEventListener("click", () => {
         const active = this.currentMedia;
-        if (active) active.paused ? active.play().catch(() => {}) : active.pause();
+        if (active) { if (active.paused) { this.setupAudioAnalysis(); active.play().catch(() => {}); } else active.pause(); }
       });
       this.globalMini.querySelector(".global-mini-next").addEventListener("click", () => this.sessionMove(1));
       this.globalMini.querySelector(".global-mini-toggle").addEventListener("click", () => {
@@ -236,7 +236,7 @@ if (!customElements.get("media-engine")) {
 
       if ("mediaSession" in navigator) {
         const actions = {
-          play: () => this.currentMedia?.play().catch(() => {}),
+          play: () => { this.setupAudioAnalysis(); this.currentMedia?.play().catch(() => {}); },
           pause: () => { this.audio.pause(); this.video.pause(); },
           previoustrack: () => this.sessionMove(-1),
           nexttrack: () => this.sessionMove(1),
@@ -448,7 +448,7 @@ const init = () => {
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
     currentLyrics=entry?.lyrics||[];showLyrics();engine.updateSession?.(entry);updateProgress();updatePlaybackState();render();
   };
-  const play=async()=>{const active=media();if(!active||!currentEntry())return;try{await active.play();}catch(error){if(error.name!=="AbortError")console.warn("[media-player] 再生できませんでした。",error);}updatePlaybackState();};
+  const play=async()=>{const active=media();if(!active||!currentEntry())return;engine.setupAudioAnalysis?.();try{await active.play();}catch(error){if(error.name!=="AbortError")console.warn("[media-player] 再生できませんでした。",error);}updatePlaybackState();};
   const pauseAll=()=>{audio.pause();video.pause();updatePlaybackState();};
   const selectEntry=(id,autoplay=false)=>{
     const entry=entries.get(id);if(!entry)return;
