@@ -23,17 +23,6 @@ const init = () => {
   const audio = engine.audio, video = engine.video;
   const stage = $("#media-stage", root);
   stage.append(video);
-  const updateVideoStageSize = () => {
-    if (!video.videoWidth || !video.videoHeight || currentEntry()?.kind !== "video") return;
-    const ratio = video.videoWidth / video.videoHeight;
-    const availableWidth = stage.parentElement?.clientWidth || root.clientWidth;
-    const maxHeight = window.innerHeight * 0.65;
-    const width = Math.min(availableWidth, maxHeight * ratio);
-    const height = width / ratio;
-    stage.style.width = `${width}px`;
-    stage.style.height = `${height}px`;
-    stage.style.setProperty("--video-ratio", String(ratio));
-  };
   const artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
   const lyricsContent=$("#lyrics-content",root), artworkLyrics=$("#artwork-lyrics",root), count=$(".nav-file-count",root);
@@ -289,7 +278,7 @@ const init = () => {
   listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
 
   for(const active of [audio,video]){
-    listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",()=>{if(active===video)updateVideoStageSize();updateProgress();});listen(active,"durationchange",updateProgress);
+    listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",updateProgress);listen(active,"durationchange",updateProgress);
     listen(active,"play",updatePlaybackState);listen(active,"pause",updatePlaybackState);
     listen(active,"error",()=>{trackMeta.textContent="このファイルを再生できません。形式に対応しているか確認してください。";updatePlaybackState();});
   }
