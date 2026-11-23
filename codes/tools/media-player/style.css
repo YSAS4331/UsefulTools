@@ -294,3 +294,36 @@
 #tool.media-tool #queue-list .queue-select {
   justify-content: flex-start !important;
 }
+
+
+/* Compact synchronized lyrics beneath the artwork. */
+.artwork-lyrics {
+  width: min(100%, 420px);
+  min-height: 4.7rem;
+  margin: .8rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  overflow: hidden;
+  text-align: center;
+}
+.artwork-lyrics[hidden],.artwork-lyrics-line[hidden] { display:none!important; }
+.artwork-lyrics-line {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-tertiary);
+  font-size: .78rem;
+  line-height: 1.45;
+  opacity: .58;
+  transition: opacity .2s,color .2s;
+}
+.artwork-lyrics-line.is-current {
+  color: var(--text-primary);
+  font-size: .92rem;
+  font-weight: 700;
+  opacity: 1;
+}
