@@ -70,10 +70,15 @@ const init = () => {
       const visible=!!currentLyrics.length&&currentEntry()?.kind==="audio";
       artworkLyrics.hidden=!visible;
       if(visible){
-        $(".artwork-lyrics-line",artworkLyrics).forEach((line,index)=>{
-          line.classList.toggle("is-current",index===active);
-          if(index===active&&lyricChanged)line.scrollIntoView({block:"nearest",behavior:"smooth"});
-        });
+        const previewLines=$(".artwork-lyrics-line",artworkLyrics);
+        previewLines.forEach((line,index)=>line.classList.toggle("is-current",index===active));
+        if(lyricChanged&&active>=0){
+          const activeLine=previewLines[active];
+          if(activeLine)artworkLyrics.scrollTo({
+            top:activeLine.offsetTop-(artworkLyrics.clientHeight-activeLine.offsetHeight)/2,
+            behavior:"smooth"
+          });
+        }
       }
     }
   };
