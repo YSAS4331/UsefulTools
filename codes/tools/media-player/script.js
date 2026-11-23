@@ -114,7 +114,7 @@ const init = () => {
       if(active>=0){
         const activeLine=$(".lyric-line[data-index='"+active+"']",lyricsContent);
         if(activeLine){
-          const top=activeLine.offsetTop-lyricsContent.offsetTop-(lyricsContent.clientHeight-activeLine.offsetHeight)/2;
+          const top=activeLine.getBoundingClientRect().top-lyricsContent.getBoundingClientRect().top+lyricsContent.scrollTop-(lyricsContent.clientHeight-activeLine.offsetHeight)/2;
           lyricsContent.scrollTo({top,behavior:"smooth"});
         }
       }
