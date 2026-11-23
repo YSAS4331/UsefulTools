@@ -348,10 +348,11 @@ media-engine > audio {
     grid-template-columns: minmax(230px, .78fr) minmax(0, 1.22fr);
     grid-template-areas:
       "media nav"
+      "media content"
       "lyrics content"
       "now content"
       "playback content";
-    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
     align-items: start;
     column-gap: 1.5rem;
     row-gap: .75rem;
@@ -383,6 +384,7 @@ media-engine > audio {
 
   #tool.media-tool .media-stage {
     grid-area: media;
+    align-self: start;
     width: 100%;
     max-width: none;
     margin: 0;
