@@ -376,3 +376,33 @@ global-media-mini.is-expanded { width:100%; }
   align-self: center!important;
   margin-block: 0!important;
 }
+
+
+/* Compact pill: remove asymmetric vertical padding that made its contents sit low. */
+.global-media-mini:not(.is-expanded):not(.is-collapsed) {
+  box-sizing: border-box!important;
+  height: 4rem!important;
+  min-height: 4rem!important;
+  padding: 0 .55rem 0 .4rem!important;
+  gap: .55rem!important;
+  align-items: center!important;
+}
+.global-media-mini:not(.is-expanded):not(.is-collapsed) > .mini-artwork {
+  box-sizing: border-box!important;
+  align-self: center!important;
+  margin: 0!important;
+}
+.global-media-mini:not(.is-expanded):not(.is-collapsed) > .mini-track {
+  align-self: center!important;
+  height: 2.75rem!important;
+  min-height: 2.75rem!important;
+  margin: 0!important;
+  padding: 0!important;
+  justify-content: center!important;
+  transform: translateY(-1px);
+}
+.global-media-mini:not(.is-expanded):not(.is-collapsed) > button {
+  align-self: center!important;
+  margin: 0!important;
+  transform: none!important;
+}
