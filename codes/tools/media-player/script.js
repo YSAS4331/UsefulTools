@@ -285,6 +285,7 @@ if (!customElements.get("media-engine")) {
         active.volume = this.volume;
         active.playbackRate = this.playbackRate;
         active.load();
+        this.setupAudioAnalysis();
         this.updateSession(entry);
         this.dispatchEvent(new CustomEvent("trackchange", { detail: { id: nextId } }));
         active.play().catch(() => {});
