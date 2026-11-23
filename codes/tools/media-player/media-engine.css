@@ -173,3 +173,67 @@ global-media-mini.is-expanded { width:100%; }
 @media (max-width:520px) {
   #tool.media-tool #queue-list .queue-item { flex-basis: min(82%, 260px); }
 }
+
+
+/* Horizontally scrollable navigation tabs; content panels remain unchanged. */
+#tool.media-tool .view-navigation {
+  display:flex;
+  justify-content:flex-start;
+  gap:.35rem;
+  overflow-x:auto;
+  overflow-y:hidden;
+  max-width:100%;
+  white-space:nowrap;
+  scroll-snap-type:x proximity;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+#tool.media-tool .view-navigation::-webkit-scrollbar { display:none; }
+#tool.media-tool .view-navigation .content-tab {
+  flex:0 0 auto;
+  min-width:max-content;
+  scroll-snap-align:start;
+}
+#tool.media-tool #queue-list {
+  display:block;
+  margin:0;
+  padding:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+#tool.media-tool #queue-list .queue-item {
+  display:flex;
+  width:100%;
+  align-items:center;
+  justify-content:flex-start;
+  padding:.55rem .25rem;
+  border:0;
+  border-bottom:1px solid var(--border-color);
+  border-radius:0;
+}
+#tool.media-tool #queue-list .queue-select {
+  display:flex!important;
+  flex:1 1 auto;
+  width:0;
+  min-width:0;
+  align-items:center;
+  justify-content:flex-start!important;
+}
+.metadata-list { display:grid; gap:0; margin:0; }
+.metadata-list>div {
+  display:grid;
+  grid-template-columns:minmax(6.5rem, .8fr) minmax(0,1.4fr);
+  gap:.8rem;
+  padding:.8rem .25rem;
+  border-bottom:1px solid var(--border-color);
+}
+.metadata-list dt { color:var(--text-tertiary); font-size:.82rem; }
+.metadata-list dd { min-width:0; margin:0; overflow-wrap:anywhere; font-size:.88rem; text-align:right; }
+#tool.media-tool[data-view="info"] .player-main { display:none; }
+#tool.media-tool[data-view="info"] .mini-player { display:flex; }
+#tool.media-tool[data-view="info"] .content-section { display:block; }
+@media(max-width:520px) {
+  #tool.media-tool .view-navigation { gap:.35rem; }
+  #tool.media-tool .view-navigation .content-tab { flex:0 0 auto; padding:.65rem .8rem!important; }
+}
