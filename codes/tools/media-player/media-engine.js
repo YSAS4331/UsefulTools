@@ -124,7 +124,7 @@ if (!customElements.get("media-engine")) {
         <div class="global-mini-expanded" aria-label="簡易再生操作">
           <div class="global-mini-seek-row"><span class="global-mini-current">0:00</span><input class="global-mini-seek" type="range" min="0" max="1000" value="0" aria-label="再生位置" disabled><span class="global-mini-duration">0:00</span></div>
           <div class="global-mini-controls">
-            <button type="button" class="global-mini-back" aria-label="メディアプレイヤーに戻る"><i data-lucide="arrow-up-right"></i></button>
+            <button type="button" class="global-mini-back" aria-label="メディアプレイヤーに戻る"><i data-lucide="arrow-left"></i></button>
             <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
             <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
           </div>
