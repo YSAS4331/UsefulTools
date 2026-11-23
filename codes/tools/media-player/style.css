@@ -200,3 +200,44 @@
   order: 3;
   padding-top: .5rem;
 }
+
+
+/* Fullscreen: keep mini player and tabs anchored; scroll only the content. */
+#tool.fullscreen-active.media-tool {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+#tool.fullscreen-active.media-tool .player-layout {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  max-width: none;
+  gap: 0;
+}
+#tool.fullscreen-active.media-tool .mini-player {
+  order: 1;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex: 0 0 auto;
+  background: var(--bg-2);
+}
+#tool.fullscreen-active.media-tool .content-section {
+  order: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+#tool.fullscreen-active.media-tool .view-navigation {
+  order: 3;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  flex: 0 0 auto;
+  margin-top: 0;
+  background: var(--bg-2);
+}
