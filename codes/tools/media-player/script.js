@@ -44,6 +44,61 @@ if (!customElements.get("media-engine")) {
       this.video.playsInline = true;
       this.video.hidden = true;
       this.append(this.audio, this.video);
+      this.globalMini = document.createElement("aside");
+      this.globalMini.className = "global-media-mini";
+      this.globalMini.innerHTML = `
+        <button type="button" class="global-mini-open" aria-label="メディアプレイヤーを開く"><span class="global-mini-art"><img alt=""><i>♫</i></span><span class="global-mini-copy"><strong>再生待ち</strong><small>メディアプレイヤー</small></span></button>
+        <button type="button" class="global-mini-play" aria-label="再生">▶</button>
+        <button type="button" class="global-mini-next" aria-label="次の曲">⏭</button>
+        <button type="button" class="global-mini-toggle" aria-label="閉じる">⌄</button>`;
+      document.body.append(this.globalMini);
+      const globalStyle = document.createElement("style");
+      globalStyle.id = "global-media-mini-style";
+      globalStyle.textContent = `
+        .global-media-mini{position:fixed;z-index:1000;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-2);color:var(--text-primary);box-shadow:0 4px 24px #0002;font:inherit}
+        .global-media-mini.is-visible{display:flex}
+        .global-media-mini button{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;padding:0;border:0;border-radius:10px;background:transparent;color:inherit}
+        .global-media-mini .global-mini-open{display:flex;flex:1;min-width:0;justify-content:flex-start;gap:10px;text-align:left}
+        .global-mini-art{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;overflow:hidden;border-radius:9px;background:var(--bg-hover);color:var(--text-tertiary)}
+        .global-mini-art img{width:100%;height:100%;object-fit:cover}
+        .global-mini-copy{display:flex;flex-direction:column;min-width:0;gap:3px}
+        .global-mini-copy strong,.global-mini-copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .global-mini-copy strong{font-size:.85rem;font-weight:650}
+        .global-mini-copy small{font-size:.72rem;color:var(--text-tertiary)}
+        .global-media-mini .global-mini-toggle{font-size:1.2rem}
+        .global-media-mini.is-collapsed{left:auto;right:12px;width:54px;height:46px;justify-content:center;padding:4px}
+        .global-media-mini.is-collapsed .global-mini-open,.global-media-mini.is-collapsed .global-mini-play,.global-media-mini.is-collapsed .global-mini-next{display:none}
+        .global-media-mini.is-collapsed .global-mini-toggle{width:100%;height:100%}
+        @media(min-width:700px){.global-media-mini{left:auto;width:min(420px,calc(100vw - 24px))}}
+      `;
+      if (!document.getElementById("global-media-mini-style")) document.head.append(globalStyle);
+      this.globalMini.querySelector(".global-mini-open").addEventListener("click", () => window.spaRouter?.navigate("/tools/media-player/"));
+      this.globalMini.querySelector(".global-mini-play").addEventListener("click", () => {
+        const active = this.currentMedia;
+        if (active) active.paused ? active.play().catch(() => {}) : active.pause();
+      });
+      this.globalMini.querySelector(".global-mini-next").addEventListener("click", () => this.sessionMove(1));
+      this.globalMini.querySelector(".global-mini-toggle").addEventListener("click", () => {
+        this.globalMini.classList.toggle("is-collapsed");
+        const collapsed = this.globalMini.classList.contains("is-collapsed");
+        this.globalMini.querySelector(".global-mini-toggle").textContent = collapsed ? "⌃" : "⌄";
+        this.globalMini.querySelector(".global-mini-toggle").setAttribute("aria-label", collapsed ? "ミニプレーヤーを開く" : "閉じる");
+      });
+      this.updateGlobalMini = () => {
+        const entry = this.entries.get(this.currentId);
+        const onPlayerPage = location.pathname.replace(/\\/$/, "") === "/tools/media-player";
+        this.globalMini.classList.toggle("is-visible", !!entry && !onPlayerPage);
+        this.globalMini.querySelector(".global-mini-copy strong").textContent = entry ? entry.file.name.replace(/\\.[^.]+$/, "") : "再生待ち";
+        this.globalMini.querySelector(".global-mini-copy small").textContent = entry ? (entry.kind === "video" ? "動画" : "音声") : "メディアプレイヤー";
+        const image = this.globalMini.querySelector(".global-mini-art img");
+        image.src = entry?.artworkUrl || "";
+        image.hidden = !entry?.artworkUrl;
+        this.globalMini.querySelector(".global-mini-art i").hidden = !!entry?.artworkUrl;
+        const playing = !!this.currentMedia && !this.currentMedia.paused;
+        this.globalMini.querySelector(".global-mini-play").textContent = playing ? "Ⅱ" : "▶";
+        this.globalMini.querySelector(".global-mini-play").setAttribute("aria-label", playing ? "一時停止" : "再生");
+      };
+      window.addEventListener("spa:router", () => this.updateGlobalMini());
       this.nextShuffleId = () => {
         const ids = [...this.entries.keys()];
         this.shuffleBag = this.shuffleBag.filter(id => this.entries.has(id) && id !== this.currentId);
@@ -151,6 +206,7 @@ if (!customElements.get("media-engine")) {
         active.play().catch(() => {});
       };
       this.updateSession = entry => {
+        this.updateGlobalMini?.();
         if (!("mediaSession" in navigator)) return;
         if (!entry) {
           navigator.mediaSession.metadata = null;
@@ -170,6 +226,7 @@ if (!customElements.get("media-engine")) {
       this.updateSessionState = () => {
         if (!("mediaSession" in navigator)) return;
         navigator.mediaSession.playbackState = this.audio.paused && this.video.paused ? "paused" : "playing";
+        this.updateGlobalMini?.();
         const active = this.currentMedia;
         if (active && Number.isFinite(active.duration) && active.duration > 0 && "setPositionState" in navigator.mediaSession) {
           try {
@@ -181,6 +238,7 @@ if (!customElements.get("media-engine")) {
           } catch {}
         }
       };
+      this.updateGlobalMini?.();
       for (const media of [this.audio, this.video]) {
         media.addEventListener("timeupdate", this.updateSessionState);
         media.addEventListener("play", this.updateSessionState);
