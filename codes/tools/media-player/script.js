@@ -58,7 +58,7 @@ if (!customElements.get("media-engine")) {
       globalStyle.id = "global-media-mini-style";
       globalStyle.textContent = `
         media-engine{box-sizing:border-box}
-        .global-media-mini{position:relative!important;display:none!important;width:100%;max-width:none!important;box-sizing:border-box;margin:0;padding:.25rem .1rem .75rem;border:0;border-bottom:1px solid var(--border-color);border-radius:0;background:transparent;box-shadow:none;color:var(--text-primary);pointer-events:auto}
+        .global-media-mini{position:relative!important;display:none!important;width:100%;max-width:none!important;box-sizing:border-box;margin:0;padding:.35rem .55rem .35rem .4rem;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002;color:var(--text-primary);pointer-events:auto}
         .global-media-mini.is-visible{display:flex!important}
         .global-media-mini .mini-artwork{flex-basis:3.25rem;width:3.25rem;height:3.25rem}
         .global-media-mini .mini-track{display:flex;flex:1;flex-direction:column;min-width:0;gap:.2rem}
