@@ -48,7 +48,7 @@ if (!customElements.get("media-engine")) {
       this.globalMini = document.createElement("section");
       this.globalMini.className = "mini-player global-media-mini";
       this.globalMini.innerHTML = `
-        <div class="mini-artwork"><img alt="" hidden><span class="global-mini-note" aria-hidden="true">♪</span></div>
+        <div class="mini-artwork"><img alt="" hidden><i data-lucide="music-2"></i></div>
         <div class="mini-track"><strong>再生待ち</strong><span>ファイルが選択されていません</span></div>
         <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
         <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
@@ -62,7 +62,7 @@ if (!customElements.get("media-engine")) {
         .global-media-mini.is-visible{display:flex!important}
         .global-media-mini .mini-artwork{flex:0 0 2.75rem;width:2.75rem;height:2.75rem}
         .global-media-mini .mini-artwork{line-height:0}
-        .global-media-mini .global-mini-note{display:grid;place-items:center;width:100%;height:100%;font-size:2rem;line-height:1;font-family:system-ui,sans-serif}
+        .global-media-mini .mini-artwork>svg{display:block!important;position:static!important;width:1.5rem!important;height:1.5rem!important;margin:0!important;transform:none!important}
         .global-media-mini .mini-track{display:flex;flex:1 1 auto;width:0;flex-direction:column;min-width:0;gap:.2rem;cursor:pointer}
         .global-media-mini .mini-artwork{cursor:pointer}
         .global-media-mini.is-collapsed>:not(.global-mini-toggle){display:none!important}
@@ -104,7 +104,7 @@ if (!customElements.get("media-engine")) {
         const image = this.globalMini.querySelector(".mini-artwork img");
         image.src = entry?.artworkUrl || "";
         image.hidden = !entry?.artworkUrl;
-        this.globalMini.querySelector(".global-mini-note").hidden = !!entry?.artworkUrl;
+        this.globalMini.querySelector(".mini-artwork i, .mini-artwork svg").hidden = !!entry?.artworkUrl;
         const playing = !!this.currentMedia && !this.currentMedia.paused;
         this.globalMini.querySelector(".global-mini-play").innerHTML = playing ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
         this.globalMini.querySelector(".global-mini-play").setAttribute("aria-label", playing ? "一時停止" : "再生");
