@@ -234,7 +234,7 @@ const init = () => {
       const entry={id,file,kind:file.type.startsWith("video/")?"video":"audio",url:makeUrl(file),artwork:null,artworkUrl:null,lyrics:[]};
       if(entry.kind==="audio"&&artworkFile?.type.startsWith("image/")){entry.artwork=artworkFile;entry.artworkUrl=makeUrl(artworkFile);}
       if(entry.kind==="audio"&&lyricFile){
-        const reader=new FileReader();reader.onload=()=>{if(!entries.has(id))return;entry.lyrics=parseLrc(String(reader.result||""));if(id===currentId){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}};
+        const reader=new FileReader();reader.onload=()=>{if(!entries.has(id))return;entry.lyrics=parseLrc(String(reader.result||""));if(id===currentId&&root.isConnected){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}};
         reader.readAsText(lyricFile);
       }
       entries.set(id,entry);if(firstAdded===null)firstAdded=id;
