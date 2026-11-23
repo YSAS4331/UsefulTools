@@ -34,7 +34,7 @@ const init = () => {
   const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
   const {entries, artworks, lyricFiles, objectUrls} = engine;
   const listeners=[];
-  let currentId=engine.currentId,nextId=engine.nextId,shuffle=engine.shuffle,repeat=engine.repeat,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
+  let currentId=engine.currentId,nextId=engine.nextId,shuffle=engine.shuffle,repeat=engine.repeat,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;let lyricWindowStart=0;
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
   const currentEntry=()=>entries.get(currentId);
   const media=()=>currentEntry()?.kind==="video"?video:audio;
@@ -62,27 +62,49 @@ const init = () => {
     }
     if(animate){artworkLyrics.classList.remove("is-shifting");void artworkLyrics.offsetWidth;artworkLyrics.classList.add("is-shifting");}
   };
+  const renderLyricsWindow=()=>{
+    lyricsContent.replaceChildren();
+    for(let index=lyricWindowStart;index<Math.min(currentLyrics.length,lyricWindowStart+5);index++){
+      const line=document.createElement("p");
+      line.className="lyric-line"+(index===activeLyricIndex?" is-active":"");
+      line.dataset.index=index;
+      line.textContent=currentLyrics[index].text;
+      lyricsContent.append(line);
+    }
+  };
+  const advanceLyricsWindow=active=>{
+    while(active>lyricWindowStart+1&&lyricWindowStart+5<currentLyrics.length){
+      lyricsContent.firstElementChild?.remove();
+      lyricWindowStart++;
+      const nextIndex=lyricWindowStart+4;
+      if(nextIndex<currentLyrics.length){
+        const line=document.createElement("p");
+        line.className="lyric-line";
+        line.dataset.index=nextIndex;
+        line.textContent=currentLyrics[nextIndex].text;
+        lyricsContent.append(line);
+      }
+    }
+  };
   const showLyrics=()=>{
     activeLyricIndex=-1;
+    lyricWindowStart=0;
     previewStart=0;
     lyricsContent.replaceChildren();
     artworkLyrics?.replaceChildren();
     if(!currentLyrics.length){const p=document.createElement("p");p.className="content-empty";p.textContent="対応する .lrc ファイルがありません。音声ファイルと同じ名前の .lrc を一緒に追加してください。";lyricsContent.append(p);return;}
-    currentLyrics.forEach((line,index)=>{
-      const p=document.createElement("p");p.className="lyric-line";p.dataset.index=index;p.textContent=line.text;lyricsContent.append(p);
-    });
+    renderLyricsWindow();
     renderArtworkLyrics();
   };
   const updateLyrics=()=>{
     const time=media()?.currentTime||0;
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
-    $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
     const lyricChanged=active!==activeLyricIndex;
     if(lyricChanged){
       activeLyricIndex=active;
-      const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;
-      activeLine?.scrollIntoView({block:"center",behavior:"smooth"});
+      if(active>=0)advanceLyricsWindow(active);
+      $(".lyric-line",lyricsContent).forEach(line=>line.classList.toggle("is-active",Number(line.dataset.index)===active));
       if(artworkLyrics&&active>=0){
         previewStart=Math.max(0,Math.min(active-1,currentLyrics.length-5));
         renderArtworkLyrics(true);
