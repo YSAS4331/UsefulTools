@@ -8,13 +8,55 @@ const formatTime = seconds => {
 };
 const formatSize = bytes => bytes < 1048576 ? `${(bytes/1024).toFixed(1)} KB` : bytes < 1073741824 ? `${(bytes/1048576).toFixed(1)} MB` : `${(bytes/1073741824).toFixed(2)} GB`;
 const baseName = name => name.replace(/\.[^.]+$/,"").toLocaleLowerCase();
+
+if (!customElements.get("media-engine")) {
+  customElements.define("media-engine", class extends HTMLElement {
+    connectedCallback() {
+      if (this.audio) return;
+      Object.assign(this.style, {
+        position: "fixed",
+        left: "-2px",
+        top: "-2px",
+        width: "1px",
+        height: "1px",
+        overflow: "hidden",
+        opacity: "0",
+        pointerEvents: "none",
+        zIndex: "-1"
+      });
+      this.entries = new Map();
+      this.artworks = new Map();
+      this.lyricFiles = new Map();
+      this.objectUrls = new Set();
+      this.currentId = null;
+      this.nextId = 1;
+      this.shuffle = false;
+      this.repeat = false;
+      this.audio = document.createElement("audio");
+      this.audio.preload = "metadata";
+      this.audio.hidden = true;
+      this.video = document.createElement("video");
+      this.video.id = "video-player";
+      this.video.preload = "metadata";
+      this.video.playsInline = true;
+      this.video.hidden = true;
+      this.append(this.audio, this.video);
+    }
+  });
+}
+
 let cleanupActive = null;
 
 const init = () => {
   cleanupActive?.();
   const root = $("#tool"), input = $("#upload-file");
   if (!root || !input) return;
-  const audio=$("#audio-player",root), video=$("#video-player",root), artwork=$("#artwork-image",root);
+  const engine = document.querySelector("media-engine") ||
+    document.body.appendChild(document.createElement("media-engine"));
+  const audio = engine.audio, video = engine.video;
+  const stage = $("#media-stage", root);
+  stage.append(video);
+  const artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
   const lyricsContent=$("#lyrics-content",root), count=$(".nav-file-count",root);
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
@@ -23,8 +65,9 @@ const init = () => {
   const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
   const miniTitle=$("#mini-track-title",root),miniMeta=$("#mini-track-meta",root),miniArtwork=$("#mini-artwork-image",root),miniArtworkIcon=$("#mini-artwork-icon",root),miniPlay=$("#mini-play-button",root),miniNext=$("#mini-next-button",root);
   const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
-  const entries=new Map(), artworks=new Map(), lyricFiles=new Map(), listeners=[], objectUrls=new Set();
-  let currentId=null,nextId=1,shuffle=false,repeat=false,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
+  const {entries, artworks, lyricFiles, objectUrls} = engine;
+  const listeners=[];
+  let currentId=engine.currentId,nextId=engine.nextId,shuffle=engine.shuffle,repeat=engine.repeat,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
   const currentEntry=()=>entries.get(currentId);
   const media=()=>currentEntry()?.kind==="video"?video:audio;
@@ -112,6 +155,7 @@ const init = () => {
     stageEmpty.hidden=!!entry;audioVisual.hidden=!entry||entry.kind==="video"||!!entry.artwork;video.hidden=!entry||entry.kind!=="video";
     artwork.hidden=!entry||entry.kind!=="audio"||!entry.artwork;
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
+    if(entry?.kind==="video"&&video.videoWidth&&video.videoHeight)stage.style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
     currentLyrics=entry?.lyrics||[];showLyrics();updateProgress();updatePlaybackState();render();
   };
@@ -177,8 +221,14 @@ const init = () => {
   listen(miniNext,"click",event=>{event.stopPropagation();move(1);});
   const miniPlayer=$(".mini-player",root);
   listen(miniPlayer,"click",event=>{if(event.target.closest("button"))return;switchView("player");});
+  shuffleButton.classList.toggle("is-on",shuffle);
+  shuffleButton.setAttribute("aria-pressed",String(shuffle));
+  repeatButton.classList.toggle("is-on",repeat);
+  repeatButton.setAttribute("aria-pressed",String(repeat));
+  volume.value=String(audio.volume);
+  speed.value=String(media()?.playbackRate || 1);
   switchView("player");
-  for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
+  for(const button of $("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   if(upload){
     const prevent=event=>{event.preventDefault();event.stopPropagation();};
@@ -194,9 +244,15 @@ const init = () => {
   }
   updateTrack();
   cleanupActive=()=>{
-    if(destroyed)return;destroyed=true;listeners.forEach(remove=>remove());audio.pause();video.pause();
-    audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();
-    for(const url of objectUrls)URL.revokeObjectURL(url);objectUrls.clear();entries.clear();cleanupActive=null;
+    if(destroyed)return;
+    destroyed=true;
+    listeners.forEach(remove=>remove());
+    engine.currentId=currentId;
+    engine.nextId=nextId;
+    engine.shuffle=shuffle;
+    engine.repeat=repeat;
+    engine.append(video);
+    cleanupActive=null;
   };
 };
 const unmount=()=>cleanupActive?.();
