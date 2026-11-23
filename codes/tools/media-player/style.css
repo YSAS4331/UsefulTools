@@ -183,3 +183,20 @@
   aspect-ratio:var(--video-ratio, 16 / 9);
 }
 .media-stage video { width:100%; height:100%; object-fit:contain; }
+
+
+/* Keep the mini player and view tabs together in fullscreen. */
+#tool.fullscreen-active.media-tool .player-layout {
+  row-gap: .5rem;
+}
+#tool.fullscreen-active.media-tool .mini-player {
+  order: 1;
+}
+#tool.fullscreen-active.media-tool .view-navigation {
+  order: 2;
+  margin-top: 0;
+}
+#tool.fullscreen-active.media-tool .content-section {
+  order: 3;
+  padding-top: .5rem;
+}
