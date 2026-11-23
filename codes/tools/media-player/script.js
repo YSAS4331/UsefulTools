@@ -293,7 +293,7 @@ const init = () => {
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
     if(entry?.kind==="video"&&video.videoWidth&&video.videoHeight)stage.style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
-    currentLyrics=entry?.lyrics||[];showLyrics();engine.updateSession?.(entry);showLyrics();updateProgress();updatePlaybackState();render();
+    currentLyrics=entry?.lyrics||[];showLyrics();engine.updateSession?.(entry);updateProgress();updatePlaybackState();render();
   };
   const play=async()=>{const active=media();if(!active||!currentEntry())return;try{await active.play();}catch(error){if(error.name!=="AbortError")console.warn("[media-player] 再生できませんでした。",error);}updatePlaybackState();};
   const pauseAll=()=>{audio.pause();video.pause();updatePlaybackState();};
