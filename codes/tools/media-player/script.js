@@ -36,7 +36,6 @@ const init = () => {
   const listeners=[];
   let currentId=engine.currentId,nextId=engine.nextId,shuffle=engine.shuffle,repeat=engine.repeat,seeking=false,destroyed=false,currentLyrics=[],activeLyricIndex=-1;
   const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));};
-  listen(window, "resize", updateVideoStageSize);
   const currentEntry=()=>entries.get(currentId);
   const media=()=>currentEntry()?.kind==="video"?video:audio;
   const isPlaying=()=>!audio.paused||!video.paused;
