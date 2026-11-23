@@ -49,37 +49,47 @@ const init = () => {
     }
     return lines.sort((a,b)=>a.time-b.time);
   };
+  let previewStart=0;
+  const renderArtworkLyrics=()=>{
+    if(!artworkLyrics)return;
+    artworkLyrics.replaceChildren();
+    for(let index=previewStart;index<Math.min(currentLyrics.length,previewStart+5);index++){
+      const line=document.createElement("p");
+      line.className="artwork-lyrics-line"+(index===activeLyricIndex?" is-current":"");
+      line.dataset.index=index;
+      line.textContent=currentLyrics[index].text;
+      artworkLyrics.append(line);
+    }
+  };
   const showLyrics=()=>{
     activeLyricIndex=-1;
+    previewStart=0;
     lyricsContent.replaceChildren();
     artworkLyrics?.replaceChildren();
     if(!currentLyrics.length){const p=document.createElement("p");p.className="content-empty";p.textContent="対応する .lrc ファイルがありません。音声ファイルと同じ名前の .lrc を一緒に追加してください。";lyricsContent.append(p);return;}
     currentLyrics.forEach((line,index)=>{
       const p=document.createElement("p");p.className="lyric-line";p.dataset.index=index;p.textContent=line.text;lyricsContent.append(p);
-      if(artworkLyrics){const preview=document.createElement("p");preview.className="artwork-lyrics-line";preview.dataset.index=index;preview.textContent=line.text;artworkLyrics.append(preview);}
     });
+    renderArtworkLyrics();
   };
   const updateLyrics=()=>{
     const time=media()?.currentTime||0;
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
-    $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
+    $(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
     const lyricChanged=active!==activeLyricIndex;
-    if(lyricChanged){activeLyricIndex=active;const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;activeLine?.scrollIntoView({block:"center",behavior:"smooth"});}
+    if(lyricChanged){
+      activeLyricIndex=active;
+      const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;
+      activeLine?.scrollIntoView({block:"center",behavior:"smooth"});
+      if(artworkLyrics&&active>=0){
+        previewStart=Math.max(0,Math.min(active-1,currentLyrics.length-5));
+        renderArtworkLyrics();
+      }
+    }
     if(artworkLyrics){
       const visible=!!currentLyrics.length&&currentEntry()?.kind==="audio";
       artworkLyrics.hidden=!visible;
-      if(visible){
-        const previewLines=[...artworkLyrics.querySelectorAll(".artwork-lyrics-line")];
-        previewLines.forEach((line,index)=>line.classList.toggle("is-current",index===active));
-        if(lyricChanged&&active>=0){
-          const activeLine=previewLines[active];
-          if(activeLine)artworkLyrics.scrollTo({
-            top:activeLine.offsetTop-(artworkLyrics.clientHeight-activeLine.offsetHeight)/2,
-            behavior:"smooth"
-          });
-        }
-      }
     }
   };
   const updatePlaybackState=()=>{
