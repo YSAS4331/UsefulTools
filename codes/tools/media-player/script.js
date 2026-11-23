@@ -81,6 +81,71 @@ if (!customElements.get("media-engine")) {
       };
       this.audio.addEventListener("ended", handleEnded);
       this.video.addEventListener("ended", handleEnded);
+
+      if ("mediaSession" in navigator) {
+        const actions = {
+          play: () => this.dispatchEvent(new Event("sessionplay")),
+          pause: () => this.dispatchEvent(new Event("sessionpause")),
+          previoustrack: () => this.dispatchEvent(new Event("sessionprevious")),
+          nexttrack: () => this.dispatchEvent(new Event("sessionnext")),
+          seekto: event => {
+            const active = this.currentMedia;
+            if (active && Number.isFinite(event.seekTime)) active.currentTime = event.seekTime;
+          },
+          seekbackward: event => {
+            const active = this.currentMedia;
+            if (active) active.currentTime = Math.max(0, active.currentTime - (event.seekOffset || 10));
+          },
+          seekforward: event => {
+            const active = this.currentMedia;
+            if (active && Number.isFinite(active.duration)) active.currentTime = Math.min(active.duration, active.currentTime + (event.seekOffset || 10));
+          }
+        };
+        for (const [action, handler] of Object.entries(actions)) {
+          try { navigator.mediaSession.setActionHandler(action, handler); } catch {}
+        }
+      }
+
+      Object.defineProperty(this, "currentMedia", {
+        get: () => this.entries.get(this.currentId)?.kind === "video" ? this.video : this.audio
+      });
+      this.updateSession = entry => {
+        if (!("mediaSession" in navigator)) return;
+        if (!entry) {
+          navigator.mediaSession.metadata = null;
+          navigator.mediaSession.playbackState = "none";
+          return;
+        }
+        if ("MediaMetadata" in window) {
+          const artwork = entry.artworkUrl ? [{ src: entry.artworkUrl }] : [];
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: entry.file.name.replace(/\\.[^.]+$/, ""),
+            artist: "UsefulTools メディアプレイヤー",
+            album: entry.kind === "video" ? "動画" : "音声",
+            artwork
+          });
+        }
+      };
+      this.updateSessionState = () => {
+        if (!("mediaSession" in navigator)) return;
+        navigator.mediaSession.playbackState = this.audio.paused && this.video.paused ? "paused" : "playing";
+        const active = this.currentMedia;
+        if (active && Number.isFinite(active.duration) && active.duration > 0 && "setPositionState" in navigator.mediaSession) {
+          try {
+            navigator.mediaSession.setPositionState({
+              duration: active.duration,
+              playbackRate: active.playbackRate || 1,
+              position: Math.min(active.currentTime || 0, active.duration)
+            });
+          } catch {}
+        }
+      };
+      for (const media of [this.audio, this.video]) {
+        media.addEventListener("timeupdate", this.updateSessionState);
+        media.addEventListener("play", this.updateSessionState);
+        media.addEventListener("pause", this.updateSessionState);
+        media.addEventListener("ratechange", this.updateSessionState);
+      }
     }
   });
 }
@@ -138,6 +203,7 @@ const init = () => {
   };
   const updatePlaybackState=()=>{
     const playing=isPlaying();
+    engine.updateSessionState?.();
     playButton.innerHTML=playing?'<i data-lucide="pause"></i>':'<i data-lucide="play"></i>';
     playButton.setAttribute("aria-label",playing?"一時停止":"再生");
     indicator.classList.toggle("is-playing",playing);
@@ -197,7 +263,7 @@ const init = () => {
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
     if(entry?.kind==="video"&&video.videoWidth&&video.videoHeight)stage.style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
-    currentLyrics=entry?.lyrics||[];showLyrics();updateProgress();updatePlaybackState();render();
+    currentLyrics=entry?.lyrics||[];showLyrics();engine.updateSession?.(entry);showLyrics();updateProgress();updatePlaybackState();render();
   };
   const play=async()=>{const active=media();if(!active||!currentEntry())return;try{await active.play();}catch(error){if(error.name!=="AbortError")console.warn("[media-player] 再生できませんでした。",error);}updatePlaybackState();};
   const pauseAll=()=>{audio.pause();video.pause();updatePlaybackState();};
@@ -279,6 +345,10 @@ const init = () => {
     listen(upload,"drop",event=>{const files=event.dataTransfer?.files;if(files?.length)addFiles(files);});
   }
   listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
+  listen(engine,"sessionplay",()=>play());
+  listen(engine,"sessionpause",()=>pauseAll());
+  listen(engine,"sessionprevious",()=>move(-1));
+  listen(engine,"sessionnext",()=>move(1));
   for(const active of [audio,video]){
     listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",()=>{if(active===video&&currentEntry()?.kind==="video"&&video.videoWidth&&video.videoHeight)$("#media-stage",root).style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));updateProgress();});listen(active,"durationchange",updateProgress);
     listen(active,"play",updatePlaybackState);listen(active,"pause",updatePlaybackState);
