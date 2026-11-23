@@ -168,6 +168,7 @@ if (!customElements.get("media-engine")) {
       this.updateGlobalMini = () => {
         const entry = this.entries.get(this.currentId);
         const onPlayerPage = location.pathname.replace(/\/$/, "") === "/tools/media-player";
+        if (onPlayerPage) this.globalMini.classList.remove("is-expanded");
         this.globalMini.classList.toggle("is-visible", !!entry && !onPlayerPage);
         this.globalMini.querySelector(".mini-track strong").textContent = entry ? entry.file.name.replace(/\.[^.]+$/, "") : "再生待ち";
         this.globalMini.querySelector(".mini-track span").textContent = entry ? (entry.kind === "video" ? "動画" : "音声") : "ファイルが選択されていません";
