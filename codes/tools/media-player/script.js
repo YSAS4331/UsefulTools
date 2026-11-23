@@ -45,6 +45,76 @@ if (!customElements.get("media-engine")) {
       this.video.playsInline = true;
       this.video.hidden = true;
       this.append(this.audio, this.video);
+      this.audioContext = null;
+      this.analyser = null;
+      this.analysisData = null;
+      this.analysisSources = new WeakSet();
+      this.analysisFrame = 0;
+      this.setupAudioAnalysis = () => {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return false;
+        try {
+          if (!this.audioContext) {
+            this.audioContext = new AudioContextClass();
+            this.analyser = this.audioContext.createAnalyser();
+            this.analyser.fftSize = 1024;
+            this.analyser.smoothingTimeConstant = 0.78;
+            this.analysisData = new Uint8Array(this.analyser.frequencyBinCount);
+            this.analyser.connect(this.audioContext.destination);
+          }
+          for (const media of [this.audio, this.video]) {
+            if (this.analysisSources.has(media)) continue;
+            const source = this.audioContext.createMediaElementSource(media);
+            source.connect(this.analyser);
+            this.analysisSources.add(media);
+          }
+          if (this.audioContext.state === "suspended") this.audioContext.resume().catch(() => {});
+          return true;
+        } catch (error) {
+          console.warn("[media-player] 音声解析を初期化できませんでした。", error);
+          return false;
+        }
+      };
+      this.updateVisualizer = () => {
+        if (!this.analyser || !this.analysisData) return;
+        this.analyser.getByteFrequencyData(this.analysisData);
+        const bins = this.analysisData;
+        const max = bins.length;
+        const average = (from, to) => {
+          let sum = 0, count = 0;
+          for (let i = from; i < Math.min(to, max); i++) { sum += bins[i]; count++; }
+          return count ? sum / count / 255 : 0;
+        };
+        const bands = [
+          average(1, Math.max(5, Math.floor(max * 0.08))),
+          average(Math.floor(max * 0.08), Math.floor(max * 0.38)),
+          average(Math.floor(max * 0.38), Math.floor(max * 0.9))
+        ];
+        const indicator = document.getElementById("playing-indicator");
+        if (indicator) {
+          indicator.classList.add("is-analyzed");
+          [...indicator.children].forEach((bar, index) => {
+            bar.style.height = (4 + bands[index] * 16).toFixed(1) + "px";
+          });
+        }
+        if (!this.audio.paused || !this.video.paused) {
+          this.analysisFrame = requestAnimationFrame(this.updateVisualizer);
+        } else {
+          this.analysisFrame = 0;
+        }
+      };
+      for (const media of [this.audio, this.video]) {
+        media.addEventListener("play", () => {
+          this.setupAudioAnalysis();
+          if (!this.analysisFrame) this.analysisFrame = requestAnimationFrame(this.updateVisualizer);
+        });
+        media.addEventListener("pause", () => {
+          if (this.audio.paused && this.video.paused && this.analysisFrame) {
+            cancelAnimationFrame(this.analysisFrame);
+            this.analysisFrame = 0;
+          }
+        });
+      }
       this.globalMini = document.createElement("section");
       this.globalMini.className = "mini-player global-media-mini";
       this.globalMini.innerHTML = `
