@@ -333,7 +333,8 @@
 #tool.media-tool[data-view="info"] .content-panel { display:block; }
 
 
-/* The persistent video element must stay hidden while parked in the media engine. */
-media-engine > video[hidden] {
+/* Parked media elements must never render outside the player stage. */
+media-engine > video,
+media-engine > audio {
   display: none !important;
 }
