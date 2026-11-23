@@ -36,7 +36,8 @@
         </header>
 
         <div id="tool" class="media-tool">
-          <input type="file" id="upload-file" accept="audio/*,video/*,image/*,.lrc" hidden multiple>
+          <input type="file" id="upload-file" accept="audio/*,video/*,.lrc" hidden multiple>
+          <input type="file" id="upload-artwork-file" accept="image/*" hidden multiple>
             <div class="player-layout">
               <section class="player-main" aria-label="再生中のメディア">
                 <div class="media-stage" id="media-stage">
@@ -103,14 +104,23 @@
                   </dl>
                 </section>
                 <section class="content-panel" data-content-panel="library" hidden>
-                  <label for="upload-file" id="upload-container">
-                    <i data-lucide="upload"></i>
-                    <p>ファイルをアップロードします</p>
-                    <p class="sub-text">または、ファイルをドラッグ&amp;ドロップ</p>
-                  </label>
+                  <div class="upload-areas">
+                    <label for="upload-file" id="upload-container" class="upload-area">
+                      <i data-lucide="file-audio"></i>
+                      <strong>メディアを追加</strong>
+                      <p>音声・動画ファイルと .lrc 歌詞</p>
+                      <p class="sub-text">クリック、またはドラッグ&amp;ドロップ</p>
+                    </label>
+                    <label for="upload-artwork-file" id="artwork-upload-container" class="upload-area">
+                      <i data-lucide="image-plus"></i>
+                      <strong>アートワークを追加</strong>
+                      <p>画像ファイル</p>
+                      <p class="sub-text">メディアと同じファイル名で自動的に紐付け</p>
+                    </label>
+                  </div>
                   <div class="library-heading">
                     <div><h3>メディアライブラリ</h3><p>追加したファイルは、このページを開いている間だけ保持されます。</p></div>
-                    <button type="button" class="primary-button" data-open-files><i data-lucide="plus"></i>ファイルを追加</button>
+                    <div class="library-upload-actions"><button type="button" class="primary-button" data-open-files><i data-lucide="plus"></i>メディアを追加</button><button type="button" class="primary-button" data-open-artworks><i data-lucide="image-plus"></i>アートワークを追加</button></div>
                   </div>
                   <ol id="files" class="library-list"><li class="library-empty">まだファイルがありません</li></ol>
                 </section>
