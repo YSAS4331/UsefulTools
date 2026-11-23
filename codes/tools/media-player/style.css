@@ -273,7 +273,17 @@
 }
 
 
-/* Playlist content should follow the normal left alignment. */
-#tool.media-tool #queue-list .queue-empty {
-  text-align: left;
+/* Keep playlist rows full-width and align every track to the left. */
+#tool.media-tool #queue-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+#tool.media-tool #queue-list .queue-item {
+  width: 100%;
+  justify-content: flex-start;
+}
+#tool.media-tool #queue-list .queue-select {
+  flex: 1 1 auto;
+  width: 0;
 }
