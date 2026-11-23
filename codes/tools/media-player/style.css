@@ -519,3 +519,20 @@ media-engine > audio {
     min-width: 0;
   }
 }
+
+
+/* Fit desktop fullscreen artwork to the available vertical space. */
+@container media-tool (min-width: 820px) {
+  #tool.fullscreen-active.media-tool .media-stage {
+    width: min(100%, calc(100dvh - 23rem));
+    max-height: calc(100dvh - 23rem);
+    min-height: 0;
+    aspect-ratio: 1;
+  }
+
+  #tool.fullscreen-active.media-tool .media-stage:has(video:not([hidden])) {
+    width: min(100%, calc((100dvh - 23rem) * var(--video-ratio, 16 / 9)));
+    max-height: calc(100dvh - 23rem);
+    aspect-ratio: var(--video-ratio, 16 / 9);
+  }
+}
