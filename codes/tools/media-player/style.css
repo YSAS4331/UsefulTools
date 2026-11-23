@@ -241,3 +241,28 @@
   margin-top: 0;
   background: var(--bg-2);
 }
+
+
+/* Keep the tab bar at the bottom even when the mini player is hidden. */
+#tool.fullscreen-active.media-tool .player-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+#tool.fullscreen-active.media-tool .player-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+#tool.fullscreen-active.media-tool .media-stage {
+  margin-top: auto;
+  margin-bottom: auto;
+  flex-shrink: 1;
+}
+#tool.fullscreen-active.media-tool .content-section {
+  flex: 1 1 0;
+}
+#tool.fullscreen-active.media-tool .view-navigation {
+  margin-top: auto;
+}
