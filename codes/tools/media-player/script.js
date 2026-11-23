@@ -266,7 +266,7 @@ const init = () => {
   engine.playbackRate=Number(speed.value);
   const toolWidth = root.clientWidth - (parseFloat(getComputedStyle(root).paddingLeft) || 0) - (parseFloat(getComputedStyle(root).paddingRight) || 0);
   switchView(toolWidth >= 820 ? "library" : "player");
-  for(const button of $("[data-open-files]",root))listen(button,"click",()=>input.click());
+  for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   if(upload){
     const prevent=event=>{event.preventDefault();event.stopPropagation();};
