@@ -50,7 +50,7 @@ const init = () => {
     return lines.sort((a,b)=>a.time-b.time);
   };
   let previewStart=0;
-  const renderArtworkLyrics=()=>{
+  const renderArtworkLyrics=(animate=false)=>{
     if(!artworkLyrics)return;
     artworkLyrics.replaceChildren();
     for(let index=previewStart;index<Math.min(currentLyrics.length,previewStart+5);index++){
@@ -60,6 +60,7 @@ const init = () => {
       line.textContent=currentLyrics[index].text;
       artworkLyrics.append(line);
     }
+    if(animate){artworkLyrics.classList.remove("is-shifting");void artworkLyrics.offsetWidth;artworkLyrics.classList.add("is-shifting");}
   };
   const showLyrics=()=>{
     activeLyricIndex=-1;
@@ -84,7 +85,7 @@ const init = () => {
       activeLine?.scrollIntoView({block:"center",behavior:"smooth"});
       if(artworkLyrics&&active>=0){
         previewStart=Math.max(0,Math.min(active-1,currentLyrics.length-5));
-        renderArtworkLyrics();
+        renderArtworkLyrics(true);
       }
     }
     if(artworkLyrics){
