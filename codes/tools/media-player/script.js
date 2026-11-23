@@ -25,7 +25,7 @@ const init = () => {
   stage.append(video);
   const artwork=$("#artwork-image",root);
   const audioVisual=$("#audio-visual",root), stageEmpty=$("#stage-empty",root), queue=$("#queue-list",root), library=$("#files",root);
-  const lyricsContent=$("#lyrics-content",root), count=$(".nav-file-count",root);
+  const lyricsContent=$("#lyrics-content",root), artworkLyrics=$("#artwork-lyrics",root), count=$(".nav-file-count",root);
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
@@ -56,12 +56,24 @@ const init = () => {
     currentLyrics.forEach((line,index)=>{const p=document.createElement("p");p.className="lyric-line";p.dataset.index=index;p.textContent=line.text;lyricsContent.append(p);});
   };
   const updateLyrics=()=>{
-    if(!currentLyrics.length)return;
     const time=media()?.currentTime||0;
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
     $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
     if(active!==activeLyricIndex){activeLyricIndex=active;const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;activeLine?.scrollIntoView({block:"center",behavior:"smooth"});}
+    if(artworkLyrics){
+      const visible=!!currentLyrics.length&&currentEntry()?.kind==="audio";
+      artworkLyrics.hidden=!visible;
+      if(visible){
+        const center=active<0?0:active;
+        for(const line of $$(".artwork-lyrics-line",artworkLyrics)){
+          const index=center+Number(line.dataset.offset);
+          line.textContent=currentLyrics[index]?.text||"";
+          line.hidden=!currentLyrics[index];
+          line.classList.toggle("is-current",Number(line.dataset.offset)===0);
+        }
+      }
+    }
   };
   const updatePlaybackState=()=>{
     const playing=isPlaying();
