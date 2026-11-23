@@ -298,8 +298,8 @@
 /* Scrollable synchronized lyrics beneath the artwork. */
 .artwork-lyrics {
   width: min(100%, 420px);
-  height: 7.5rem;
-  max-height: 7.5rem;
+  height: 5.5rem;
+  max-height: 5.5rem;
   margin: .8rem auto 0;
   display: flex;
   flex-direction: column;
