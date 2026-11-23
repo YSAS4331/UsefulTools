@@ -56,3 +56,13 @@ media-engine{box-sizing:border-box}
 .global-media-mini.is-collapsed.is-expanded { width:100%; min-height:0; padding:.55rem .65rem .65rem; }
 .global-media-mini.is-collapsed.is-expanded > :not(.global-mini-expanded) { display:none!important; }
 global-media-mini.is-expanded { width:100%; }
+
+/* Expanded mode uses only its dedicated control row. */
+.global-media-mini.is-expanded > .global-mini-play,
+.global-media-mini.is-expanded > .global-mini-next {
+  display:none!important;
+}
+.global-media-mini.is-expanded .mini-track,
+.global-media-mini.is-expanded .mini-artwork {
+  cursor:pointer;
+}
