@@ -72,6 +72,7 @@ if (!customElements.get("media-engine")) {
         this.video.load();
         const nextMedia = nextEntry.kind === "video" ? this.video : this.audio;
         this.currentId = nextId;
+        this.updateSession?.(nextEntry);
         nextMedia.src = nextEntry.url;
         nextMedia.volume = this.volume;
         nextMedia.playbackRate = this.playbackRate;
@@ -84,10 +85,10 @@ if (!customElements.get("media-engine")) {
 
       if ("mediaSession" in navigator) {
         const actions = {
-          play: () => this.dispatchEvent(new Event("sessionplay")),
-          pause: () => this.dispatchEvent(new Event("sessionpause")),
-          previoustrack: () => this.dispatchEvent(new Event("sessionprevious")),
-          nexttrack: () => this.dispatchEvent(new Event("sessionnext")),
+          play: () => this.currentMedia?.play().catch(() => {}),
+          pause: () => { this.audio.pause(); this.video.pause(); },
+          previoustrack: () => this.sessionMove(-1),
+          nexttrack: () => this.sessionMove(1),
           seekto: event => {
             const active = this.currentMedia;
             if (active && Number.isFinite(event.seekTime)) active.currentTime = event.seekTime;
@@ -109,6 +110,35 @@ if (!customElements.get("media-engine")) {
       Object.defineProperty(this, "currentMedia", {
         get: () => this.entries.get(this.currentId)?.kind === "video" ? this.video : this.audio
       });
+      this.sessionMove = direction => {
+        const ids = [...this.entries.keys()];
+        if (ids.length < 2 || this.currentId == null) return;
+        let nextId;
+        if (this.shuffle && ids.length > 1) {
+          const choices = ids.filter(id => id !== this.currentId);
+          nextId = choices[Math.floor(Math.random() * choices.length)];
+        } else {
+          const index = ids.indexOf(this.currentId);
+          nextId = ids[(index + direction + ids.length) % ids.length];
+        }
+        const entry = this.entries.get(nextId);
+        if (!entry) return;
+        this.audio.pause();
+        this.video.pause();
+        this.audio.removeAttribute("src");
+        this.video.removeAttribute("src");
+        this.audio.load();
+        this.video.load();
+        const active = entry.kind === "video" ? this.video : this.audio;
+        this.currentId = nextId;
+        active.src = entry.url;
+        active.volume = this.volume;
+        active.playbackRate = this.playbackRate;
+        active.load();
+        this.updateSession(entry);
+        this.dispatchEvent(new CustomEvent("trackchange", { detail: { id: nextId } }));
+        active.play().catch(() => {});
+      };
       this.updateSession = entry => {
         if (!("mediaSession" in navigator)) return;
         if (!entry) {
@@ -345,10 +375,7 @@ const init = () => {
     listen(upload,"drop",event=>{const files=event.dataTransfer?.files;if(files?.length)addFiles(files);});
   }
   listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
-  listen(engine,"sessionplay",()=>play());
-  listen(engine,"sessionpause",()=>pauseAll());
-  listen(engine,"sessionprevious",()=>move(-1));
-  listen(engine,"sessionnext",()=>move(1));
+
   for(const active of [audio,video]){
     listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",()=>{if(active===video&&currentEntry()?.kind==="video"&&video.videoWidth&&video.videoHeight)$("#media-stage",root).style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));updateProgress();});listen(active,"durationchange",updateProgress);
     listen(active,"play",updatePlaybackState);listen(active,"pause",updatePlaybackState);
