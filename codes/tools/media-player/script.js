@@ -101,11 +101,7 @@ const init = () => {
       const copy=document.createElement("span");copy.className="queue-copy";
       const name=document.createElement("strong");name.textContent=entry.file.name;
       const meta=document.createElement("small");meta.textContent=(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size);
-      const details=document.createElement("span");details.className="queue-details";
-      for(const [label,available] of [["ジャケット",!!entry.artworkUrl],["歌詞",!!entry.lyrics?.length]]){
-        const badge=document.createElement("span");badge.className="queue-detail"+(available?" is-available":"");badge.textContent=label+(available?"あり":"なし");details.append(badge);
-      }
-      copy.append(name,meta,details);select.append(icon,copy);select.addEventListener("click",()=>selectEntry(id,true));
+      copy.append(name,meta);select.append(icon,copy);select.addEventListener("click",()=>selectEntry(id,true));
       const remove=document.createElement("button");remove.type="button";remove.className="remove-file";remove.textContent="×";remove.setAttribute("aria-label",entry.file.name+"を削除");remove.addEventListener("click",()=>removeEntry(id));
       li.append(select,remove);queue.append(li);
     }
@@ -140,6 +136,26 @@ const init = () => {
     artwork.hidden=!entry||entry.kind!=="audio"||!entry.artwork;
     if(entry?.kind==="audio"&&entry.artwork){artwork.src=entry.artworkUrl;}else artwork.removeAttribute("src");
     if(entry?.kind==="video"&&video.videoWidth&&video.videoHeight)stage.style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));
+    const metadata=$("#metadata-list",root);
+    if(metadata){
+      const rows=[
+        ["ファイル名",entry?.file.name||"未選択"],
+        ["メディア種別",entry?(entry.kind==="video"?"動画":"音声"):"—"],
+        ["ファイル形式",entry?.file.type||"不明"],
+        ["ファイルサイズ",entry?formatSize(entry.file.size):"—"],
+        ["最終更新",entry?new Date(entry.file.lastModified).toLocaleString():"—"],
+        ["再生時間",entry&&Number.isFinite(media()?.duration)&&media().duration>0?formatTime(media().duration):"読み込み待ち"],
+        ["映像サイズ",entry?.kind==="video"&&video.videoWidth?video.videoWidth+" × "+video.videoHeight:"—"],
+        ["ジャケット",entry?.artworkUrl?"あり":"なし"],
+        ["歌詞ファイル",entry?.lyrics?.length?"あり":"なし"]
+      ];
+      metadata.replaceChildren();
+      for(const [label,value] of rows){
+        const row=document.createElement("div"),term=document.createElement("dt"),description=document.createElement("dd");
+        term.textContent=label;description.textContent=value;row.append(term,description);metadata.append(row);
+      }
+    }
+
     seek.disabled=!entry;playButton.disabled=!entry;previousButton.disabled=entries.size<2;nextButton.disabled=entries.size<2;
     currentLyrics=entry?.lyrics||[];showLyrics();engine.updateSession?.(entry);updateProgress();updatePlaybackState();render();
   };
@@ -230,6 +246,7 @@ const init = () => {
     root.querySelectorAll(".content-tab[data-content-tab]").forEach(item=>{const active=item.dataset.contentTab===view;item.classList.toggle("is-active",active);item.setAttribute("aria-selected",String(active));});
     root.querySelectorAll(".content-panel").forEach(panel=>panel.hidden=panel.dataset.contentPanel!==view);
     if(view==="lyrics"){activeLyricIndex=-1;updateLyrics();}
+    if(view==="info")updateTrack();
   };
   for(const tab of root.querySelectorAll(".content-tab[data-content-tab]"))listen(tab,"click",()=>switchView(tab.dataset.contentTab));
   listen(miniPlay,"click",event=>{event.stopPropagation();isPlaying()?pauseAll():play();});
