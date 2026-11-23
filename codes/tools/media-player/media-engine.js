@@ -120,11 +120,34 @@ if (!customElements.get("media-engine")) {
         <div class="mini-track"><strong>再生待ち</strong><span>ファイルが選択されていません</span></div>
         <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
         <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
-        <button type="button" class="global-mini-toggle" aria-label="閉じる"><i data-lucide="chevron-down"></i></button>`;
+        <button type="button" class="global-mini-toggle" aria-label="閉じる"><i data-lucide="chevron-down"></i></button>
+        <div class="global-mini-expanded" aria-label="簡易再生操作">
+          <div class="global-mini-seek-row"><span class="global-mini-current">0:00</span><input class="global-mini-seek" type="range" min="0" max="1000" value="0" aria-label="再生位置" disabled><span class="global-mini-duration">0:00</span></div>
+          <div class="global-mini-controls">
+            <button type="button" class="global-mini-back" aria-label="メディアプレイヤーに戻る"><i data-lucide="arrow-up-right"></i></button>
+            <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
+            <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
+          </div>
+        </div>`;
       this.append(this.globalMini);
       this.globalMini.addEventListener("click", event => {
         if (!event.target.closest(".mini-track, .mini-artwork")) return;
+        this.globalMini.classList.toggle("is-expanded");
+        this.globalMini.querySelector(".global-mini-toggle").setAttribute("aria-label", this.globalMini.classList.contains("is-expanded") ? "ミニプレーヤーを閉じる" : "ミニプレーヤーを展開");
+      });
+      this.globalMini.querySelector(".global-mini-back").addEventListener("click", () => {
         window.spaRouter?.navigate("/tools/media-player/");
+      });
+      const miniSeek = this.globalMini.querySelector(".global-mini-seek");
+      miniSeek.addEventListener("input", () => {
+        const active = this.currentMedia;
+        if (active && Number.isFinite(active.duration)) {
+          this.globalMini.querySelector(".global-mini-current").textContent = this.formatMediaTime(active.duration * Number(miniSeek.value) / 1000);
+        }
+      });
+      miniSeek.addEventListener("change", () => {
+        const active = this.currentMedia;
+        if (active && Number.isFinite(active.duration)) active.currentTime = active.duration * Number(miniSeek.value) / 1000;
       });
       this.globalMini.querySelector(".global-mini-play").addEventListener("click", () => {
         const active = this.currentMedia;
@@ -149,6 +172,16 @@ if (!customElements.get("media-engine")) {
         image.hidden = !entry?.artworkUrl;
         this.globalMini.querySelector(".mini-artwork i, .mini-artwork svg").hidden = !!entry?.artworkUrl;
         const playing = !!this.currentMedia && !this.currentMedia.paused;
+        const active = this.currentMedia;
+        const seek = this.globalMini.querySelector(".global-mini-seek");
+        const current = this.globalMini.querySelector(".global-mini-current");
+        const duration = this.globalMini.querySelector(".global-mini-duration");
+        const format = value => this.formatMediaTime(value);
+        const hasDuration = !!active && Number.isFinite(active.duration) && active.duration > 0;
+        seek.disabled = !hasDuration;
+        if (hasDuration) seek.value = String(active.currentTime / active.duration * 1000);
+        current.textContent = format(active?.currentTime || 0);
+        duration.textContent = format(hasDuration ? active.duration : 0);
         this.globalMini.querySelector(".global-mini-play").innerHTML = playing ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
         this.globalMini.querySelector(".global-mini-play").setAttribute("aria-label", playing ? "一時停止" : "再生");
         const createIcons = window.spaRouter?.commonStorage?.get("createIcons");
@@ -263,6 +296,12 @@ if (!customElements.get("media-engine")) {
         this.dispatchEvent(new CustomEvent("trackchange", { detail: { id: nextId } }));
         active.play().catch(() => {});
       };
+      this.formatMediaTime = seconds => {
+        if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+        const value = Math.floor(seconds), minutes = Math.floor(value / 60), secs = value % 60;
+        const hours = Math.floor(minutes / 60);
+        return hours ? `${hours}:${String(minutes % 60).padStart(2, "0")}:${String(secs).padStart(2, "0")}` : `${minutes}:${String(secs).padStart(2, "0")}`;
+      };
       this.updateSession = entry => {
         this.updateGlobalMini?.();
         if (!("mediaSession" in navigator)) return;
@@ -298,7 +337,10 @@ if (!customElements.get("media-engine")) {
       };
       this.updateGlobalMini?.();
       for (const media of [this.audio, this.video]) {
-        media.addEventListener("timeupdate", this.updateSessionState);
+        media.addEventListener("timeupdate", () => {
+          this.updateSessionState();
+          if (this.globalMini.classList.contains("is-expanded")) this.updateGlobalMini();
+        });
         media.addEventListener("play", this.updateSessionState);
         media.addEventListener("pause", this.updateSessionState);
         media.addEventListener("ratechange", this.updateSessionState);
