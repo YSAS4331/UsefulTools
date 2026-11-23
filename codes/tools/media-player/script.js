@@ -111,7 +111,6 @@ const init = () => {
     if(lyricChanged){
       activeLyricIndex=active;
       $$(".lyric-line",lyricsContent).forEach(line=>line.classList.toggle("is-active",Number(line.dataset.index)===active));
-      if(active>=0)$(".lyric-line[data-index='"+active+"']",lyricsContent)?.scrollIntoView({block:"center",behavior:"smooth"});
       if(artworkLyrics&&active>=0)advanceArtworkLyrics(active);
     }
     if(artworkLyrics){
