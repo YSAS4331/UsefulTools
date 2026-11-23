@@ -173,8 +173,8 @@ const init = () => {
     if(view==="lyrics"){activeLyricIndex=-1;updateLyrics();}
   };
   for(const tab of root.querySelectorAll(".content-tab[data-content-tab]"))listen(tab,"click",()=>switchView(tab.dataset.contentTab));
-  listen(miniPlay,"click",()=>isPlaying()?pauseAll():play());
-  listen(miniNext,"click",()=>move(1));
+  listen(miniPlay,"click",event=>{event.stopPropagation();isPlaying()?pauseAll():play();});
+  listen(miniNext,"click",event=>{event.stopPropagation();move(1);});
   const miniPlayer=$(".mini-player",root);
   listen(miniPlayer,"click",event=>{if(event.target.closest("button"))return;switchView("player");});
   switchView("player");
