@@ -77,7 +77,7 @@ const init = () => {
     const time=media()?.currentTime||0;
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
-    $(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
+    $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
     const lyricChanged=active!==activeLyricIndex;
     if(lyricChanged){
       activeLyricIndex=active;
@@ -286,8 +286,8 @@ const init = () => {
   engine.playbackRate=Number(speed.value);
   const toolWidth = root.clientWidth - (parseFloat(getComputedStyle(root).paddingLeft) || 0) - (parseFloat(getComputedStyle(root).paddingRight) || 0);
   switchView(toolWidth >= 820 ? "library" : "player");
-  for(const button of $("[data-open-files]",root))listen(button,"click",()=>input.click());
-  for(const button of $("[data-open-artworks]",root))listen(button,"click",()=>artworkInput.click());
+  for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
+  for(const button of $$("[data-open-artworks]",root))listen(button,"click",()=>artworkInput.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
   listen(artworkInput,"change",()=>{if(artworkInput.files?.length)addFiles(artworkInput.files);artworkInput.value="";});
   const bindDropZone=(zone,accept)=>{
