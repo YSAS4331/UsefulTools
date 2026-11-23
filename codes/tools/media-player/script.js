@@ -98,7 +98,7 @@ if (!customElements.get("media-engine")) {
         const image = this.globalMini.querySelector(".mini-artwork img");
         image.src = entry?.artworkUrl || "";
         image.hidden = !entry?.artworkUrl;
-        this.globalMini.querySelector(".mini-artwork i").hidden = !!entry?.artworkUrl;
+        this.globalMini.querySelector(".mini-artwork i, .mini-artwork svg").hidden = !!entry?.artworkUrl;
         const playing = !!this.currentMedia && !this.currentMedia.paused;
         this.globalMini.querySelector(".global-mini-play").innerHTML = playing ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
         this.globalMini.querySelector(".global-mini-play").setAttribute("aria-label", playing ? "一時停止" : "再生");
