@@ -125,8 +125,11 @@ if (!customElements.get("media-engine")) {
           <div class="global-mini-seek-row"><span class="global-mini-current">0:00</span><input class="global-mini-seek" type="range" min="0" max="1000" value="0" aria-label="再生位置" disabled><span class="global-mini-duration">0:00</span></div>
           <div class="global-mini-controls">
             <button type="button" class="global-mini-back" aria-label="閉じる"><i data-lucide="chevron-down"></i></button>
+            <button type="button" class="global-mini-previous" aria-label="前のファイル"><i data-lucide="skip-back"></i></button>
             <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
             <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
+            <button type="button" class="global-mini-shuffle" aria-label="シャッフル" aria-pressed="false"><i data-lucide="shuffle"></i></button>
+            <button type="button" class="global-mini-repeat" aria-label="リピート" aria-pressed="false"><i data-lucide="repeat-1"></i></button>
           </div>
         </div>`;
       this.append(this.globalMini);
@@ -141,6 +144,16 @@ if (!customElements.get("media-engine")) {
       });
       this.globalMini.querySelector(".global-mini-back").addEventListener("click", () => {
         this.globalMini.classList.remove("is-expanded");
+      });
+      this.globalMini.querySelector(".global-mini-previous").addEventListener("click", () => this.sessionMove(-1));
+      this.globalMini.querySelector(".global-mini-shuffle").addEventListener("click", () => {
+        this.shuffle = !this.shuffle;
+        this.shuffleBag = this.shuffle ? this.shuffleBag.filter(id => this.entries.has(id) && id !== this.currentId) : [];
+        this.updateGlobalMini();
+      });
+      this.globalMini.querySelector(".global-mini-repeat").addEventListener("click", () => {
+        this.repeat = !this.repeat;
+        this.updateGlobalMini();
       });
       const miniSeek = this.globalMini.querySelector(".global-mini-seek");
       miniSeek.addEventListener("input", () => {
@@ -178,6 +191,15 @@ if (!customElements.get("media-engine")) {
         this.globalMini.querySelector(".mini-artwork i, .mini-artwork svg").hidden = !!entry?.artworkUrl;
         const playing = !!this.currentMedia && !this.currentMedia.paused;
         const active = this.currentMedia;
+        const canMove = this.entries.size > 1;
+        this.globalMini.querySelector(".global-mini-previous").disabled = !canMove;
+        this.globalMini.querySelector(".global-mini-next").disabled = !canMove;
+        const shuffleButton = this.globalMini.querySelector(".global-mini-shuffle");
+        const repeatButton = this.globalMini.querySelector(".global-mini-repeat");
+        shuffleButton.classList.toggle("is-on", this.shuffle);
+        shuffleButton.setAttribute("aria-pressed", String(this.shuffle));
+        repeatButton.classList.toggle("is-on", this.repeat);
+        repeatButton.setAttribute("aria-pressed", String(this.repeat));
         const seek = this.globalMini.querySelector(".global-mini-seek");
         const current = this.globalMini.querySelector(".global-mini-current");
         const duration = this.globalMini.querySelector(".global-mini-duration");
