@@ -406,3 +406,12 @@ global-media-mini.is-expanded { width:100%; }
   margin: 0!important;
   transform: none!important;
 }
+
+
+/* Keep the expanded controls out of the flex layout while the mini-player is compact. */
+.global-media-mini:not(.is-expanded) > .global-mini-expanded {
+  display: none!important;
+}
+.global-media-mini.is-expanded > .global-mini-expanded {
+  display: block!important;
+}
