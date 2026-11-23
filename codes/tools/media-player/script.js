@@ -83,7 +83,7 @@ const init = () => {
       }
       shifted=true;
     }
-    $(".artwork-lyrics-line",artworkLyrics).forEach(line=>{
+    $$(".artwork-lyrics-line",artworkLyrics).forEach(line=>{
       line.classList.toggle("is-current",Number(line.dataset.index)===active);
     });
     if(shifted){
@@ -110,7 +110,7 @@ const init = () => {
     const lyricChanged=active!==activeLyricIndex;
     if(lyricChanged){
       activeLyricIndex=active;
-      $(".lyric-line",lyricsContent).forEach(line=>line.classList.toggle("is-active",Number(line.dataset.index)===active));
+      $$(".lyric-line",lyricsContent).forEach(line=>line.classList.toggle("is-active",Number(line.dataset.index)===active));
       if(active>=0)$(".lyric-line[data-index='"+active+"']",lyricsContent)?.scrollIntoView({block:"center",behavior:"smooth"});
       if(artworkLyrics&&active>=0)advanceArtworkLyrics(active);
     }
