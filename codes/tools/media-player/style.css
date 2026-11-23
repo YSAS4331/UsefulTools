@@ -306,14 +306,12 @@
   align-items: center;
   justify-content: flex-start;
   gap: .35rem;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   padding: .55rem .4rem;
   text-align: center;
   cursor: pointer;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scroll-behavior: smooth;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 .artwork-lyrics[hidden],.artwork-lyrics-line[hidden] { display:none!important; }
 .artwork-lyrics-line {
