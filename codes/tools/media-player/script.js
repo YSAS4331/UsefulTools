@@ -64,14 +64,15 @@ const init = () => {
     let active=-1;
     for(let i=0;i<currentLyrics.length;i++){if(currentLyrics[i].time<=time)active=i;else break;}
     $$(".lyric-line",lyricsContent).forEach((line,index)=>line.classList.toggle("is-active",index===active));
-    if(active!==activeLyricIndex){activeLyricIndex=active;const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;activeLine?.scrollIntoView({block:"center",behavior:"smooth"});}
+    const lyricChanged=active!==activeLyricIndex;
+    if(lyricChanged){activeLyricIndex=active;const activeLine=active>=0?$(".lyric-line[data-index='"+active+"']",lyricsContent):null;activeLine?.scrollIntoView({block:"center",behavior:"smooth"});}
     if(artworkLyrics){
       const visible=!!currentLyrics.length&&currentEntry()?.kind==="audio";
       artworkLyrics.hidden=!visible;
       if(visible){
         $(".artwork-lyrics-line",artworkLyrics).forEach((line,index)=>{
           line.classList.toggle("is-current",index===active);
-          if(index===active&&active!==activeLyricIndex)line.scrollIntoView({block:"nearest",behavior:"smooth"});
+          if(index===active&&lyricChanged)line.scrollIntoView({block:"nearest",behavior:"smooth"});
         });
       }
     }
