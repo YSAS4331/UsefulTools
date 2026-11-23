@@ -292,28 +292,34 @@
 }
 
 
-/* Compact synchronized lyrics beneath the artwork. */
+/* Scrollable synchronized lyrics beneath the artwork. */
 .artwork-lyrics {
   width: min(100%, 420px);
-  min-height: 4.7rem;
+  height: 7.5rem;
+  max-height: 7.5rem;
   margin: .8rem auto 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: .2rem;
-  overflow: hidden;
+  justify-content: flex-start;
+  gap: .35rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: .55rem .4rem;
   text-align: center;
+  cursor: pointer;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
 }
 .artwork-lyrics[hidden],.artwork-lyrics-line[hidden] { display:none!important; }
 .artwork-lyrics-line {
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin: 0;
   color: var(--text-tertiary);
   font-size: .78rem;
-  line-height: 1.45;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
   opacity: .58;
   transition: opacity .2s,color .2s;
 }
