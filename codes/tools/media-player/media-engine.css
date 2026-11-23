@@ -44,15 +44,30 @@ media-engine{box-sizing:border-box}
   box-shadow:var(--glass-inner-shadow),0 8px 32px #0003;
 }
 .global-media-mini.is-expanded .global-mini-toggle { transform:rotate(180deg); }
-.global-media-mini .global-mini-expanded { display:none; flex:0 0 100%; width:100%; padding:.35rem .2rem .1rem; }
-.global-media-mini.is-expanded .global-mini-expanded { display:block; }
+.global-media-mini .global-mini-expanded {
+  display:block;
+  flex:0 0 100%;
+  width:100%;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  padding:0 .2rem;
+  transition:max-height .32s ease, opacity .22s ease, padding .32s ease;
+}
+.global-media-mini.is-expanded .global-mini-expanded {
+  max-height:180px;
+  opacity:1;
+  padding:.35rem .2rem .1rem;
+}
 .global-media-mini.is-expanded .global-mini-toggle { display:none!important; }
 .global-mini-seek-row { display:flex; align-items:center; gap:.55rem; color:var(--text-tertiary); font-size:.7rem; font-variant-numeric:tabular-nums; }
 .global-mini-seek { flex:1; min-width:0; width:100%; accent-color:var(--accent-strong); }
 .global-mini-seek:disabled { opacity:.4; }
-.global-mini-controls { display:flex; align-items:center; justify-content:center; gap:.8rem; padding-top:.35rem; }
-.global-media-mini .global-mini-controls button { flex:0 0 2.5rem; }
-.global-media-mini .global-mini-controls .global-mini-back { margin-right:auto; }
+.global-mini-controls { display:flex; align-items:center; justify-content:space-between; gap:.1rem; padding-top:.35rem; }
+.global-media-mini .global-mini-controls button { flex:0 1 2.5rem; min-width:0; width:2.5rem; }
+.global-media-mini .global-mini-controls .global-mini-back { margin-right:.25rem; }
+.global-media-mini .global-mini-controls button:disabled { opacity:.3!important; }
+.global-media-mini .global-mini-controls button.is-on { color:var(--accent-strong)!important; }
 .global-media-mini.is-collapsed.is-expanded { width:100%; min-height:0; padding:.55rem .65rem .65rem; }
 .global-media-mini.is-collapsed.is-expanded > :not(.global-mini-expanded) { display:none!important; }
 global-media-mini.is-expanded { width:100%; }
@@ -65,4 +80,8 @@ global-media-mini.is-expanded { width:100%; }
 .global-media-mini.is-expanded .mini-track,
 .global-media-mini.is-expanded .mini-artwork {
   cursor:pointer;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .global-media-mini,.global-media-mini .global-mini-expanded{transition:none!important}
 }
