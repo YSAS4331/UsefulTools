@@ -45,37 +45,38 @@ if (!customElements.get("media-engine")) {
       this.video.playsInline = true;
       this.video.hidden = true;
       this.append(this.audio, this.video);
-      this.globalMini = document.createElement("aside");
-      this.globalMini.className = "global-media-mini";
+      this.globalMini = document.createElement("section");
+      this.globalMini.className = "mini-player global-media-mini";
       this.globalMini.innerHTML = `
-        <button type="button" class="global-mini-open" aria-label="メディアプレイヤーを開く"><span class="global-mini-art"><img alt=""><i>♫</i></span><span class="global-mini-copy"><strong>再生待ち</strong><small>メディアプレイヤー</small></span></button>
-        <button type="button" class="global-mini-play" aria-label="再生">▶</button>
-        <button type="button" class="global-mini-next" aria-label="次の曲">⏭</button>
-        <button type="button" class="global-mini-toggle" aria-label="閉じる">⌄</button>`;
+        <div class="mini-artwork"><img alt="" hidden><i data-lucide="music-2"></i></div>
+        <div class="mini-track"><strong>再生待ち</strong><span>ファイルが選択されていません</span></div>
+        <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
+        <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
+        <button type="button" class="global-mini-toggle" aria-label="閉じる"><i data-lucide="chevron-down"></i></button>`;
       this.append(this.globalMini);
       const globalStyle = document.createElement("style");
       globalStyle.id = "global-media-mini-style";
       globalStyle.textContent = `
         media-engine{box-sizing:border-box}
-        .global-media-mini{display:none;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-2);color:var(--text-primary);box-shadow:0 4px 24px #0002;font:inherit;pointer-events:auto}
-        .global-media-mini.is-visible{display:flex}
-        .global-media-mini button{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;padding:0;border:0;border-radius:10px;background:transparent;color:inherit}
-        .global-media-mini .global-mini-open{display:flex;flex:1;min-width:0;justify-content:flex-start;gap:10px;text-align:left}
-        .global-mini-art{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;overflow:hidden;border-radius:9px;background:var(--bg-hover);color:var(--text-tertiary)}
-        .global-mini-art img{width:100%;height:100%;object-fit:cover}
-        .global-mini-copy{display:flex;flex-direction:column;min-width:0;gap:3px}
-        .global-mini-copy strong,.global-mini-copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .global-mini-copy strong{font-size:.85rem;font-weight:650}
-        .global-mini-copy small{font-size:.72rem;color:var(--text-tertiary)}
-        .global-media-mini .global-mini-toggle{font-size:1.2rem}
-        .global-media-mini.is-collapsed .global-mini-open,.global-media-mini.is-collapsed .global-mini-play,.global-media-mini.is-collapsed .global-mini-next{display:none}
-        .global-media-mini.is-collapsed .global-mini-toggle{width:100%;height:100%}
-        media-engine.is-mini-collapsed{left:auto!important;right:12px!important;width:54px!important;height:46px!important}
-        media-engine.is-mini-collapsed .global-media-mini{height:100%;justify-content:center;padding:4px}
+        .global-media-mini{position:relative!important;display:none!important;width:100%;max-width:none!important;box-sizing:border-box;margin:0;padding:.25rem .1rem .75rem;border:0;border-bottom:1px solid var(--border-color);border-radius:0;background:transparent;box-shadow:none;color:var(--text-primary);pointer-events:auto}
+        .global-media-mini.is-visible{display:flex!important}
+        .global-media-mini .mini-artwork{flex-basis:3.25rem;width:3.25rem;height:3.25rem}
+        .global-media-mini .mini-track{display:flex;flex:1;flex-direction:column;min-width:0;gap:.2rem}
+        .global-media-mini .mini-track strong,.global-media-mini .mini-track span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .global-media-mini .mini-track span{color:var(--text-tertiary);font-size:.85rem}
+        .global-media-mini button{display:grid!important;place-items:center;flex:0 0 2.5rem;width:2.5rem;height:2.5rem;padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important;color:var(--text-primary)!important}
+        .global-media-mini .global-mini-toggle{flex-basis:2rem;width:2rem}
+        media-engine.is-mini-collapsed{left:auto!important;right:12px!important;width:48px!important;height:48px!important}
+        media-engine.is-mini-collapsed .global-media-mini{height:100%;justify-content:center;padding:0;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002}
+        media-engine.is-mini-collapsed .global-mini-toggle{flex:1;width:100%;height:100%}
+        media-engine.is-mini-collapsed .global-mini-toggle i{transform:rotate(180deg)}
         @media(min-width:700px){media-engine{left:auto!important;right:12px!important;width:min(420px,calc(100vw - 24px))!important}}
       `;
       if (!document.getElementById("global-media-mini-style")) document.head.append(globalStyle);
-      this.globalMini.querySelector(".global-mini-open").addEventListener("click", () => window.spaRouter?.navigate("/tools/media-player/"));
+      this.globalMini.addEventListener("click", event => {
+        if (event.target.closest("button")) return;
+        window.spaRouter?.navigate("/tools/media-player/");
+      });
       this.globalMini.querySelector(".global-mini-play").addEventListener("click", () => {
         const active = this.currentMedia;
         if (active) active.paused ? active.play().catch(() => {}) : active.pause();
@@ -85,22 +86,25 @@ if (!customElements.get("media-engine")) {
         this.globalMini.classList.toggle("is-collapsed");
         const collapsed = this.globalMini.classList.contains("is-collapsed");
         this.classList.toggle("is-mini-collapsed", collapsed);
-        this.globalMini.querySelector(".global-mini-toggle").textContent = collapsed ? "⌃" : "⌄";
+        this.globalMini.querySelector(".global-mini-toggle").innerHTML = collapsed ? '<i data-lucide="chevron-up"></i>' : '<i data-lucide="chevron-down"></i>';
         this.globalMini.querySelector(".global-mini-toggle").setAttribute("aria-label", collapsed ? "ミニプレーヤーを開く" : "閉じる");
       });
       this.updateGlobalMini = () => {
         const entry = this.entries.get(this.currentId);
         const onPlayerPage = location.pathname.replace(/\\/$/, "") === "/tools/media-player";
         this.globalMini.classList.toggle("is-visible", !!entry && !onPlayerPage);
-        this.globalMini.querySelector(".global-mini-copy strong").textContent = entry ? entry.file.name.replace(/\\.[^.]+$/, "") : "再生待ち";
-        this.globalMini.querySelector(".global-mini-copy small").textContent = entry ? (entry.kind === "video" ? "動画" : "音声") : "メディアプレイヤー";
-        const image = this.globalMini.querySelector(".global-mini-art img");
+        this.globalMini.querySelector(".mini-track strong").textContent = entry ? entry.file.name.replace(/\\.[^.]+$/, "") : "再生待ち";
+        this.globalMini.querySelector(".mini-track span").textContent = entry ? (entry.kind === "video" ? "動画" : "音声") : "ファイルが選択されていません";
+        const image = this.globalMini.querySelector(".mini-artwork img");
         image.src = entry?.artworkUrl || "";
         image.hidden = !entry?.artworkUrl;
-        this.globalMini.querySelector(".global-mini-art i").hidden = !!entry?.artworkUrl;
+        this.globalMini.querySelector(".mini-artwork i").hidden = !!entry?.artworkUrl;
         const playing = !!this.currentMedia && !this.currentMedia.paused;
-        this.globalMini.querySelector(".global-mini-play").textContent = playing ? "Ⅱ" : "▶";
+        this.globalMini.querySelector(".global-mini-play").innerHTML = playing ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
         this.globalMini.querySelector(".global-mini-play").setAttribute("aria-label", playing ? "一時停止" : "再生");
+        const createIcons = window.spaRouter?.commonStorage?.get("createIcons");
+        const lucideIcons = window.spaRouter?.commonStorage?.get("lucideIcons");
+        createIcons?.({icons:lucideIcons});
       };
       window.addEventListener("spa:router", () => this.updateGlobalMini());
       this.nextShuffleId = () => {
