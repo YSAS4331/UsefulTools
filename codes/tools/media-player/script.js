@@ -298,8 +298,8 @@ const init = () => {
     for(const type of ["dragleave","drop"])listen(zone,type,()=>zone.classList.remove("dragover"));
     listen(zone,"drop",event=>{const files=[...(event.dataTransfer?.files||[])].filter(accept);if(files.length)addFiles(files);});
   };
-  bindDropZone(upload,file=>!file.type.startsWith("image/"));
-  bindDropZone(artworkUpload,file=>file.type.startsWith("image/"));
+  bindDropZone(upload,file=>!(/\\.(?:jpe?g|png|webp|gif|avif|bmp)$/i.test(file.name)||file.type.startsWith("image/")));
+  bindDropZone(artworkUpload,file=>/\\.(?:jpe?g|png|webp|gif|avif|bmp)$/i.test(file.name)||file.type.startsWith("image/"));
   listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
 
   for(const active of [audio,video]){
