@@ -224,9 +224,9 @@ if (!customElements.get("media-engine")) {
         }
       };
       this.updateSessionState = () => {
+        this.updateGlobalMini?.();
         if (!("mediaSession" in navigator)) return;
         navigator.mediaSession.playbackState = this.audio.paused && this.video.paused ? "paused" : "playing";
-        this.updateGlobalMini?.();
         const active = this.currentMedia;
         if (active && Number.isFinite(active.duration) && active.duration > 0 && "setPositionState" in navigator.mediaSession) {
           try {
