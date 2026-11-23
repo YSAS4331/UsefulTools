@@ -86,10 +86,6 @@
 #audio-player { display:none; }
 #tool.fullscreen-active { overflow-y:auto; }
 @keyframes equalize { from { height:4px; } to { height:19px; } }
-@media (min-width:800px) {
-  .player-layout { max-width:560px; }
-  .media-stage { max-width:360px; }
-}
 @media (max-width:520px) {
   #tool.media-tool { padding:.8rem; }
   .media-tool { gap:.8rem; }
@@ -337,4 +333,98 @@
 media-engine > video,
 media-engine > audio {
   display: none !important;
+}
+
+
+/* Desktop layout is based on the tool's own available width, not the viewport. */
+#tool.media-tool {
+  container-name: media-tool;
+  container-type: inline-size;
+}
+
+@container media-tool (min-width: 820px) {
+  #tool.media-tool .player-layout {
+    display: grid;
+    grid-template-columns: minmax(230px, .78fr) minmax(0, 1.22fr);
+    grid-template-areas:
+      "now media"
+      "playback lyrics"
+      "playback nav"
+      "playback content";
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: 1.5rem;
+    row-gap: .75rem;
+    max-width: none;
+    margin: 0;
+  }
+
+  #tool.media-tool .player-main {
+    display: contents !important;
+  }
+
+  #tool.media-tool .mini-player {
+    display: none !important;
+  }
+
+  #tool.media-tool .now-playing {
+    grid-area: now;
+    align-self: end;
+    min-width: 0;
+    padding: .25rem 0 .5rem;
+  }
+
+  #tool.media-tool .playback {
+    grid-area: playback;
+    align-self: start;
+    width: 100%;
+    padding-top: .5rem;
+  }
+
+  #tool.media-tool .media-stage {
+    grid-area: media;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  #tool.media-tool .media-stage:has(video:not([hidden])) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #tool.media-tool .artwork-lyrics {
+    grid-area: lyrics;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  #tool.media-tool .view-navigation {
+    grid-area: nav;
+    order: initial;
+    position: static;
+    margin: 0;
+    padding: .25rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--bg);
+    box-shadow: none;
+  }
+
+  #tool.media-tool .content-section {
+    grid-area: content;
+    display: block !important;
+    order: initial;
+    min-width: 0;
+    padding: 0;
+  }
+
+  #tool.media-tool .content-panel {
+    padding-top: .25rem;
+  }
+
+  #tool.media-tool[data-view="player"] .content-section {
+    visibility: hidden;
+  }
 }
