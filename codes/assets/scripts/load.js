@@ -4,14 +4,16 @@ import "/components/sidebar.js";
 import {
   createIcons, Star, Folders, Blocks, Info, Hash, Share2,
   Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
-  Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus
+  Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus,
+  ChevronDown, ChevronUp
 } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
 import { LibDB, LibDBError } from "https://cdn.jsdelivr.net/gh/YSAS4331/LibDB@main/libdb.min.js";
 
 const icons = {
   Star, Folders, Blocks, Info, Hash, Share2,
   Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
-  Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus
+  Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus,
+  ChevronDown, ChevronUp
 };
 
 const setupIcons = () => {
