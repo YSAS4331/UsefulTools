@@ -117,7 +117,7 @@ if (!customElements.get("media-engine")) {
       this.globalMini = document.createElement("section");
       this.globalMini.className = "mini-player global-media-mini";
       this.globalMini.innerHTML = `
-        <div class="mini-artwork"><img alt="" hidden><i data-lucide="music-2"></i></div>
+        <div class="mini-artwork"><i data-lucide="music-2"></i></div>
         <div class="mini-track"><strong>再生待ち</strong><span>ファイルが選択されていません</span></div>
         <button type="button" class="global-mini-play" aria-label="再生"><i data-lucide="play"></i></button>
         <button type="button" class="global-mini-next" aria-label="次のファイル"><i data-lucide="skip-forward"></i></button>
@@ -186,10 +186,21 @@ if (!customElements.get("media-engine")) {
         this.globalMini.classList.toggle("is-visible", !!entry && !onPlayerPage);
         this.globalMini.querySelector(".mini-track strong").textContent = entry ? entry.file.name.replace(/\.[^.]+$/, "") : "再生待ち";
         this.globalMini.querySelector(".mini-track span").textContent = entry ? (entry.kind === "video" ? "動画" : "音声") : "ファイルが選択されていません";
-        const image = this.globalMini.querySelector(".mini-artwork img");
-        image.src = entry?.artworkUrl || "";
-        image.hidden = !entry?.artworkUrl;
-        this.globalMini.querySelector(".mini-artwork i, .mini-artwork svg").hidden = !!entry?.artworkUrl;
+        const artwork = this.globalMini.querySelector(".mini-artwork");
+        const fallbackIcon = artwork.querySelector("i, svg");
+        let image = artwork.querySelector("img");
+        if (entry?.artworkUrl) {
+          if (!image) {
+            image = document.createElement("img");
+            image.alt = "";
+            artwork.prepend(image);
+          }
+          if (image.src !== entry.artworkUrl) image.src = entry.artworkUrl;
+          fallbackIcon?.setAttribute("hidden", "");
+        } else {
+          image?.remove();
+          fallbackIcon?.removeAttribute("hidden");
+        }
         const playing = !!this.currentMedia && !this.currentMedia.paused;
         const active = this.currentMedia;
         const canMove = this.entries.size > 1;
