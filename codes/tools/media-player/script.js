@@ -70,7 +70,7 @@ const init = () => {
       const visible=!!currentLyrics.length&&currentEntry()?.kind==="audio";
       artworkLyrics.hidden=!visible;
       if(visible){
-        const previewLines=$(".artwork-lyrics-line",artworkLyrics);
+        const previewLines=[...artworkLyrics.querySelectorAll(".artwork-lyrics-line")];
         previewLines.forEach((line,index)=>line.classList.toggle("is-current",index===active));
         if(lyricChanged&&active>=0){
           const activeLine=previewLines[active];
