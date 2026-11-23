@@ -101,7 +101,11 @@ const init = () => {
       const copy=document.createElement("span");copy.className="queue-copy";
       const name=document.createElement("strong");name.textContent=entry.file.name;
       const meta=document.createElement("small");meta.textContent=(entry.kind==="video"?"動画":"音声")+" · "+formatSize(entry.file.size);
-      copy.append(name,meta);select.append(icon,copy);select.addEventListener("click",()=>selectEntry(id,true));
+      const details=document.createElement("span");details.className="queue-details";
+      for(const [label,available] of [["ジャケット",!!entry.artworkUrl],["歌詞",!!entry.lyrics?.length]]){
+        const badge=document.createElement("span");badge.className="queue-detail"+(available?" is-available":"");badge.textContent=label+(available?"あり":"なし");details.append(badge);
+      }
+      copy.append(name,meta,details);select.append(icon,copy);select.addEventListener("click",()=>selectEntry(id,true));
       const remove=document.createElement("button");remove.type="button";remove.className="remove-file";remove.textContent="×";remove.setAttribute("aria-label",entry.file.name+"を削除");remove.addEventListener("click",()=>removeEntry(id));
       li.append(select,remove);queue.append(li);
     }
@@ -172,23 +176,46 @@ const init = () => {
     const isVideo=file=>file.type.startsWith("video/")||videoExts.has(extension(file));
     const isImage=file=>file.type.startsWith("image/")||imageExts.has(extension(file));
     const mediaFiles=files.filter(file=>isAudio(file)||isVideo(file));
+    const addedArtwork=new Set(),addedLyrics=new Set();
     for(const file of files){
       const ext=extension(file),base=baseName(file.name);
-      if(isImage(file))artworks.set(base,file);
-      if(ext==="lrc")lyricFiles.set(base,file);
+      if(isImage(file)){artworks.set(base,file);addedArtwork.add(base);}
+      if(ext==="lrc"){lyricFiles.set(base,file);addedLyrics.add(base);}
+    }
+    const readLyrics=(entry,file)=>{
+      const reader=new FileReader();
+      reader.onload=()=>{
+        if(!entries.has(entry.id))return;
+        entry.lyrics=parseLrc(String(reader.result||""));
+        if(entry.id===currentId&&root.isConnected){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}
+        render();
+      };
+      reader.readAsText(file);
+    };
+    // Attach sidecar files to already imported tracks as soon as they are added.
+    for(const [id,entry] of entries){
+      const base=baseName(entry.file.name);
+      if(entry.kind==="audio"&&addedArtwork.has(base)){
+        const oldUrl=entry.artworkUrl;
+        entry.artwork=artworks.get(base);
+        entry.artworkUrl=makeUrl(entry.artwork);
+        if(oldUrl){URL.revokeObjectURL(oldUrl);objectUrls.delete(oldUrl);}
+        if(id===currentId&&root.isConnected)updateTrack();
+      }
+      if(entry.kind==="audio"&&addedLyrics.has(base))readLyrics(entry,lyricFiles.get(base));
     }
     let firstAdded=null;
     for(const file of mediaFiles){
       const id=nextId++,base=baseName(file.name),artworkFile=artworks.get(base),lyricFile=lyricFiles.get(base);
       const entry={id,file,kind:isVideo(file)?"video":"audio",url:makeUrl(file),artwork:null,artworkUrl:null,lyrics:[]};
       if(entry.kind==="audio"&&artworkFile){entry.artwork=artworkFile;entry.artworkUrl=makeUrl(artworkFile);}
-      if(entry.kind==="audio"&&lyricFile){
-        const reader=new FileReader();reader.onload=()=>{if(!entries.has(id))return;entry.lyrics=parseLrc(String(reader.result||""));if(id===currentId&&root.isConnected){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}};
-        reader.readAsText(lyricFile);
-      }
-      entries.set(id,entry);if(firstAdded===null)firstAdded=id;
+      entries.set(id,entry);
+      if(entry.kind==="audio"&&lyricFile)readLyrics(entry,lyricFile);
+      if(firstAdded===null)firstAdded=id;
     }
-    render();if(currentId===null&&firstAdded!==null)selectEntry(firstAdded,false);
+    render();
+    if(currentId===null&&firstAdded!==null)selectEntry(firstAdded,false);
+    else if(currentId!==null)updateTrack();
   };
   listen(playButton,"click",()=>isPlaying()?pauseAll():play());listen(previousButton,"click",()=>move(-1));listen(nextButton,"click",()=>move(1));
   listen(shuffleButton,"click",()=>{shuffle=!shuffle;engine.shuffle=shuffle;if(!shuffle)engine.shuffleBag=[];else engine.shuffleBag=engine.shuffleBag.filter(id=>entries.has(id)&&id!==currentId);shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
