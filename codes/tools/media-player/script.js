@@ -58,7 +58,7 @@ const init = () => {
       line.className="artwork-lyrics-line"+(index===activeLyricIndex?" is-current":"");
       line.dataset.index=index;
       if(currentLyrics[index])line.textContent=currentLyrics[index].text;
-      else{line.textContent="\\u00a0";line.setAttribute("aria-hidden","true");}
+      else{line.textContent="\u00a0";line.setAttribute("aria-hidden","true");}
       artworkLyrics.append(line);
     }
     if(animate){artworkLyrics.classList.remove("is-shifting");void artworkLyrics.offsetWidth;artworkLyrics.classList.add("is-shifting");}
@@ -79,7 +79,7 @@ const init = () => {
       line.className="artwork-lyrics-line";
       line.dataset.index=nextIndex;
       if(currentLyrics[nextIndex])line.textContent=currentLyrics[nextIndex].text;
-      else{line.textContent="\\u00a0";line.setAttribute("aria-hidden","true");}
+      else{line.textContent="\u00a0";line.setAttribute("aria-hidden","true");}
       artworkLyrics.append(line);
       shifted=true;
     }
