@@ -347,9 +347,9 @@ media-engine > audio {
     display: grid;
     grid-template-columns: minmax(230px, .78fr) minmax(0, 1.22fr);
     grid-template-areas:
-      "now media"
-      "playback lyrics"
-      "playback nav"
+      "media nav"
+      "lyrics content"
+      "now content"
       "playback content";
     grid-template-rows: auto auto auto minmax(0, 1fr);
     align-items: start;
