@@ -271,3 +271,9 @@
 #tool.fullscreen-active.media-tool .view-navigation {
   margin-top: auto;
 }
+
+
+/* Playlist content should follow the normal left alignment. */
+#tool.media-tool #queue-list .queue-empty {
+  text-align: left;
+}
