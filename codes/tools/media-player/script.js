@@ -396,17 +396,25 @@ const init = () => {
     render();updateTrack();
   };
   const addFiles=fileList=>{
-    const files=[...fileList],mediaFiles=files.filter(file=>file.type.startsWith("audio/")||file.type.startsWith("video/"));
+    const files=[...fileList];
+    const audioExts=new Set(["mp3","m4a","aac","flac","wav","ogg","oga","opus","mid","midi"]);
+    const videoExts=new Set(["mp4","m4v","mov","webm","mkv","avi","3gp","mpeg","mpg","ogv"]);
+    const imageExts=new Set(["jpg","jpeg","png","webp","gif","avif","bmp"]);
+    const extension=file=>file.name.split(".").pop().toLowerCase();
+    const isAudio=file=>file.type.startsWith("audio/")||audioExts.has(extension(file));
+    const isVideo=file=>file.type.startsWith("video/")||videoExts.has(extension(file));
+    const isImage=file=>file.type.startsWith("image/")||imageExts.has(extension(file));
+    const mediaFiles=files.filter(file=>isAudio(file)||isVideo(file));
     for(const file of files){
-      const ext=file.name.split(".").pop().toLowerCase(),base=baseName(file.name);
-      if(file.type.startsWith("image/"))artworks.set(base,file);
+      const ext=extension(file),base=baseName(file.name);
+      if(isImage(file))artworks.set(base,file);
       if(ext==="lrc")lyricFiles.set(base,file);
     }
     let firstAdded=null;
     for(const file of mediaFiles){
       const id=nextId++,base=baseName(file.name),artworkFile=artworks.get(base),lyricFile=lyricFiles.get(base);
-      const entry={id,file,kind:file.type.startsWith("video/")?"video":"audio",url:makeUrl(file),artwork:null,artworkUrl:null,lyrics:[]};
-      if(entry.kind==="audio"&&artworkFile?.type.startsWith("image/")){entry.artwork=artworkFile;entry.artworkUrl=makeUrl(artworkFile);}
+      const entry={id,file,kind:isVideo(file)?"video":"audio",url:makeUrl(file),artwork:null,artworkUrl:null,lyrics:[]};
+      if(entry.kind==="audio"&&artworkFile){entry.artwork=artworkFile;entry.artworkUrl=makeUrl(artworkFile);}
       if(entry.kind==="audio"&&lyricFile){
         const reader=new FileReader();reader.onload=()=>{if(!entries.has(id))return;entry.lyrics=parseLrc(String(reader.result||""));if(id===currentId&&root.isConnected){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}};
         reader.readAsText(lyricFile);
