@@ -52,8 +52,12 @@ const init = () => {
   const showLyrics=()=>{
     activeLyricIndex=-1;
     lyricsContent.replaceChildren();
+    artworkLyrics?.replaceChildren();
     if(!currentLyrics.length){const p=document.createElement("p");p.className="content-empty";p.textContent="対応する .lrc ファイルがありません。音声ファイルと同じ名前の .lrc を一緒に追加してください。";lyricsContent.append(p);return;}
-    currentLyrics.forEach((line,index)=>{const p=document.createElement("p");p.className="lyric-line";p.dataset.index=index;p.textContent=line.text;lyricsContent.append(p);});
+    currentLyrics.forEach((line,index)=>{
+      const p=document.createElement("p");p.className="lyric-line";p.dataset.index=index;p.textContent=line.text;lyricsContent.append(p);
+      if(artworkLyrics){const preview=document.createElement("p");preview.className="artwork-lyrics-line";preview.dataset.index=index;preview.textContent=line.text;artworkLyrics.append(preview);}
+    });
   };
   const updateLyrics=()=>{
     const time=media()?.currentTime||0;
@@ -65,13 +69,10 @@ const init = () => {
       const visible=!!currentLyrics.length&&currentEntry()?.kind==="audio";
       artworkLyrics.hidden=!visible;
       if(visible){
-        const center=active<0?0:active;
-        for(const line of $$(".artwork-lyrics-line",artworkLyrics)){
-          const index=center+Number(line.dataset.offset);
-          line.textContent=currentLyrics[index]?.text||"";
-          line.hidden=!currentLyrics[index];
-          line.classList.toggle("is-current",Number(line.dataset.offset)===0);
-        }
+        $(".artwork-lyrics-line",artworkLyrics).forEach((line,index)=>{
+          line.classList.toggle("is-current",index===active);
+          if(index===active&&active!==activeLyricIndex)line.scrollIntoView({block:"nearest",behavior:"smooth"});
+        });
       }
     }
   };
@@ -252,6 +253,8 @@ const init = () => {
     if(view==="info")updateTrack();
   };
   for(const tab of root.querySelectorAll(".content-tab[data-content-tab]"))listen(tab,"click",()=>switchView(tab.dataset.contentTab));
+  listen(artworkLyrics,"click",()=>switchView("lyrics"));
+  listen(artworkLyrics,"keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();switchView("lyrics");}});
   listen(miniPlay,"click",event=>{event.stopPropagation();isPlaying()?pauseAll():play();});
   listen(miniNext,"click",event=>{event.stopPropagation();move(1);});
   const miniPlayer=$(".mini-player",root);
