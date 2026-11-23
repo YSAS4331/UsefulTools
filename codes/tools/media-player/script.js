@@ -16,7 +16,7 @@ let cleanupActive = null;
 
 const init = () => {
   cleanupActive?.();
-  const root = $("#tool"), input = $("#upload-file");
+  const root = $("#tool"), input = $("#upload-file"), artworkInput = $("#upload-artwork-file");
   if (!root || !input) return;
   const engine = document.querySelector("media-engine") ||
     document.body.appendChild(document.createElement("media-engine"));
@@ -29,7 +29,7 @@ const init = () => {
   const seek=$("#seek-bar",root), playButton=$("#play-button",root), previousButton=$("#previous-button",root), nextButton=$("#next-button",root);
   const shuffleButton=$("#shuffle-button",root), repeatButton=$("#repeat-button",root), volume=$("#volume-bar",root), speed=$("#speed-select",root);
   const currentTime=$("#current-time",root), duration=$("#duration",root), trackTitle=$("#track-title",root), trackMeta=$("#track-meta",root);
-  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root);
+  const indicator=$("#playing-indicator",root), upload=$("#upload-container",root), artworkUpload=$("#artwork-upload-container",root);
   const miniTitle=$("#mini-track-title",root),miniMeta=$("#mini-track-meta",root),miniArtwork=$("#mini-artwork-image",root),miniArtworkIcon=$("#mini-artwork-icon",root),miniPlay=$("#mini-play-button",root),miniNext=$("#mini-next-button",root);
   const iconStorage=window.spaRouter?.commonStorage, createIcons=iconStorage?.get("createIcons"), lucideIcons=iconStorage?.get("lucideIcons");
   const {entries, artworks, lyricFiles, objectUrls} = engine;
@@ -286,15 +286,20 @@ const init = () => {
   engine.playbackRate=Number(speed.value);
   const toolWidth = root.clientWidth - (parseFloat(getComputedStyle(root).paddingLeft) || 0) - (parseFloat(getComputedStyle(root).paddingRight) || 0);
   switchView(toolWidth >= 820 ? "library" : "player");
-  for(const button of $$("[data-open-files]",root))listen(button,"click",()=>input.click());
+  for(const button of $("[data-open-files]",root))listen(button,"click",()=>input.click());
+  for(const button of $("[data-open-artworks]",root))listen(button,"click",()=>artworkInput.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
-  if(upload){
+  listen(artworkInput,"change",()=>{if(artworkInput.files?.length)addFiles(artworkInput.files);artworkInput.value="";});
+  const bindDropZone=(zone,accept)=>{
+    if(!zone)return;
     const prevent=event=>{event.preventDefault();event.stopPropagation();};
-    for(const type of ["dragenter","dragover","dragleave","drop"])listen(upload,type,prevent);
-    for(const type of ["dragenter","dragover"])listen(upload,type,()=>upload.classList.add("dragover"));
-    for(const type of ["dragleave","drop"])listen(upload,type,()=>upload.classList.remove("dragover"));
-    listen(upload,"drop",event=>{const files=event.dataTransfer?.files;if(files?.length)addFiles(files);});
-  }
+    for(const type of ["dragenter","dragover","dragleave","drop"])listen(zone,type,prevent);
+    for(const type of ["dragenter","dragover"])listen(zone,type,()=>zone.classList.add("dragover"));
+    for(const type of ["dragleave","drop"])listen(zone,type,()=>zone.classList.remove("dragover"));
+    listen(zone,"drop",event=>{const files=[...(event.dataTransfer?.files||[])].filter(accept);if(files.length)addFiles(files);});
+  };
+  bindDropZone(upload,file=>!file.type.startsWith("image/"));
+  bindDropZone(artworkUpload,file=>file.type.startsWith("image/"));
   listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
 
   for(const active of [audio,video]){
