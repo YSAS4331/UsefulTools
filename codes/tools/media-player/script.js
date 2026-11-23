@@ -31,6 +31,7 @@ if (!customElements.get("media-engine")) {
       this.currentId = null;
       this.nextId = 1;
       this.shuffle = false;
+      this.shuffleBag = [];
       this.repeat = false;
       this.volume = 1;
       this.playbackRate = 1;
@@ -43,6 +44,18 @@ if (!customElements.get("media-engine")) {
       this.video.playsInline = true;
       this.video.hidden = true;
       this.append(this.audio, this.video);
+      this.nextShuffleId = () => {
+        const ids = [...this.entries.keys()];
+        this.shuffleBag = this.shuffleBag.filter(id => this.entries.has(id) && id !== this.currentId);
+        if (!this.shuffleBag.length) {
+          this.shuffleBag = ids.filter(id => id !== this.currentId);
+          for (let i = this.shuffleBag.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.shuffleBag[i], this.shuffleBag[j]] = [this.shuffleBag[j], this.shuffleBag[i]];
+          }
+        }
+        return this.shuffleBag.shift() ?? null;
+      };
       const handleEnded = () => {
         const ids = [...this.entries.keys()];
         if (this.currentId == null || ids.length < 2 && !this.repeat) return;
@@ -56,8 +69,7 @@ if (!customElements.get("media-engine")) {
         }
         let nextId;
         if (this.shuffle && ids.length > 1) {
-          const choices = ids.filter(id => id !== this.currentId);
-          nextId = choices[Math.floor(Math.random() * choices.length)];
+          nextId = this.nextShuffleId();
         } else {
           const index = ids.indexOf(this.currentId);
           nextId = ids[(index + 1) % ids.length];
@@ -115,8 +127,7 @@ if (!customElements.get("media-engine")) {
         if (ids.length < 2 || this.currentId == null) return;
         let nextId;
         if (this.shuffle && ids.length > 1) {
-          const choices = ids.filter(id => id !== this.currentId);
-          nextId = choices[Math.floor(Math.random() * choices.length)];
+          nextId = this.nextShuffleId();
         } else {
           const index = ids.indexOf(this.currentId);
           nextId = ids[(index + direction + ids.length) % ids.length];
@@ -299,13 +310,14 @@ const init = () => {
   const pauseAll=()=>{audio.pause();video.pause();updatePlaybackState();};
   const selectEntry=(id,autoplay=false)=>{
     const entry=entries.get(id);if(!entry)return;
+    if(shuffle)engine.shuffleBag=engine.shuffleBag.filter(item=>item!==id);
     pauseAll();currentId=id;engine.currentId=id;$("#media-stage",root).style.removeProperty("--video-ratio");audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();
     const active=entry.kind==="video"?video:audio;active.src=entry.url;active.playbackRate=Number(speed.value);active.volume=Number(volume.value);engine.playbackRate=Number(speed.value);engine.volume=Number(volume.value);active.load();
     updateTrack();if(autoplay)play();
   };
   const getNextId=direction=>{
     const ids=[...entries.keys()];if(!ids.length)return null;
-    if(shuffle&&ids.length>1){const choices=ids.filter(id=>id!==currentId);return choices[Math.floor(Math.random()*choices.length)];}
+    if(shuffle&&ids.length>1)return engine.nextShuffleId();
     const index=ids.indexOf(currentId);return ids[(index+direction+ids.length)%ids.length];
   };
   const move=direction=>{const id=getNextId(direction);if(id!==null)selectEntry(id,true);};
@@ -338,7 +350,7 @@ const init = () => {
     render();if(currentId===null&&firstAdded!==null)selectEntry(firstAdded,false);
   };
   listen(playButton,"click",()=>isPlaying()?pauseAll():play());listen(previousButton,"click",()=>move(-1));listen(nextButton,"click",()=>move(1));
-  listen(shuffleButton,"click",()=>{shuffle=!shuffle;engine.shuffle=shuffle;shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
+  listen(shuffleButton,"click",()=>{shuffle=!shuffle;engine.shuffle=shuffle;if(!shuffle)engine.shuffleBag=[];else engine.shuffleBag=engine.shuffleBag.filter(id=>entries.has(id)&&id!==currentId);shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
   listen(repeatButton,"click",()=>{repeat=!repeat;engine.repeat=repeat;repeatButton.classList.toggle("is-on",repeat);repeatButton.setAttribute("aria-pressed",String(repeat));});
   listen(seek,"input",()=>{seeking=true;const active=media();if(active?.duration)currentTime.textContent=formatTime(active.duration*Number(seek.value)/1000);});
   listen(seek,"change",()=>{const active=media();if(active?.duration)active.currentTime=active.duration*Number(seek.value)/1000;seeking=false;updateProgress();});
