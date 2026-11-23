@@ -53,7 +53,7 @@ const init = () => {
   const renderArtworkLyrics=(animate=false)=>{
     if(!artworkLyrics)return;
     artworkLyrics.replaceChildren();
-    for(let index=previewStart;index<Math.min(currentLyrics.length,previewStart+5);index++){
+    for(let index=previewStart;index<Math.min(currentLyrics.length,previewStart+4);index++){
       const line=document.createElement("p");
       line.className="artwork-lyrics-line"+(index===activeLyricIndex?" is-current":"");
       line.dataset.index=index;
@@ -63,7 +63,7 @@ const init = () => {
     if(animate){artworkLyrics.classList.remove("is-shifting");void artworkLyrics.offsetWidth;artworkLyrics.classList.add("is-shifting");}
   };
   const advanceArtworkLyrics=active=>{
-    const targetStart=Math.max(0,Math.min(active-1,currentLyrics.length-5));
+    const targetStart=Math.max(0,Math.min(active-1,currentLyrics.length-4));
     if(targetStart<previewStart){
       previewStart=targetStart;
       renderArtworkLyrics(true);
@@ -73,7 +73,7 @@ const init = () => {
     while(previewStart<targetStart){
       artworkLyrics.firstElementChild?.remove();
       previewStart++;
-      const nextIndex=previewStart+4;
+      const nextIndex=previewStart+3;
       if(nextIndex<currentLyrics.length){
         const line=document.createElement("p");
         line.className="artwork-lyrics-line";
