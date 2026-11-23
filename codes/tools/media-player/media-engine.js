@@ -31,6 +31,7 @@ if (!customElements.get("media-engine")) {
       this.nextId = 1;
       this.shuffle = false;
       this.shuffleBag = [];
+      this.playHistory = [];
       this.repeat = false;
       this.volume = 1;
       this.playbackRate = 1;
@@ -300,7 +301,17 @@ if (!customElements.get("media-engine")) {
         const ids = [...this.entries.keys()];
         if (ids.length < 2 || this.currentId == null) return;
         let nextId;
-        if (this.shuffle && ids.length > 1) {
+        if (this.shuffle && direction < 0) {
+          while (this.playHistory.length) {
+            const previousId = this.playHistory.pop();
+            if (this.entries.has(previousId) && previousId !== this.currentId) {
+              nextId = previousId;
+              break;
+            }
+          }
+          if (nextId == null) return;
+        } else if (this.shuffle) {
+          this.playHistory.push(this.currentId);
           nextId = this.nextShuffleId();
         } else {
           const index = ids.indexOf(this.currentId);
