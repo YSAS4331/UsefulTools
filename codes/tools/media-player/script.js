@@ -32,6 +32,8 @@ if (!customElements.get("media-engine")) {
       this.nextId = 1;
       this.shuffle = false;
       this.repeat = false;
+      this.volume = 1;
+      this.playbackRate = 1;
       this.audio = document.createElement("audio");
       this.audio.preload = "metadata";
       this.audio.hidden = true;
@@ -41,6 +43,44 @@ if (!customElements.get("media-engine")) {
       this.video.playsInline = true;
       this.video.hidden = true;
       this.append(this.audio, this.video);
+      const handleEnded = () => {
+        const ids = [...this.entries.keys()];
+        if (this.currentId == null || ids.length < 2 && !this.repeat) return;
+        const activeEntry = this.entries.get(this.currentId);
+        if (!activeEntry) return;
+        const active = activeEntry.kind === "video" ? this.video : this.audio;
+        if (this.repeat) {
+          active.currentTime = 0;
+          active.play().catch(() => {});
+          return;
+        }
+        let nextId;
+        if (this.shuffle && ids.length > 1) {
+          const choices = ids.filter(id => id !== this.currentId);
+          nextId = choices[Math.floor(Math.random() * choices.length)];
+        } else {
+          const index = ids.indexOf(this.currentId);
+          nextId = ids[(index + 1) % ids.length];
+        }
+        const nextEntry = this.entries.get(nextId);
+        if (!nextEntry) return;
+        this.audio.pause();
+        this.video.pause();
+        this.audio.removeAttribute("src");
+        this.video.removeAttribute("src");
+        this.audio.load();
+        this.video.load();
+        const nextMedia = nextEntry.kind === "video" ? this.video : this.audio;
+        this.currentId = nextId;
+        nextMedia.src = nextEntry.url;
+        nextMedia.volume = this.volume;
+        nextMedia.playbackRate = this.playbackRate;
+        nextMedia.load();
+        this.dispatchEvent(new CustomEvent("trackchange", { detail: { id: nextId } }));
+        nextMedia.play().catch(() => {});
+      };
+      this.audio.addEventListener("ended", handleEnded);
+      this.video.addEventListener("ended", handleEnded);
     }
   });
 }
@@ -163,8 +203,8 @@ const init = () => {
   const pauseAll=()=>{audio.pause();video.pause();updatePlaybackState();};
   const selectEntry=(id,autoplay=false)=>{
     const entry=entries.get(id);if(!entry)return;
-    pauseAll();currentId=id;$("#media-stage",root).style.removeProperty("--video-ratio");audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();
-    const active=entry.kind==="video"?video:audio;active.src=entry.url;active.playbackRate=Number(speed.value);active.volume=Number(volume.value);active.load();
+    pauseAll();currentId=id;engine.currentId=id;$("#media-stage",root).style.removeProperty("--video-ratio");audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();
+    const active=entry.kind==="video"?video:audio;active.src=entry.url;active.playbackRate=Number(speed.value);active.volume=Number(volume.value);engine.playbackRate=Number(speed.value);engine.volume=Number(volume.value);active.load();
     updateTrack();if(autoplay)play();
   };
   const getNextId=direction=>{
@@ -173,11 +213,10 @@ const init = () => {
     const index=ids.indexOf(currentId);return ids[(index+direction+ids.length)%ids.length];
   };
   const move=direction=>{const id=getNextId(direction);if(id!==null)selectEntry(id,true);};
-  const onEnded=()=>{if(repeat){const active=media();active.currentTime=0;play();}else if(entries.size>1)move(1);else updatePlaybackState();};
   const removeEntry=id=>{
     const entry=entries.get(id);if(!entry)return;
     const ids=[...entries.keys()],wasCurrent=id===currentId,next=wasCurrent?ids[(ids.indexOf(id)+1)%ids.length]:null;
-    if(wasCurrent){pauseAll();audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();currentId=null;}
+    if(wasCurrent){pauseAll();audio.removeAttribute("src");video.removeAttribute("src");audio.load();video.load();currentId=null;engine.currentId=null;}
     entries.delete(id);for(const url of [entry.url,entry.artworkUrl])if(url){URL.revokeObjectURL(url);objectUrls.delete(url);}if(wasCurrent&&entries.size)selectEntry(next===id?entries.keys().next().value:next,false);
     if(!entries.size){currentId=null;artwork.hidden=true;artwork.removeAttribute("src");stageEmpty.hidden=false;audioVisual.hidden=false;video.hidden=true;seek.disabled=true;playButton.disabled=true;trackTitle.textContent="再生待ち";trackMeta.textContent="ファイルが選択されていません";currentLyrics=[];showLyrics();updatePlaybackState();updateProgress();}
     render();updateTrack();
@@ -203,12 +242,12 @@ const init = () => {
     render();if(currentId===null&&firstAdded!==null)selectEntry(firstAdded,false);
   };
   listen(playButton,"click",()=>isPlaying()?pauseAll():play());listen(previousButton,"click",()=>move(-1));listen(nextButton,"click",()=>move(1));
-  listen(shuffleButton,"click",()=>{shuffle=!shuffle;shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
-  listen(repeatButton,"click",()=>{repeat=!repeat;repeatButton.classList.toggle("is-on",repeat);repeatButton.setAttribute("aria-pressed",String(repeat));});
+  listen(shuffleButton,"click",()=>{shuffle=!shuffle;engine.shuffle=shuffle;shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
+  listen(repeatButton,"click",()=>{repeat=!repeat;engine.repeat=repeat;repeatButton.classList.toggle("is-on",repeat);repeatButton.setAttribute("aria-pressed",String(repeat));});
   listen(seek,"input",()=>{seeking=true;const active=media();if(active?.duration)currentTime.textContent=formatTime(active.duration*Number(seek.value)/1000);});
   listen(seek,"change",()=>{const active=media();if(active?.duration)active.currentTime=active.duration*Number(seek.value)/1000;seeking=false;updateProgress();});
-  listen(volume,"input",()=>{audio.volume=Number(volume.value);video.volume=Number(volume.value);});
-  listen(speed,"change",()=>{audio.playbackRate=Number(speed.value);video.playbackRate=Number(speed.value);});
+  listen(volume,"input",()=>{audio.volume=Number(volume.value);video.volume=Number(volume.value);engine.volume=Number(volume.value);});
+  listen(speed,"change",()=>{audio.playbackRate=Number(speed.value);video.playbackRate=Number(speed.value);engine.playbackRate=Number(speed.value);});
   listen($("#clear-queue-button",root),"click",()=>{for(const id of [...entries.keys()])removeEntry(id);});
   const switchView=view=>{
     root.dataset.view=view;
@@ -227,6 +266,8 @@ const init = () => {
   repeatButton.setAttribute("aria-pressed",String(repeat));
   volume.value=String(audio.volume);
   speed.value=String(media()?.playbackRate || 1);
+  engine.volume=Number(volume.value);
+  engine.playbackRate=Number(speed.value);
   switchView("player");
   for(const button of $("[data-open-files]",root))listen(button,"click",()=>input.click());
   listen(input,"change",()=>{if(input.files?.length)addFiles(input.files);input.value="";});
@@ -237,9 +278,10 @@ const init = () => {
     for(const type of ["dragleave","drop"])listen(upload,type,()=>upload.classList.remove("dragover"));
     listen(upload,"drop",event=>{const files=event.dataTransfer?.files;if(files?.length)addFiles(files);});
   }
+  listen(engine,"trackchange",()=>{currentId=engine.currentId;updateTrack();});
   for(const active of [audio,video]){
     listen(active,"timeupdate",updateProgress);listen(active,"loadedmetadata",()=>{if(active===video&&currentEntry()?.kind==="video"&&video.videoWidth&&video.videoHeight)$("#media-stage",root).style.setProperty("--video-ratio",String(video.videoWidth/video.videoHeight));updateProgress();});listen(active,"durationchange",updateProgress);
-    listen(active,"play",updatePlaybackState);listen(active,"pause",updatePlaybackState);listen(active,"ended",onEnded);
+    listen(active,"play",updatePlaybackState);listen(active,"pause",updatePlaybackState);
     listen(active,"error",()=>{trackMeta.textContent="このファイルを再生できません。形式に対応しているか確認してください。";updatePlaybackState();});
   }
   updateTrack();
