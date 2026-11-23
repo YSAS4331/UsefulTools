@@ -100,6 +100,12 @@
                 <section class="content-panel" data-content-panel="lyrics" hidden>
                   <div id="lyrics-content" class="lyrics-content"><p class="content-empty">対応する .lrc ファイルを一緒に追加すると、ここに歌詞が表示されます。</p></div>
                 </section>
+                <section class="content-panel metadata-panel" data-content-panel="info" hidden>
+                  <div class="section-heading"><h3>メディア情報</h3></div>
+                  <dl class="metadata-list" id="metadata-list">
+                    <div><dt>ファイル名</dt><dd>未選択</dd></div>
+                  </dl>
+                </section>
                 <section class="content-panel" data-content-panel="library" hidden>
                   <label for="upload-file" id="upload-container">
                     <i data-lucide="upload"></i>
@@ -117,6 +123,7 @@
                 <button type="button" class="content-tab" data-content-tab="playlist">プレイリスト</button>
                 <button type="button" class="content-tab" data-content-tab="lyrics">歌詞</button>
                 <button type="button" class="content-tab" data-content-tab="library">ライブラリ <span class="nav-file-count">0</span></button>
+                <button type="button" class="content-tab" data-content-tab="info">情報</button>
               </nav>
             </div>
         </div>
