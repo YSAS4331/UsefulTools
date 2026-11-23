@@ -428,3 +428,20 @@ media-engine > audio {
     visibility: hidden;
   }
 }
+
+
+/* Keep the control and artwork columns present for every selected tab. */
+@container media-tool (min-width: 820px) {
+  #tool.media-tool[data-view="player"] .player-main,
+  #tool.media-tool[data-view="playlist"] .player-main,
+  #tool.media-tool[data-view="lyrics"] .player-main,
+  #tool.media-tool[data-view="library"] .player-main,
+  #tool.media-tool[data-view="info"] .player-main,
+  #tool.fullscreen-active.media-tool[data-view="player"] .player-main,
+  #tool.fullscreen-active.media-tool[data-view="playlist"] .player-main,
+  #tool.fullscreen-active.media-tool[data-view="lyrics"] .player-main,
+  #tool.fullscreen-active.media-tool[data-view="library"] .player-main,
+  #tool.fullscreen-active.media-tool[data-view="info"] .player-main {
+    display: contents !important;
+  }
+}
