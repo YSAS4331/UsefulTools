@@ -128,7 +128,7 @@ if (!customElements.get("media-engine")) {
       globalStyle.id = "global-media-mini-style";
       globalStyle.textContent = `
         media-engine{box-sizing:border-box}
-        .global-media-mini{position:relative!important;display:none!important;align-items:center;gap:.55rem;width:100%;min-height:4rem;max-width:none!important;box-sizing:border-box;margin:0;padding:.35rem .55rem .35rem .4rem;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002;color:var(--text-primary);pointer-events:auto}
+        .global-media-mini{position:relative!important;display:none!important;align-items:center;gap:.55rem;width:100%;min-height:4rem;max-width:none!important;box-sizing:border-box;margin:0;padding:.35rem .55rem .35rem .4rem;border:1px solid var(--glass-border-2);border-radius:999px;background:var(--glass-bg-2);box-shadow:var(--glass-inner-shadow),0 4px 24px #0002;backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);color:var(--text-primary);pointer-events:auto}
         .global-media-mini.is-visible{display:flex!important}
         .global-media-mini .mini-artwork{flex:0 0 2.75rem;width:2.75rem;height:2.75rem}
         .global-media-mini .mini-artwork{display:flex;align-items:center;justify-content:center;line-height:0}
@@ -143,7 +143,7 @@ if (!customElements.get("media-engine")) {
         .global-media-mini button{display:grid!important;place-items:center;flex:0 0 2.5rem;width:2.5rem;height:2.5rem;padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important;color:var(--text-primary)!important}
         .global-media-mini .global-mini-toggle{flex-basis:2rem;width:2rem}
         media-engine.is-mini-collapsed{left:auto!important;right:12px!important;width:48px!important;height:48px!important}
-        media-engine.is-mini-collapsed .global-media-mini{height:100%;justify-content:center;padding:0;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002}
+        media-engine.is-mini-collapsed .global-media-mini{height:100%;justify-content:center;padding:0;border:1px solid var(--glass-border-2);border-radius:999px;background:var(--glass-bg-2);box-shadow:var(--glass-inner-shadow),0 4px 24px #0002;backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
         media-engine.is-mini-collapsed .global-mini-toggle{flex:1;width:100%;height:100%}
         media-engine.is-mini-collapsed .global-mini-toggle i{transform:rotate(180deg)}
         @media(min-width:700px){media-engine{left:auto!important;right:12px!important;width:min(420px,calc(100vw - 24px))!important}}
