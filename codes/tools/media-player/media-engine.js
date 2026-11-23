@@ -132,11 +132,15 @@ if (!customElements.get("media-engine")) {
       this.append(this.globalMini);
       this.globalMini.addEventListener("click", event => {
         if (!event.target.closest(".mini-track, .mini-artwork")) return;
-        this.globalMini.classList.toggle("is-expanded");
-        this.globalMini.querySelector(".global-mini-toggle").setAttribute("aria-label", this.globalMini.classList.contains("is-expanded") ? "ミニプレーヤーを閉じる" : "ミニプレーヤーを展開");
+        if (this.globalMini.classList.contains("is-expanded")) {
+          window.spaRouter?.navigate("/tools/media-player/");
+          return;
+        }
+        this.globalMini.classList.add("is-expanded");
+        this.globalMini.querySelector(".global-mini-toggle").setAttribute("aria-label", "ミニプレーヤーを閉じる");
       });
       this.globalMini.querySelector(".global-mini-back").addEventListener("click", () => {
-        window.spaRouter?.navigate("/tools/media-player/");
+        this.globalMini.classList.remove("is-expanded");
       });
       const miniSeek = this.globalMini.querySelector(".global-mini-seek");
       miniSeek.addEventListener("input", () => {
@@ -149,11 +153,11 @@ if (!customElements.get("media-engine")) {
         const active = this.currentMedia;
         if (active && Number.isFinite(active.duration)) active.currentTime = active.duration * Number(miniSeek.value) / 1000;
       });
-      this.globalMini.querySelector(".global-mini-play").addEventListener("click", () => {
+      this.globalMini.querySelectorAll(".global-mini-play").forEach(button => button.addEventListener("click", () => {
         const active = this.currentMedia;
         if (active) { if (active.paused) { this.setupAudioAnalysis(); active.play().catch(() => {}); } else active.pause(); }
-      });
-      this.globalMini.querySelector(".global-mini-next").addEventListener("click", () => this.sessionMove(1));
+      }));
+      this.globalMini.querySelectorAll(".global-mini-next").forEach(button => button.addEventListener("click", () => this.sessionMove(1)));
       this.globalMini.querySelector(".global-mini-toggle").addEventListener("click", () => {
         this.globalMini.classList.toggle("is-collapsed");
         const collapsed = this.globalMini.classList.contains("is-collapsed");
@@ -182,8 +186,10 @@ if (!customElements.get("media-engine")) {
         if (hasDuration) seek.value = String(active.currentTime / active.duration * 1000);
         current.textContent = format(active?.currentTime || 0);
         duration.textContent = format(hasDuration ? active.duration : 0);
-        this.globalMini.querySelector(".global-mini-play").innerHTML = playing ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
-        this.globalMini.querySelector(".global-mini-play").setAttribute("aria-label", playing ? "一時停止" : "再生");
+        this.globalMini.querySelectorAll(".global-mini-play").forEach(button => {
+          button.innerHTML = playing ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
+          button.setAttribute("aria-label", playing ? "一時停止" : "再生");
+        });
         const createIcons = window.spaRouter?.commonStorage?.get("createIcons");
         const lucideIcons = window.spaRouter?.commonStorage?.get("lucideIcons");
         createIcons?.({icons:lucideIcons});
