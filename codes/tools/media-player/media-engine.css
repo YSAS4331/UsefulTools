@@ -85,3 +85,91 @@ global-media-mini.is-expanded { width:100%; }
 @media(prefers-reduced-motion:reduce){
   .global-media-mini,.global-media-mini .global-mini-expanded{transition:none!important}
 }
+
+
+/* Keep the persistent mini-player artwork confined to its thumbnail box. */
+.global-media-mini .mini-artwork {
+  flex: 0 0 2.75rem!important;
+  width: 2.75rem!important;
+  height: 2.75rem!important;
+  min-width: 2.75rem!important;
+  min-height: 2.75rem!important;
+  overflow: hidden!important;
+}
+.global-media-mini .mini-artwork img {
+  display: block!important;
+  position: static!important;
+  width: 100%!important;
+  height: 100%!important;
+  max-width: 100%!important;
+  max-height: 100%!important;
+  object-fit: cover!important;
+  flex: 0 0 auto!important;
+  margin: 0!important;
+}
+
+/* Horizontal playlist cards expose per-track sidecar metadata. */
+#tool.media-tool #queue-list {
+  display: flex;
+  gap: .65rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: .25rem .1rem .75rem;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+#tool.media-tool #queue-list .queue-item {
+  flex: 0 0 min(78%, 260px);
+  width: auto;
+  min-width: 0;
+  min-height: 108px;
+  align-items: flex-start;
+  padding: .55rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  scroll-snap-align: start;
+}
+#tool.media-tool #queue-list .queue-select {
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  padding: .2rem!important;
+}
+#tool.media-tool #queue-list .queue-copy {
+  flex: 1;
+  min-width: 0;
+}
+#tool.media-tool #queue-list .queue-copy strong {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.queue-details {
+  display: flex;
+  gap: .3rem;
+  flex-wrap: wrap;
+  margin-top: .25rem;
+}
+.queue-detail {
+  display: inline-flex;
+  align-items: center;
+  padding: .12rem .38rem;
+  border-radius: 99px;
+  background: var(--bg-hover);
+  color: var(--text-tertiary);
+  font-size: .65rem;
+  white-space: nowrap;
+}
+.queue-detail.is-available {
+  background: color-mix(in srgb,var(--accent) 14%,transparent);
+  color: var(--accent-strong);
+}
+#tool.media-tool #queue-list .queue-empty {
+  flex: 0 0 100%;
+}
+@media (max-width:520px) {
+  #tool.media-tool #queue-list .queue-item { flex-basis: min(82%, 260px); }
+}
