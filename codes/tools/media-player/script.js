@@ -61,6 +61,8 @@ if (!customElements.get("media-engine")) {
         .global-media-mini{position:relative!important;display:none!important;align-items:center;gap:.55rem;width:100%;min-height:4rem;max-width:none!important;box-sizing:border-box;margin:0;padding:.35rem .55rem .35rem .4rem;border:1px solid var(--border-color);border-radius:999px;background:var(--bg-2);box-shadow:0 4px 24px #0002;color:var(--text-primary);pointer-events:auto}
         .global-media-mini.is-visible{display:flex!important}
         .global-media-mini .mini-artwork{flex:0 0 2.75rem;width:2.75rem;height:2.75rem}
+        .global-media-mini .mini-artwork{line-height:0}
+        .global-media-mini .mini-artwork>svg{display:block;width:1.35rem;height:1.35rem;margin:0}
         .global-media-mini .mini-track{display:flex;flex:1 1 auto;width:0;flex-direction:column;min-width:0;gap:.2rem;cursor:pointer}
         .global-media-mini .mini-artwork{cursor:pointer}
         .global-media-mini.is-collapsed>:not(.global-mini-toggle){display:none!important}
