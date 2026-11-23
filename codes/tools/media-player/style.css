@@ -301,10 +301,9 @@
   height: 5.5rem;
   max-height: 5.5rem;
   margin: .8rem auto 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: flex-start;
   gap: .35rem;
   overflow: hidden;
   padding: .55rem .4rem;
@@ -313,6 +312,10 @@
   touch-action: none;
   overscroll-behavior: none;
 }
+.artwork-lyrics-line:nth-child(1) { align-self: end; }
+.artwork-lyrics-line:nth-child(2) { grid-row: 2; align-self: center; }
+.artwork-lyrics-line:nth-child(3) { align-self: start; }
+.artwork-lyrics-line:nth-child(4) { display: none; }
 .artwork-lyrics[hidden],.artwork-lyrics-line[hidden] { display:none!important; }
 .artwork-lyrics-line {
   max-width: 100%;
