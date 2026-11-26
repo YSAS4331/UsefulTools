@@ -559,3 +559,22 @@ media-engine > audio {
     align-self: stretch;
   }
 }
+
+
+/* Manual sidecar matching in the information tab. */
+.related-files-section { margin-top:1.25rem; padding-top:1rem; border-top:1px solid var(--border-color); }
+.related-files-description { margin:.25rem 0 .85rem; color:var(--text-tertiary); font-size:.82rem; line-height:1.6; }
+.related-files-list { display:flex; flex-direction:column; gap:.65rem; }
+.related-file-row { display:flex; align-items:center; justify-content:space-between; gap:.8rem; padding:.8rem; border:1px solid var(--border-color); border-radius:12px; background:var(--bg); }
+.related-file-details { display:flex; flex:1; min-width:0; flex-direction:column; gap:.2rem; }
+.related-file-details strong { overflow-wrap:anywhere; font-size:.88rem; }
+.related-file-details small { color:var(--text-tertiary); font-size:.75rem; }
+.related-file-hint { color:var(--accent-strong)!important; }
+.related-file-controls { display:flex; align-items:center; gap:.4rem; }
+.related-file-select { max-width:min(45vw,220px); min-width:110px; padding:.5rem; border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); background:var(--bg-2); }
+.related-file-attach { white-space:nowrap; }
+@media(max-width:560px) {
+  .related-file-row { align-items:stretch; flex-direction:column; }
+  .related-file-controls { width:100%; }
+  .related-file-select { flex:1; max-width:none; min-width:0; }
+}
