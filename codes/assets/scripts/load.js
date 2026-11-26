@@ -1,5 +1,6 @@
 import "/components/header.js";
 import "/components/collapse.js";
+import "/components/modal.js";
 import "/components/sidebar.js";
 import {
   createIcons, Star, Folders, Blocks, Info, Hash, Share2,
