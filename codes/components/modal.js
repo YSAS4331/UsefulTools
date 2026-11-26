@@ -32,14 +32,12 @@ class UIModal extends HTMLElement {
           .close svg { width: 1.15rem; height: 1.15rem; }
           .content { min-height: 0; overflow: auto; padding: 1.5rem; color: var(--text-secondary); line-height: 1.65; overscroll-behavior: contain; }
           .footer { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .65rem; padding: 1rem 1.25rem; border-top: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-hover) 24%, transparent); }
-          .footer[hidden] { display: none; }\n          .sheet-handle { display: none; }
-          @media (max-width: 600px) { .backdrop { align-items: end; padding: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); } .dialog { width: 100%; height: min(var(--sheet-height), 92dvh); max-height: 92dvh; border: 1px solid var(--border-color); border-bottom: 0; border-radius: 18px 18px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); transform: translateY(20px); } :host([open]) .dialog { transform: translateY(0); } .sheet-handle { display: block; position: absolute; z-index: 2; top: 0; left: 50%; width: 4rem; height: 1.5rem; padding: 0; border: 0; background: transparent; transform: translateX(-50%); touch-action: none; cursor: grab; } .sheet-handle::after { content: ""; position: absolute; top: .45rem; left: 50%; width: 2.25rem; height: 4px; border-radius: 99px; background: var(--text-tertiary); opacity: .5; transform: translateX(-50%); } .sheet-handle:active { cursor: grabbing; } .header { position: relative; min-height: 3.75rem; padding: 1.1rem 1.25rem .85rem; background: var(--bg-2); } .header::before { content: ''; position: absolute; top: .45rem; left: 50%; width: 2.25rem; height: 4px; border-radius: 99px; background: var(--text-tertiary); opacity: .45; transform: translateX(-50%); } .title { font-size: 1.05rem; } .content { padding: 1.25rem; } .footer { padding: .85rem 1.25rem; } }
+          .footer[hidden] { display: none; }\n          @media (max-width: 600px) { .backdrop { align-items: end; padding: 0; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); } .dialog { width: 100%; height: min(var(--sheet-height), 92dvh); max-height: 92dvh; border: 1px solid var(--border-color); border-bottom: 0; border-radius: 18px 18px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); transform: translateY(20px); } :host([open]) .dialog { transform: translateY(0); } .header { position: relative; min-height: 3.75rem; padding: 1.1rem 1.25rem .85rem; background: var(--bg-2); touch-action: pan-x; user-select: none; -webkit-user-select: none; cursor: grab; } .header:active { cursor: grabbing; } .header::before { content: ''; position: absolute; top: .45rem; left: 50%; width: 2.25rem; height: 4px; border-radius: 99px; background: var(--text-tertiary); opacity: .45; transform: translateX(-50%); } .title { font-size: 1.05rem; } .content { padding: 1.25rem; } .footer { padding: .85rem 1.25rem; } }
           @media (prefers-reduced-motion: reduce) { .backdrop, .dialog { transition-duration: 0ms; } }
         </style>
         <div class="backdrop">
           <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <header class="header">\n              <button class="sheet-handle" type="button" aria-label="下にスライドして閉じる"></button>
-              <h2 class="title" id="modal-title"></h2>
+            <header class="header">\n              <h2 class="title" id="modal-title"></h2>
               <button class="close" type="button" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
             </header>
             <div class="content"><slot></slot></div>
@@ -49,11 +47,11 @@ class UIModal extends HTMLElement {
       `;
 
       this.shadowRoot.querySelector(".close").addEventListener("click", () => this.close());
-      const handle = this.shadowRoot.querySelector(".sheet-handle");
-      handle.addEventListener("pointerdown", this.handlePointerDown);
-      handle.addEventListener("pointermove", this.handlePointerMove);
-      handle.addEventListener("pointerup", this.handlePointerUp);
-      handle.addEventListener("pointercancel", this.handlePointerUp);
+      const header = this.shadowRoot.querySelector(".header");
+      header.addEventListener("pointerdown", this.handlePointerDown);
+      header.addEventListener("pointermove", this.handlePointerMove);
+      header.addEventListener("pointerup", this.handlePointerUp);
+      header.addEventListener("pointercancel", this.handlePointerUp);
       this.shadowRoot.querySelector(".backdrop").addEventListener("click", this.handleBackdropClick);
       this.shadowRoot.querySelector("slot[name=footer]").addEventListener("slotchange", () => this.syncFooter());
     }
@@ -103,35 +101,72 @@ class UIModal extends HTMLElement {
 
   handlePointerDown(event) {
     if (!this.isOpen || event.button !== 0 || window.matchMedia("(min-width: 601px)").matches) return;
+    if (event.target.closest("button")) return;
+
     const dialog = this.shadowRoot.querySelector(".dialog");
-    this.dragState = { pointerId: event.pointerId, startY: event.clientY, startTime: performance.now(), height: dialog.getBoundingClientRect().height };
+    this.dragState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      currentY: event.clientY,
+      startTime: performance.now(),
+      height: dialog.getBoundingClientRect().height,
+      isVertical: false
+    };
+
     event.currentTarget.setPointerCapture(event.pointerId);
-    dialog.style.transition = "none";
-    event.preventDefault();
   }
 
   handlePointerMove(event) {
-    if (!this.dragState || event.pointerId !== this.dragState.pointerId) return;
-    const delta = Math.max(0, event.clientY - this.dragState.startY);
+    const state = this.dragState;
+    if (!state || event.pointerId !== state.pointerId) return;
+
+    const deltaX = event.clientX - state.startX;
+    const deltaY = event.clientY - state.startY;
+
+    if (!state.isVertical) {
+      const threshold = state.height * .02;
+      if (Math.abs(deltaX) < threshold && Math.abs(deltaY) < threshold) return;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        this.dragState = null;
+        return;
+      }
+
+      state.isVertical = true;
+      this.shadowRoot.querySelector(".dialog").style.transition = "none";
+    }
+
+    state.currentY = event.clientY;
+    const distance = Math.max(0, deltaY);
     const dialog = this.shadowRoot.querySelector(".dialog");
     const backdrop = this.shadowRoot.querySelector(".backdrop");
-    dialog.style.transform = "translateY(" + delta + "px)";
-    backdrop.style.opacity = String(Math.max(.25, 1 - delta / Math.max(this.dragState.height, 1)));
+
+    dialog.style.transform = "translateY(" + distance + "px)";
+    backdrop.style.opacity = String(Math.max(.25, 1 - distance / Math.max(state.height, 1)));
+
+    if (event.cancelable) event.preventDefault();
   }
 
   handlePointerUp(event) {
-    if (!this.dragState || event.pointerId !== this.dragState.pointerId) return;
     const state = this.dragState;
+    if (!state || event.pointerId !== state.pointerId) return;
     this.dragState = null;
-    const delta = Math.max(0, event.clientY - state.startY);
+
+    const deltaY = event.clientY - state.startY;
+    const distance = Math.max(0, deltaY);
     const elapsed = Math.max(1, performance.now() - state.startTime);
-    const velocity = delta / elapsed;
+    const velocity = distance / elapsed;
     const dialog = this.shadowRoot.querySelector(".dialog");
     const backdrop = this.shadowRoot.querySelector(".backdrop");
+
     dialog.style.transition = "";
     dialog.style.transform = "";
     backdrop.style.opacity = "";
-    if (delta > state.height * .25 || velocity > .65) this.close();
+
+    if (state.isVertical && (distance > state.height * .3 || velocity > .5)) {
+      this.close();
+    }
   }
 
   syncFooter() {
