@@ -146,7 +146,7 @@ class ToolSearch extends HTMLElement {
     panel.id = "tool-search";
     panel.innerHTML = `
       <label class="search-field">
-        <i data-lucide="search" aria-hidden="true"></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
         <input type="search" autocomplete="off" placeholder="ツール名や機能で検索..." aria-label="ツール名や機能で検索">
       </label>
       <p class="search-status" role="status" aria-live="polite">ツール名や説明に含まれる言葉で検索できます。</p>
@@ -179,7 +179,7 @@ class ToolSearch extends HTMLElement {
       return;
     }
 
-    const terms = query.split(/\\s+/).filter(Boolean);
+    const terms = query.split(/\s+/).filter(Boolean);
     const matches = this.registry
       .map((tool) => {
         const title = String(tool.title || "");
