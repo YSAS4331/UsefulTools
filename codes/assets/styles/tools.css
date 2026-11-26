@@ -22,7 +22,8 @@
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -.02em;
-  min-width: 200px
+  min-width: 200px;
+  color: var(--text-primary)
 }
 
 .tool-icon {
@@ -37,6 +38,7 @@
 }
 
 .tool-name {
+  color: var(--text-primary);
   white-space: nowrap
 }
 
@@ -49,7 +51,7 @@
 
 .tool-buttons {
   display: flex;
-  gap: .4rem;
+  gap: .5rem;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -59,9 +61,46 @@
   display: none;
 }
 
-.tool-buttons button {
+.tool-buttons button:not(.nostyle) {
   flex-shrink: 0;
   white-space: nowrap;
+  padding: .7rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-2);
+  color: var(--text-secondary);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  font-size: .9rem;
+  font-weight: 650;
+  transition:
+    background-color .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    transform .18s ease;
+}
+
+.tool-buttons button:not(.nostyle):hover {
+  border-color: var(--accent-border-strong);
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-2));
+  color: var(--accent-strong);
+  box-shadow: none;
+}
+
+.tool-buttons button:not(.nostyle):active {
+  transform: translateY(1px);
+}
+
+.tool-buttons button:not(.nostyle):focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.tool-buttons .tool-favorite.is-favorite {
+  border-color: var(--accent-border-strong);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-2));
+  color: var(--accent-strong);
 }
 
 #tool {
@@ -150,10 +189,9 @@
   .tool-details h2 {
     font-size: 1.15rem
   }
-}
 
-
-.tool-buttons .tool-favorite.is-favorite {
-  border-color: var(--accent-border-strong);
-  color: var(--accent-strong);
+  .tool-buttons button:not(.nostyle) {
+    padding: .65rem .85rem;
+    font-size: .85rem
+  }
 }
