@@ -1,10 +1,11 @@
 import "/components/header.js";
 import "/components/collapse.js";
-import "/components/modal.js";\nimport "/components/search.js";
+import "/components/modal.js";
+import "/components/search.js";
 import { Modals } from "/managers/modals.js";
 import "/components/sidebar.js";
 import {
-  createIcons, Star, Folders, Blocks, Info, Hash, Share2, Search, Search,
+  createIcons, Star, Folders, Blocks, Info, Hash, Share2,
   Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
   Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus,
   ChevronDown, ChevronUp, ArrowLeft, FileAudio, ImagePlus, History
