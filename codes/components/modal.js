@@ -98,7 +98,7 @@ class UIModal extends HTMLElement {
   syncSheetHeight() {
     const value = (this.getAttribute("sheet-height") || "70dvh").trim();
     const valid = value.endsWith("%") || value.endsWith("px") || value.endsWith("vh") || value.endsWith("dvh") || value.endsWith("svh") || value.endsWith("lvh") || value.endsWith("rem") || value.endsWith("em");
-    this.style.setProperty("--sheet-height", valid && /^[0-9.]+(%.+|px|vh|dvh|svh|lvh|rem|em)$/.test(value) ? value : "70dvh");
+    this.style.setProperty("--sheet-height", valid && /^[0-9.]+(%|px|vh|dvh|svh|lvh|rem|em)$/.test(value) ? value : "70dvh");
   }
 
   handlePointerDown(event) {
