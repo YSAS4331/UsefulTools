@@ -27,7 +27,7 @@ class Side extends HTMLElement {
 .sidebar-section {
   width: 100%;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 4px 16px;
 }
 
 .sidebar-section-list {
