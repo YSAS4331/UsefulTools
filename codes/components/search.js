@@ -97,52 +97,52 @@ class ToolSearch extends HTMLElement {
   createSearchPanel() {
     const style = document.createElement("style");
     style.textContent = `
-      #tool-search { display: flex; flex-direction: column; gap: 1rem; }
-      #tool-search .search-field {
+      #tool-search-panel { display: flex; flex-direction: column; gap: 1rem; }
+      #tool-search-panel .search-field {
         display: flex; align-items: center; gap: .7rem;
         padding: .8rem 1rem; border: 1px solid var(--border-color);
         border-radius: 10px; background: var(--bg); color: var(--text-tertiary);
       }
-      #tool-search .search-field:focus-within {
+      #tool-search-panel .search-field:focus-within {
         border-color: var(--accent-border-strong);
         box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
       }
-      #tool-search .search-field svg { width: 1.1rem; height: 1.1rem; flex: none; }
-      #tool-search input {
+      #tool-search-panel .search-field svg { width: 1.1rem; height: 1.1rem; flex: none; }
+      #tool-search-panel input {
         width: 100%; min-width: 0; border: 0; outline: 0;
         background: transparent; color: var(--text-primary);
         font: inherit; font-size: 1rem;
       }
-      #tool-search input::placeholder { color: var(--text-tertiary); }
-      #tool-search .search-status {
+      #tool-search-panel input::placeholder { color: var(--text-tertiary); }
+      #tool-search-panel .search-status {
         color: var(--text-tertiary); font-size: .82rem; line-height: 1.5;
       }
-      #tool-search .search-results {
+      #tool-search-panel .search-results {
         display: grid; gap: .4rem; max-height: min(55dvh, 32rem);
         overflow-y: auto; overscroll-behavior: contain;
       }
-      #tool-search .search-result {
+      #tool-search-panel .search-result {
         display: grid; gap: .25rem; padding: .8rem .9rem;
         border: 1px solid transparent; border-radius: 9px;
         color: var(--text-primary); text-decoration: none;
         transition: background-color .16s ease, border-color .16s ease;
       }
-      #tool-search .search-result:hover {
+      #tool-search-panel .search-result:hover {
         border-color: var(--border-color); background: var(--bg-hover);
         text-decoration: none;
       }
-      #tool-search .result-title { font-size: .95rem; font-weight: 650; }
-      #tool-search .result-description {
+      #tool-search-panel .result-title { font-size: .95rem; font-weight: 650; }
+      #tool-search-panel .result-description {
         color: var(--text-secondary); font-size: .82rem; line-height: 1.5;
       }
-      #tool-search .search-empty {
+      #tool-search-panel .search-empty {
         padding: 1.5rem .75rem; color: var(--text-tertiary);
         font-size: .9rem; text-align: center;
       }
     `;
 
     const panel = document.createElement("div");
-    panel.id = "tool-search";
+    panel.id = "tool-search-panel";
     panel.innerHTML = `
       <label class="search-field">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
