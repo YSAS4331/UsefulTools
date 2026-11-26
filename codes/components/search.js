@@ -36,7 +36,7 @@ class ToolSearch extends HTMLElement {
         }
       </style>
       <button type="button" aria-label="ツールを検索">
-        <i data-lucide="search" aria-hidden="true"></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
         <span>ツールを検索...</span>
       </button>
     `;
@@ -84,6 +84,10 @@ class ToolSearch extends HTMLElement {
       });
 
       this.createSearchPanel();
+      if (this.openWhenReady) {
+        this.openWhenReady = false;
+        this.open();
+      }
     } catch (error) {
       console.error("[search] 検索機能の初期化に失敗しました。", error);
     } finally {
@@ -226,9 +230,8 @@ class ToolSearch extends HTMLElement {
 
   open() {
     if (!this.modal) {
-      this.initializeModal().then(() => {
-        if (this.modal) this.open();
-      });
+      this.openWhenReady = true;
+      this.initializeModal();
       return;
     }
 
