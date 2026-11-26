@@ -91,7 +91,7 @@ class Side extends HTMLElement {
       </nav>
     </ui-collapse>
     <ui-collapse label="履歴" duration="240ms" easing="ease">
-      <span slot="label"><i data-lucide="rotate-ccw-clock" aria-hidden="true"></i>履歴</span>
+      <span slot="label"><i data-lucide="history" aria-hidden="true"></i>履歴</span>
       <nav class="sidebar-history-list" aria-live="polite">
         <span class="sidebar-history-empty">履歴を読み込み中...</span>
       </nav>
@@ -119,7 +119,7 @@ class Side extends HTMLElement {
       }
     };
     this.handleStorageEvent = (event) => {
-      if (['LibDB', 'toolsPromise'].includes(event.detail?.key)) {
+      if (['LibDB'].includes(event.detail?.key)) {
         this.setupFavorites();
       }
     };
@@ -152,15 +152,14 @@ class Side extends HTMLElement {
   async setupFavorites() {
     const storage = window.spaRouter?.commonStorage;
     if (!storage || !this.favoriteList || this.favoriteUnsubscribe || this.favoriteInitializing) return;
-    if (!storage.get('LibDB') || !storage.get('toolsPromise')) return;
+    if (!storage.get('LibDB')) return;
 
     this.favoriteInitializing = true;
     const token = ++this.favoriteInitToken;
 
     try {
       const LibDB = storage.get('LibDB');
-      const toolsPromise = storage.get('toolsPromise');
-      if (!LibDB || !toolsPromise) return;
+      if (!LibDB) return;
 
       let dbPromise = storage.get('favoriteDBPromise');
       if (!dbPromise) {
@@ -175,7 +174,7 @@ class Side extends HTMLElement {
         storage.set('favoriteDBPromise', dbPromise);
       }
 
-      const [, db] = await Promise.all([toolsPromise, dbPromise]);
+      const db = await dbPromise;
       if (token !== this.favoriteInitToken || !this.isConnected) return;
 
       const favorites = db.store('favorite');
@@ -256,7 +255,6 @@ class Side extends HTMLElement {
       };
 
       this.renderFavorites = render;
-      await render();
       this.favoriteUnsubscribe = db.on('change', (event) => {
         if (event.stores?.includes('favorite')) {
           render().catch((error) => {
@@ -264,6 +262,7 @@ class Side extends HTMLElement {
           });
         }
       });
+      await render();
     } catch (error) {
       if (token === this.favoriteInitToken && this.isConnected) {
         this.favoriteList.textContent = 'お気に入りを読み込めませんでした';
