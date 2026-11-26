@@ -57,9 +57,11 @@ class Side extends HTMLElement {
   text-decoration: none;
 }
 
-.sidebar-section-list a[aria-current="page"] {
+.sidebar a[aria-current="page"] {
   color: var(--text-primary);
   font-weight: bold;
+  cursor: default;
+  pointer-events: none;
 }
 
 .sidebar-section-empty {
@@ -186,10 +188,10 @@ class Side extends HTMLElement {
   }
 
   updateActiveLinks(path = location.pathname) {
-    const currentPath = new URL(path, location.origin).pathname.replace(/\\/+$/, '') || '/';
+    const currentPath = new URL(path, location.origin).pathname.replace(/\/+$/, '') || '/';
 
     this.querySelectorAll('a[href]').forEach((link) => {
-      const linkPath = new URL(link.href, location.origin).pathname.replace(/\\/+$/, '') || '/';
+      const linkPath = new URL(link.href, location.origin).pathname.replace(/\/+$/, '') || '/';
       if (linkPath === currentPath) {
         link.setAttribute('aria-current', 'page');
         link.setAttribute('aria-disabled', 'true');
