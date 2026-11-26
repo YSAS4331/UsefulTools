@@ -29,20 +29,6 @@ class Modals {
     return this.modals.get(id) || document.getElementById(id)?.matches("ui-modal") && document.getElementById(id) || null;
   }
 
-  open(id) {
-    const modal = this.get(id);
-    if (!modal) return false;
-    modal.showModal();
-    return true;
-  }
-
-  close(id) {
-    const modal = this.get(id);
-    if (!modal) return false;
-    modal.close();
-    return true;
-  }
-
   remove(id) {
     const modal = this.get(id);
     if (!modal) return false;
