@@ -38,7 +38,7 @@ class UIModal extends HTMLElement {
         </style>
         <div class="backdrop">
           <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <header class="header">
+            <header class="header">\n              <button class="sheet-handle" type="button" aria-label="下にスライドして閉じる"></button>
               <h2 class="title" id="modal-title"></h2>
               <button class="close" type="button" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
             </header>
