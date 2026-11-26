@@ -70,7 +70,8 @@ const getFavoriteDB = async (storage) => {
     }
 
     const db = new LibDB("UsefulTools", "auto", {
-      favorite: { keyPath: "id" }
+      favorite: { keyPath: "id" },
+      history: { keyPath: "id" }
     });
 
     dbPromise = db.ready
