@@ -187,7 +187,7 @@ class Side extends HTMLElement {
       if (!this.isConnected) return;
 
       saved.sort((a, b) => (b[timestampKey] ?? 0) - (a[timestampKey] ?? 0));
-      const currentPath = new URL(path, location.origin).pathname.replace(/\\/+$/, '') || '/';
+      const currentPath = new URL(path, location.origin).pathname.replace(/\/+$/, '') || '/';
       const activeIds = new Set(saved.map((item) => String(item.id)));
 
       for (const [id, link] of nodes) {
@@ -221,7 +221,7 @@ class Side extends HTMLElement {
           nodes.set(id, link);
         }
 
-        const itemPath = new URL(item.url, location.origin).pathname.replace(/\\/+$/, '') || '/';
+        const itemPath = new URL(item.url, location.origin).pathname.replace(/\/+$/, '') || '/';
         const title = item.title || item.key || '名称未設定';
         const description = item.description || title;
 
@@ -277,7 +277,7 @@ class Side extends HTMLElement {
         list: this.favoriteList,
         store: favorites,
         emptyClass: 'sidebar-favorite-empty',
-        emptyText: 'お気に入りはまだありません。\\n気に入ったツールを追加すると、ここに表示されます。',
+        emptyText: 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。',
         timestampKey: 'addedAt'
       });
 
@@ -336,7 +336,7 @@ class Side extends HTMLElement {
         list: this.historyList,
         store: history,
         emptyClass: 'sidebar-history-empty',
-        emptyText: '履歴はまだありません。\\nツールを開くと、ここに表示されます。',
+        emptyText: '履歴はまだありません。\nツールを開くと、ここに表示されます。',
         timestampKey: 'visitedAt'
       });
 
