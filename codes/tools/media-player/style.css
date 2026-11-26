@@ -602,3 +602,28 @@ media-engine > audio {
     max-height: none;
   }
 }
+
+
+/* Fullscreen tab panels also fill the available height on narrow screens. */
+#tool.fullscreen-active.media-tool[data-view="playlist"] .content-section,
+#tool.fullscreen-active.media-tool[data-view="lyrics"] .content-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#tool.fullscreen-active.media-tool[data-view="playlist"] .content-panel[data-content-panel="playlist"]:not([hidden]),
+#tool.fullscreen-active.media-tool[data-view="lyrics"] .content-panel[data-content-panel="lyrics"]:not([hidden]) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+#tool.fullscreen-active.media-tool[data-view="playlist"] #queue-list,
+#tool.fullscreen-active.media-tool[data-view="lyrics"] #lyrics-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
