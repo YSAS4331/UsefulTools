@@ -131,6 +131,10 @@ class Side extends HTMLElement {
     this.historyUnsubscribe = null;
     this.favoriteInitializing = false;
     this.historyInitializing = false;
+    this.handleActiveLinkClick = (event) => {
+      const link = event.target.closest('a[aria-current="page"]');
+      if (link && this.contains(link)) event.preventDefault();
+    };
     this.handleRouterEvent = (event) => {
       const type = event.detail?.type;
       if (type === 'setup-ok') {
@@ -138,6 +142,7 @@ class Side extends HTMLElement {
         this.setupHistory();
       } else if (type === 'after') {
         const path = event.detail?.to || location.pathname;
+        this.updateActiveLinks(path);
         this.renderFavorites?.(path);
         this.renderHistory?.(path);
         this.recordHistory(path);
@@ -151,8 +156,10 @@ class Side extends HTMLElement {
         this.setupHistory();
       }
     };
+    this.addEventListener('click', this.handleActiveLinkClick);
     window.addEventListener('spa:router', this.handleRouterEvent);
     window.addEventListener('spa:storage', this.handleStorageEvent);
+    this.updateActiveLinks(location.pathname);
     this.setupFavorites();
     this.setupHistory();
 
@@ -176,6 +183,23 @@ class Side extends HTMLElement {
     window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleTouchEnd, { passive: true });
     window.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
+  }
+
+  updateActiveLinks(path = location.pathname) {
+    const currentPath = new URL(path, location.origin).pathname.replace(/\\/+$/, '') || '/';
+
+    this.querySelectorAll('a[href]').forEach((link) => {
+      const linkPath = new URL(link.href, location.origin).pathname.replace(/\\/+$/, '') || '/';
+      if (linkPath === currentPath) {
+        link.setAttribute('aria-current', 'page');
+        link.setAttribute('aria-disabled', 'true');
+        link.tabIndex = -1;
+      } else {
+        link.removeAttribute('aria-current');
+        link.removeAttribute('aria-disabled');
+        link.removeAttribute('tabindex');
+      }
+    });
   }
 
   createSectionRenderer({ list, store, emptyClass, emptyText, timestampKey }) {
@@ -233,8 +257,12 @@ class Side extends HTMLElement {
 
         if (itemPath === currentPath) {
           link.setAttribute('aria-current', 'page');
+          link.setAttribute('aria-disabled', 'true');
+          link.tabIndex = -1;
         } else {
           link.removeAttribute('aria-current');
+          link.removeAttribute('aria-disabled');
+          link.removeAttribute('tabindex');
         }
 
         const current = list.children[index];
@@ -498,6 +526,7 @@ class Side extends HTMLElement {
     this.historyUnsubscribe = null;
     this.renderFavorites = null;
     this.renderHistory = null;
+    this.removeEventListener('click', this.handleActiveLinkClick);
     window.removeEventListener('spa:router', this.handleRouterEvent);
     window.removeEventListener('spa:storage', this.handleStorageEvent);
     window.removeEventListener('touchstart', this.handleTouchStart);
