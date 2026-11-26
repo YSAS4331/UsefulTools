@@ -16,7 +16,7 @@ class Side extends HTMLElement {
   border-right: 1px solid var(--border-color);
 }
 
-.sidebar-sections {
+.sidebar-search {\n  padding: 0 16px 16px;\n}\n\n.sidebar-sections {
   width: 100%;
   min-height: 0;
   flex: 1;
@@ -100,7 +100,7 @@ class Side extends HTMLElement {
 }
 </style>
 <aside class="sidebar">
-  <div id="searchbar"></div>
+  <div class="sidebar-search"><ui-search></ui-search></div>
   <div class="sidebar-sections">
     <section class="sidebar-section" aria-label="お気に入り">
       <ui-collapse label="お気に入り" duration="240ms" easing="ease">
