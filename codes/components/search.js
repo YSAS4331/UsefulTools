@@ -51,7 +51,6 @@ class ToolSearch extends HTMLElement {
     };
     window.addEventListener("spa:storage", this.handleStorage);
     this.initializeModal();
-    this.refreshIcons();
   }
 
   disconnectedCallback() {
@@ -238,10 +237,6 @@ class ToolSearch extends HTMLElement {
     this.modal.open();
   }
 
-  refreshIcons() {
-    const storage = window.spaRouter?.commonStorage;
-    storage?.get("createIcons")?.({ icons: storage.get("lucideIcons") });
-  }
 }
 
 customElements.define("ui-search", ToolSearch);
