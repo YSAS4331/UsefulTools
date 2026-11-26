@@ -1,7 +1,7 @@
 import "/components/header.js";
 import "/components/collapse.js";
 import "/components/modal.js";
-import "/components/page-modals.js";
+import { Modals } from "/components/modals.js";
 import "/components/sidebar.js";
 import {
   createIcons, Star, Folders, Blocks, Info, Hash, Share2,
@@ -10,6 +10,8 @@ import {
   ChevronDown, ChevronUp, ArrowLeft, FileAudio, ImagePlus, History
 } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
 import { LibDB, LibDBError } from "https://cdn.jsdelivr.net/gh/YSAS4331/LibDB@main/libdb.min.js";
+
+const modals = new Modals();
 
 const icons = {
   Star, Folders, Blocks, Info, Hash, Share2,
@@ -30,6 +32,7 @@ const setupCommonStorage = () => {
   cs.set("lucideIcons", icons);
   cs.set("LibDB", LibDB);
   cs.set("LibDBError", LibDBError);
+  cs.set("Modals", modals);
 
   const toolsPromise = fetch("/assets/tools.json")
     .then((response) => {
