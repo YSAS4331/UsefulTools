@@ -79,7 +79,8 @@ class ToolSearch extends HTMLElement {
       this.modal = modals.create("tool-search", {
         title: "ツールを検索",
         dialogWidth: "42rem",
-        dialogHeight: "85dvh"
+        dialogHeight: "85dvh",
+        sheetHeight: "85dvh"
       });
 
       this.createSearchPanel();
@@ -118,7 +119,7 @@ class ToolSearch extends HTMLElement {
         color: var(--text-tertiary); font-size: .82rem; line-height: 1.5;
       }
       #tool-search-panel .search-results {
-        display: grid; gap: .4rem; max-height: min(55dvh, 32rem);
+        display: grid; gap: .4rem; max-height: min(68dvh, 40rem);
         overflow-y: auto; overscroll-behavior: contain;
       }
       #tool-search-panel .search-result {
@@ -158,6 +159,13 @@ class ToolSearch extends HTMLElement {
     this.results = panel.querySelector(".search-results");
 
     this.input.addEventListener("input", () => this.renderResults());
+    this.input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === "Search") {
+        event.preventDefault();
+        this.input.blur();
+      }
+    });
+    this.input.addEventListener("search", () => this.input.blur());
     this.modal.addEventListener("open", () => {
       this.input.value = "";
       this.renderResults();
