@@ -578,3 +578,27 @@ media-engine > audio {
   .related-file-controls { width:100%; }
   .related-file-select { flex:1; max-width:none; min-width:0; }
 }
+
+
+/* Let playlist and lyrics panels fill the available content column. */
+@container media-tool (min-width: 820px) {
+  #tool.media-tool .content-section {
+    min-height: 0;
+  }
+
+  #tool.media-tool .content-panel[data-content-panel="playlist"]:not([hidden]),
+  #tool.media-tool .content-panel[data-content-panel="lyrics"]:not([hidden]) {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  #tool.media-tool .content-panel[data-content-panel="playlist"]:not([hidden]) #queue-list,
+  #tool.media-tool .content-panel[data-content-panel="lyrics"]:not([hidden]) #lyrics-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
