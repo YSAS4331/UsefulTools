@@ -155,6 +155,8 @@ class UIModal extends HTMLElement {
 
     const deltaY = event.clientY - state.startY;
     const distance = Math.max(0, deltaY);
+    const elapsed = Math.max(1, performance.now() - state.startTime);
+    const velocity = distance / elapsed;
     const dialog = this.shadowRoot.querySelector(".dialog");
     const backdrop = this.shadowRoot.querySelector(".backdrop");
 
@@ -162,7 +164,7 @@ class UIModal extends HTMLElement {
     dialog.style.transform = "";
     backdrop.style.opacity = "";
 
-    if (state.isVertical && distance >= state.height * .5) {
+    if (state.isVertical && (velocity > .5 || distance >= state.height * .5)) {
       this.close();
     }
   }
