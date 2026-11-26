@@ -16,7 +16,11 @@ class Side extends HTMLElement {
   border-right: 1px solid var(--border-color);
 }
 
-.sidebar-search {\n  padding: 0 16px 16px;\n}\n\n.sidebar-sections {
+.sidebar-search {
+  padding: 0 16px 16px;
+}
+
+.sidebar-sections {
   width: 100%;
   min-height: 0;
   flex: 1;
