@@ -118,8 +118,4 @@ app-sidebar {
     gap: 6px
   }
 
-  .tool-buttons button:not(.nostyle) {
-    padding: .65rem .85rem;
-    font-size: .85rem
-  }
 }
