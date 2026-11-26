@@ -103,7 +103,7 @@ class UIModal extends HTMLElement {
 
   syncDialogSize() {
     const validLength = (value) =>
-      /^(\\d+(?:\\.\\d+)?)(px|rem|em|vw|vh|dvw|dvh|svh|lvh|%)$/.test(value);
+      /^(\d+(?:\.\d+)?)(px|rem|em|vw|vh|dvw|dvh|svh|lvh|%)$/.test(value);
 
     const width = (this.getAttribute("dialog-width") || "48rem").trim();
     const height = (this.getAttribute("dialog-height") || "85dvh").trim();
