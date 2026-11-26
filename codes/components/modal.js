@@ -82,11 +82,15 @@ class UIModal extends HTMLElement {
     return this.hasAttribute("open");
   }
 
-  showModal() {
+  open() {
     if (this.isOpen) return;
     this.previousFocus = document.activeElement;
     this.setAttribute("open", "");
     this.dispatchEvent(new CustomEvent("open", { bubbles: true, composed: true }));
+  }
+
+  showModal() {
+    this.open();
   }
 
   close() {
