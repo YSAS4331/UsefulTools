@@ -164,7 +164,7 @@ class UIModal extends HTMLElement {
     dialog.style.transform = "";
     backdrop.style.opacity = "";
 
-    if (state.isVertical && (distance > state.height * .3 || velocity > .5)) {
+    if (state.isVertical && velocity > .5) {
       this.close();
     }
   }
