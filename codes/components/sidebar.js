@@ -145,6 +145,8 @@ class Side extends HTMLElement {
       if (event.detail?.key === 'LibDB') {
         this.setupFavorites();
         this.setupHistory();
+      } else if (event.detail?.key === 'toolsPromise') {
+        this.setupHistory();
       }
     };
     window.addEventListener('spa:router', this.handleRouterEvent);
@@ -303,7 +305,7 @@ class Side extends HTMLElement {
   async setupHistory() {
     const storage = window.spaRouter?.commonStorage;
     if (!storage || !this.historyList || this.historyUnsubscribe || this.historyInitializing) return;
-    if (!storage.get('LibDB')) return;
+    if (!storage.get('LibDB') || !storage.get('toolsPromise')) return;
 
     this.historyInitializing = true;
     const token = ++this.historyInitToken;
