@@ -16,21 +16,29 @@ class Side extends HTMLElement {
   border-right: 1px solid var(--border-color);
 }
 
-.sidebar-favorites {
+.sidebar-sections {
   width: 100%;
   min-height: 0;
   flex: 1;
-  box-sizing: border-box;
-  padding: 20px 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
-.sidebar-favorite-list {
+
+.sidebar-section {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+}
+
+.sidebar-section-list {
   display: grid;
   gap: .2rem;
   max-height: 100%;
   overflow-y: auto;
   scrollbar-width: thin;
 }
-.sidebar-favorite-list a {
+
+.sidebar-section-list a {
   display: block;
   overflow: hidden;
   padding: .35rem .65rem;
@@ -42,19 +50,23 @@ class Side extends HTMLElement {
   text-decoration: none;
   transition: background-color .18s ease, color .18s ease;
 }
-.sidebar-favorite-list a:hover {
+
+.sidebar-section-list a:hover {
   color: var(--text-primary);
   background: var(--bg-hover);
   text-decoration: none;
 }
-.sidebar-favorite-list a[aria-current="page"] {
+
+.sidebar-section-list a[aria-current="page"] {
   color: var(--text-primary);
   font-weight: bold;
 }
-.sidebar-favorite-empty {
+
+.sidebar-section-empty {
   color: var(--text-tertiary);
   font-size: .85rem;
   line-height: 1.6;
+  white-space: pre-line;
 }
 
 .sidebar footer {
@@ -83,20 +95,25 @@ class Side extends HTMLElement {
 </style>
 <aside class="sidebar">
   <div id="searchbar"></div>
-  <section class="sidebar-favorites" aria-label="お気に入り">
-    <ui-collapse label="お気に入り" duration="240ms" easing="ease">
-      <span slot="label"><i data-lucide="heart" aria-hidden="true"></i>お気に入り</span>
-      <nav class="sidebar-favorite-list" aria-live="polite">
-        <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
-      </nav>
-    </ui-collapse>
-    <ui-collapse label="履歴" duration="240ms" easing="ease">
-      <span slot="label"><i data-lucide="history" aria-hidden="true"></i>履歴</span>
-      <nav class="sidebar-history-list" aria-live="polite">
-        <span class="sidebar-history-empty">履歴を読み込み中...</span>
-      </nav>
-    </ui-collapse>
-  </section>
+  <div class="sidebar-sections">
+    <section class="sidebar-section" aria-label="お気に入り">
+      <ui-collapse label="お気に入り" duration="240ms" easing="ease">
+        <span slot="label"><i data-lucide="heart" aria-hidden="true"></i>お気に入り</span>
+        <nav class="sidebar-section-list sidebar-favorite-list" aria-live="polite">
+          <span class="sidebar-section-empty sidebar-favorite-empty">お気に入りを読み込み中...</span>
+        </nav>
+      </ui-collapse>
+    </section>
+
+    <section class="sidebar-section" aria-label="履歴">
+      <ui-collapse label="履歴" duration="240ms" easing="ease">
+        <span slot="label"><i data-lucide="history" aria-hidden="true"></i>履歴</span>
+        <nav class="sidebar-section-list sidebar-history-list" aria-live="polite">
+          <span class="sidebar-section-empty sidebar-history-empty">履歴を読み込み中...</span>
+        </nav>
+      </ui-collapse>
+    </section>
+  </div>
 
   <footer>
     <a href="/terms/">利用規約</a>
@@ -201,7 +218,7 @@ class Side extends HTMLElement {
         if (!saved.length) {
           if (!emptyMessage) {
             emptyMessage = document.createElement('span');
-            emptyMessage.className = 'sidebar-favorite-empty';
+            emptyMessage.className = 'sidebar-section-empty sidebar-favorite-empty';
           }
           emptyMessage.textContent = 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。';
           if (this.favoriteList.firstElementChild !== emptyMessage ||
