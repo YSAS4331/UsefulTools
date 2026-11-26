@@ -124,25 +124,33 @@ class Side extends HTMLElement {
     `;
 
     this.favoriteList = this.querySelector('.sidebar-favorite-list');
+    this.historyList = this.querySelector('.sidebar-history-list');
     this.favoriteInitToken = 0;
+    this.historyInitToken = 0;
     this.favoriteUnsubscribe = null;
+    this.historyUnsubscribe = null;
     this.favoriteInitializing = false;
+    this.historyInitializing = false;
     this.handleRouterEvent = (event) => {
       const type = event.detail?.type;
       if (type === 'setup-ok') {
         this.setupFavorites();
+        this.setupHistory();
       } else if (type === 'after') {
         this.renderFavorites?.();
+        this.recordHistory(event.detail?.to);
       }
     };
     this.handleStorageEvent = (event) => {
-      if (['LibDB'].includes(event.detail?.key)) {
+      if (event.detail?.key === 'LibDB') {
         this.setupFavorites();
+        this.setupHistory();
       }
     };
     window.addEventListener('spa:router', this.handleRouterEvent);
     window.addEventListener('spa:storage', this.handleStorageEvent);
     this.setupFavorites();
+    this.setupHistory();
 
     this.mediaQuery = window.matchMedia('(max-width: 600px)');
 
@@ -181,7 +189,8 @@ class Side extends HTMLElement {
       let dbPromise = storage.get('favoriteDBPromise');
       if (!dbPromise) {
         const db = new LibDB('UsefulTools', 'auto', {
-          favorite: { keyPath: 'id' }
+          favorite: { keyPath: 'id' },
+          history: { keyPath: 'id' }
         });
         dbPromise = db.ready.then(() => db).catch((error) => {
           storage.delete('favoriteDBPromise');
@@ -290,6 +299,156 @@ class Side extends HTMLElement {
     }
   }
 
+
+  async setupHistory() {
+    const storage = window.spaRouter?.commonStorage;
+    if (!storage || !this.historyList || this.historyUnsubscribe || this.historyInitializing) return;
+    if (!storage.get('LibDB')) return;
+
+    this.historyInitializing = true;
+    const token = ++this.historyInitToken;
+
+    try {
+      const LibDB = storage.get('LibDB');
+      let dbPromise = storage.get('favoriteDBPromise');
+      if (!dbPromise) {
+        const db = new LibDB('UsefulTools', 'auto', {
+          favorite: { keyPath: 'id' },
+          history: { keyPath: 'id' }
+        });
+        dbPromise = db.ready.then(() => db).catch((error) => {
+          storage.delete('favoriteDBPromise');
+          db.close();
+          throw error;
+        });
+        storage.set('favoriteDBPromise', dbPromise);
+      }
+
+      const [db, registry] = await Promise.all([
+        dbPromise,
+        storage.get('toolsPromise')
+      ]);
+      if (token !== this.historyInitToken || !this.isConnected) return;
+
+      const history = db.store('history');
+      const nodes = new Map();
+      let emptyMessage = this.historyList.querySelector('.sidebar-history-empty');
+
+      const render = async () => {
+        const saved = await history.getAll();
+        if (token !== this.historyInitToken || !this.isConnected) return;
+
+        saved.sort((a, b) => (b.visitedAt ?? 0) - (a.visitedAt ?? 0));
+        const currentPath = location.pathname.replace(/\/+$/, '') || '/';
+        const activeIds = new Set(saved.map((item) => String(item.id)));
+
+        for (const [id, link] of nodes) {
+          if (!activeIds.has(id)) {
+            link.remove();
+            nodes.delete(id);
+          }
+        }
+
+        if (!saved.length) {
+          if (!emptyMessage) {
+            emptyMessage = document.createElement('span');
+            emptyMessage.className = 'sidebar-section-empty sidebar-history-empty';
+          }
+          emptyMessage.textContent = '履歴はまだありません。\nツールを開くと、ここに表示されます。';
+          if (this.historyList.firstElementChild !== emptyMessage ||
+              this.historyList.childElementCount !== 1) {
+            this.historyList.replaceChildren(emptyMessage);
+          }
+          return;
+        }
+
+        emptyMessage?.remove();
+        emptyMessage = null;
+
+        saved.forEach((item, index) => {
+          const id = String(item.id);
+          let link = nodes.get(id);
+          if (!link) {
+            link = document.createElement('a');
+            link.append(document.createElement('span'));
+            nodes.set(id, link);
+          }
+
+          const itemPath = new URL(item.url, location.origin).pathname.replace(/\/+$/, '') || '/';
+          const title = item.title || item.key || '名称未設定';
+          const description = item.description || title;
+
+          if (link.getAttribute('href') !== item.url) link.href = item.url;
+          if (link.title !== description) link.title = description;
+          if (link.firstElementChild.textContent !== title) {
+            link.firstElementChild.textContent = title;
+          }
+          if (itemPath === currentPath) {
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+
+          const current = this.historyList.children[index];
+          if (current !== link) this.historyList.insertBefore(link, current || null);
+        });
+      };
+
+      this.renderHistory = render;
+      this.historyUnsubscribe = db.on('change', (event) => {
+        if (event.stores?.includes('history')) {
+          render().catch((error) => {
+            console.error('[sidebar] 履歴一覧の更新に失敗しました。', error);
+          });
+        }
+      });
+
+      await this.recordHistory(location.pathname, registry, db);
+      await render();
+    } catch (error) {
+      if (token === this.historyInitToken && this.isConnected) {
+        this.historyList.textContent = '履歴を読み込めませんでした';
+      }
+      console.error('[sidebar] 履歴の初期化に失敗しました。', error);
+    } finally {
+      this.historyInitializing = false;
+    }
+  }
+
+  async recordHistory(path, suppliedRegistry, suppliedDb) {
+    if (!path) return;
+    const storage = window.spaRouter?.commonStorage;
+    if (!storage) return;
+
+    try {
+      const [registry, db] = await Promise.all([
+        suppliedRegistry ? Promise.resolve(suppliedRegistry) : storage.get('toolsPromise'),
+        suppliedDb ? Promise.resolve(suppliedDb) : storage.get('favoriteDBPromise')
+      ]);
+      const pathname = new URL(path, location.origin).pathname.replace(/\/+$/, '') || '/';
+      const tool = Object.entries(registry || {}).map(([key, item]) => ({ key, ...item }))
+        .find((item) => (new URL(item.url, location.origin).pathname.replace(/\/+$/, '') || '/') === pathname);
+      if (!tool) return;
+
+      const history = db.store('history');
+      await history.put({
+        id: tool.id,
+        key: tool.key || tool.id,
+        title: tool.title,
+        description: tool.description,
+        url: tool.url,
+        visitedAt: Date.now()
+      });
+
+      const saved = await history.getAll();
+      saved.sort((a, b) => (b.visitedAt ?? 0) - (a.visitedAt ?? 0));
+      await Promise.all(saved.slice(30).map((item) => history.delete(item.id)));
+      await this.renderHistory?.();
+    } catch (error) {
+      console.error('[sidebar] 履歴の保存に失敗しました。', error);
+    }
+  }
+
   onTouchStart(e) {
     if (!this.mediaQuery.matches || e.touches.length !== 1) return;
 
@@ -386,9 +545,13 @@ class Side extends HTMLElement {
 
   disconnectedCallback() {
     this.favoriteInitToken++;
+    this.historyInitToken++;
     this.favoriteUnsubscribe?.();
+    this.historyUnsubscribe?.();
     this.favoriteUnsubscribe = null;
+    this.historyUnsubscribe = null;
     this.renderFavorites = null;
+    this.renderHistory = null;
     window.removeEventListener('spa:router', this.handleRouterEvent);
     window.removeEventListener('spa:storage', this.handleStorageEvent);
     window.removeEventListener('touchstart', this.handleTouchStart);
