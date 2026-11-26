@@ -65,7 +65,7 @@ class Side extends HTMLElement {
 }
 
 .sidebar-section-list a[aria-current="page"] {
-  background: var(--bg-hover);
+  background: color-mix(in srgb, var(--bg-hover) 55%, transparent);
 }
 
 .sidebar-section-empty {
