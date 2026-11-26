@@ -90,6 +90,12 @@ class Side extends HTMLElement {
         <span class="sidebar-favorite-empty">お気に入りを読み込み中...</span>
       </nav>
     </ui-collapse>
+    <ui-collapse label="履歴" duration="240ms" easing="ease">
+      <span slot="label"><i data-lucide="rotate-ccw-clock" aria-hidden="true"></i>履歴</span>
+      <nav class="sidebar-history-list" aria-live="polite">
+        <span class="sidebar-history-empty">履歴を読み込み中...</span>
+      </nav>
+    </ui-collapse>
   </section>
 
   <footer>
