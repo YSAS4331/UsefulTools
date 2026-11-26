@@ -7,7 +7,24 @@ const formatTime = seconds => {
   return hours ? `${hours}:${String(minutes).padStart(2,"0")}:${String(secs).padStart(2,"0")}` : `${minutes}:${String(secs).padStart(2,"0")}`;
 };
 const formatSize = bytes => bytes < 1048576 ? `${(bytes/1024).toFixed(1)} KB` : bytes < 1073741824 ? `${(bytes/1048576).toFixed(1)} MB` : `${(bytes/1073741824).toFixed(2)} GB`;
-const baseName = name => name.replace(/\.[^.]+$/,"").toLocaleLowerCase();
+const normalizeName = name => name.replace(/\.[^.]+$/,"").normalize("NFKC").toLocaleLowerCase().replace(/[\\s　]+/g," ").trim();
+const baseName = normalizeName;
+const similarity = (left,right) => {
+  const a=normalizeName(left),b=normalizeName(right);
+  if(!a&&!b)return 1;
+  if(!a||!b)return 0;
+  const previous=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    let diagonal=previous[0];
+    previous[0]=i;
+    for(let j=1;j<=b.length;j++){
+      const above=previous[j];
+      previous[j]=Math.min(previous[j]+1,previous[j-1]+1,diagonal+(a[i-1]===b[j-1]?0:1));
+      diagonal=above;
+    }
+  }
+  return 1-previous[b.length]/Math.max(a.length,b.length);
+};
 
 import "./media-engine.js";
 
@@ -172,7 +189,70 @@ const init = () => {
       actions.append(play,remove);li.append(icon,copy,actions);library.append(li);
     }
   };
-  const render=()=>{renderQueue();renderLibrary();};
+  const renderRelatedFiles=()=>{
+    const container=$("#related-files",root);
+    if(!container)return;
+    container.replaceChildren();
+    const tracks=[...entries.values()].filter(entry=>entry.kind==="audio");
+    const pending=[
+      ...[...lyricFiles].map(([key,file])=>({type:"lyrics",key,file,label:"歌詞"})),
+      ...[...artworks].map(([key,file])=>({type:"artwork",key,file,label:"ジャケット"}))
+    ].filter(item=>!tracks.some(entry=>baseName(entry.file.name)===item.key));
+    if(!pending.length){
+      const empty=document.createElement("p");
+      empty.className="content-empty";
+      empty.textContent="未紐付けのLRCファイルやジャケット画像はありません。";
+      container.append(empty);
+      return;
+    }
+    for(const item of pending){
+      const row=document.createElement("div");
+      row.className="related-file-row";
+      const details=document.createElement("div");
+      details.className="related-file-details";
+      const name=document.createElement("strong");
+      name.textContent=item.file.name;
+      const kind=document.createElement("small");
+      kind.textContent=item.label+" · "+formatSize(item.file.size);
+      details.append(name,kind);
+      const ranked=tracks.map(entry=>({entry,score:similarity(item.key,entry.file.name)})).sort((a,b)=>b.score-a.score);
+      const best=ranked[0];
+      const hint=document.createElement("small");
+      hint.className="related-file-hint";
+      hint.textContent=best&&best.score>=.5
+        ? "候補: "+best.entry.file.name+"（類似度 "+Math.round(best.score*100)+"%）"
+        : "紐付け先を選択してください";
+      details.append(hint);
+      const controls=document.createElement("div");
+      controls.className="related-file-controls";
+      const select=document.createElement("select");
+      select.className="related-file-select";
+      select.setAttribute("aria-label",item.file.name+"の紐付け先");
+      const placeholder=document.createElement("option");
+      placeholder.value="";
+      placeholder.textContent="曲を選択…";
+      select.append(placeholder);
+      for(const entry of tracks){
+        const option=document.createElement("option");
+        option.value=String(entry.id);
+        option.textContent=entry.file.name;
+        select.append(option);
+      }
+      if(best&&best.score>=.5)select.value=String(best.entry.id);
+      const attach=document.createElement("button");
+      attach.type="button";
+      attach.className="small-action related-file-attach";
+      attach.textContent="紐付け";
+      attach.disabled=!tracks.length;
+      attach.dataset.sidecarType=item.type;
+      attach.dataset.sidecarKey=item.key;
+      attach.dataset.selectId=select.id="related-"+item.type+"-"+Math.random().toString(36).slice(2);
+      controls.append(select,attach);
+      row.append(details,controls);
+      container.append(row);
+    }
+  };
+  const render=()=>{renderQueue();renderLibrary();renderRelatedFiles();};
   const updateMetadata=()=>{
     const entry=currentEntry();
     const metadata=$("#metadata-list",root);
@@ -286,6 +366,38 @@ const init = () => {
     if(currentId===null&&firstAdded!==null)selectEntry(firstAdded,false);
     else if(currentId!==null)updateTrack();
   };
+  listen($("#related-files",root),"click",event=>{
+    const button=event.target.closest(".related-file-attach");
+    if(!button)return;
+    const select=$("#"+CSS.escape(button.dataset.selectId),root);
+    const entry=entries.get(Number(select?.value));
+    if(!entry)return;
+    const type=button.dataset.sidecarType,key=button.dataset.sidecarKey;
+    if(type==="artwork"){
+      const file=artworks.get(key);
+      if(!file)return;
+      if(entry.artworkUrl){URL.revokeObjectURL(entry.artworkUrl);objectUrls.delete(entry.artworkUrl);}
+      entry.artwork=file;
+      entry.artworkUrl=makeUrl(file);
+      artworks.delete(key);
+    }else{
+      const file=lyricFiles.get(key);
+      if(!file)return;
+      lyricFiles.delete(key);
+      file.text().then(text=>{
+        if(!entries.has(entry.id))return;
+        entry.lyrics=parseLrc(text);
+        entry.lyricFileName=file.name;
+        if(entry.id===currentId){currentLyrics=entry.lyrics;showLyrics();updateLyrics();}
+        render();
+        if(entry.id===currentId)updateMetadata();
+      }).catch(error=>console.warn("[media-player] 歌詞ファイルを読み込めませんでした。",error));
+    }
+    if(type==="artwork"){
+      render();
+      if(entry.id===currentId)updateTrack();
+    }
+  });
   listen(playButton,"click",()=>isPlaying()?pauseAll():play());listen(previousButton,"click",()=>move(-1));listen(nextButton,"click",()=>move(1));
   listen(shuffleButton,"click",()=>{shuffle=!shuffle;engine.shuffle=shuffle;if(!shuffle)engine.shuffleBag=[];else engine.shuffleBag=engine.shuffleBag.filter(id=>entries.has(id)&&id!==currentId);shuffleButton.classList.toggle("is-on",shuffle);shuffleButton.setAttribute("aria-pressed",String(shuffle));});
   listen(repeatButton,"click",()=>{repeat=!repeat;engine.repeat=repeat;repeatButton.classList.toggle("is-on",repeat);repeatButton.setAttribute("aria-pressed",String(repeat));});
