@@ -65,36 +65,7 @@
   flex-shrink: 0;
   white-space: nowrap;
   padding: .7rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: var(--bg-2);
-  color: var(--text-secondary);
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   font-size: .9rem;
-  font-weight: 650;
-  transition:
-    background-color .18s ease,
-    border-color .18s ease,
-    color .18s ease,
-    transform .18s ease;
-}
-
-.tool-buttons button:not(.nostyle):hover {
-  border-color: var(--accent-border-strong);
-  background: color-mix(in srgb, var(--accent) 10%, var(--bg-2));
-  color: var(--accent-strong);
-  box-shadow: none;
-}
-
-.tool-buttons button:not(.nostyle):active {
-  transform: translateY(1px);
-}
-
-.tool-buttons button:not(.nostyle):focus-visible {
-  outline: 2px solid var(--accent-strong);
-  outline-offset: 2px;
 }
 
 .tool-buttons .tool-favorite.is-favorite {
