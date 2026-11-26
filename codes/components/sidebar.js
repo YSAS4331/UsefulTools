@@ -64,6 +64,10 @@ class Side extends HTMLElement {
   pointer-events: none;
 }
 
+.sidebar-section-list a[aria-current="page"] {
+  background: var(--bg-hover);
+}
+
 .sidebar-section-empty {
   color: var(--text-tertiary);
   font-size: .85rem;
