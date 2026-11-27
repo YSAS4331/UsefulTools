@@ -3,12 +3,14 @@
     "id": "13f578d1-04c6-4d3c-a12b-550612f58cc4",
     "title": "進数・基数変換ツール",
     "description": "2進数・8進数・10進数・16進数など、様々な進数同士を簡単に変換できます。",
-    "url": "/tools/base-converter/"
+    "url": "/tools/base-converter/",
+    "icon": "tool-lead"
   },
   "media-player": {
     "id": "4e47d96e-bce6-445c-aee0-97d602a93c77",
     "title": "メディアプレイヤー",
     "description": "パソコンやスマホにある音声・動画ファイルをアップロードして、Web上で再生できます。バックグラウンド再生に対応しています。",
-    "url": "/tools/media-player/"
+    "url": "/tools/media-player/",
+    "icon": "audio-lines"
   }
 }
