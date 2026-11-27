@@ -1,6 +1,7 @@
 import "/components/collapse.js";
 import "/components/modal.js";
 import "/components/search.js";
+import "/components/settings.js";
 import { Modals } from "/managers/modals.js";
 import "/components/sidebar.js";
 import "/components/header.js";
