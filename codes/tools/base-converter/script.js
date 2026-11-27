@@ -119,8 +119,49 @@ const init = () => {
     }
   };
 
+  const isAllowedValue = (value, base) => {
+    let decimalPoint = false;
+    for (let index = 0; index < value.length; index++) {
+      const char = value[index];
+      if (char === "+" || char === "-") {
+        if (index !== 0) return false;
+        continue;
+      }
+      if (char === ".") {
+        if (decimalPoint) return false;
+        decimalPoint = true;
+        continue;
+      }
+      if (char === "_" || /\\s/.test(char)) continue;
+      const digit = DIGITS.indexOf(char.toUpperCase());
+      if (digit < 0 || digit >= base) return false;
+    }
+    return true;
+  };
+
+  results.addEventListener("beforeinput", event => {
+    const input = event.target;
+    if (!input.matches(".result-value") || event.isComposing || !event.inputType.startsWith("insert")) return;
+    const inserted = event.data ?? event.dataTransfer?.getData("text/plain");
+    if (inserted == null) return;
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? start;
+    const nextValue = input.value.slice(0, start) + inserted + input.value.slice(end);
+    if (!isAllowedValue(nextValue, Number(input.closest(".result-row").dataset.base))) {
+      event.preventDefault();
+    }
+  }, {signal});
+
   results.addEventListener("input", event => {
-    if (event.target.matches(".result-value")) updateFrom(event.target);
+    const input = event.target;
+    if (!input.matches(".result-value")) return;
+    const normalized = input.value.toUpperCase();
+    if (normalized !== input.value) {
+      const position = input.selectionStart;
+      input.value = normalized;
+      input.setSelectionRange(position, position);
+    }
+    updateFrom(input);
   }, {signal});
 
   addButton.addEventListener("click", () => {
