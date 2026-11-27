@@ -20,6 +20,21 @@ class Side extends HTMLElement {
   padding: 0 16px 16px;
 }
 
+@media (min-width: 601px) {
+  :host(.collapsed) .sidebar-search,
+  :host(.collapsed) .sidebar footer {
+    display: none;
+  }
+
+  :host(.collapsed) .sidebar {
+    padding: 24px 0;
+  }
+
+  :host(.collapsed) .sidebar-section {
+    padding: 4px 6px;
+  }
+}
+
 .sidebar-sections {
   width: 100%;
   min-height: 0;
@@ -108,7 +123,7 @@ class Side extends HTMLElement {
   <div class="sidebar-sections">
     <section class="sidebar-section" aria-label="お気に入り">
       <ui-collapse label="お気に入り" duration="240ms" easing="ease">
-        <span slot="label"><i data-lucide="heart" aria-hidden="true"></i>お気に入り</span>
+        <span slot="label"><i data-lucide="heart" aria-hidden="true"></i><span class="label-text">お気に入り</span></span>
         <nav class="sidebar-section-list sidebar-favorite-list" aria-live="polite">
           <span class="sidebar-section-empty sidebar-favorite-empty">お気に入りを読み込み中...</span>
         </nav>
@@ -117,7 +132,7 @@ class Side extends HTMLElement {
 
     <section class="sidebar-section" aria-label="履歴">
       <ui-collapse label="履歴" duration="240ms" easing="ease">
-        <span slot="label"><i data-lucide="history" aria-hidden="true"></i>履歴</span>
+        <span slot="label"><i data-lucide="history" aria-hidden="true"></i><span class="label-text">履歴</span></span>
         <nav class="sidebar-section-list sidebar-history-list" aria-live="polite">
           <span class="sidebar-section-empty sidebar-history-empty">履歴を読み込み中...</span>
         </nav>
