@@ -68,8 +68,8 @@ const convertValue = (parsed, targetBase) => {
   return (sign < 0n ? "-" : "") + whole + (fraction ? "." + fraction : "") + (remainder !== 0n ? "…" : "");
 };
 
-const formatValue = (value, base) => {
-  if (!value || !groupDigits?.checked) return value;
+const formatValue = (value, base, enabled) => {
+  if (!value || !enabled) return value;
   const sign = /^[+-]/.test(value) ? value[0] : "";
   let body = sign ? value.slice(1) : value;
   const prefix = getBasePrefix(base);
@@ -124,7 +124,7 @@ const init = () => {
       results.querySelectorAll(".result-row").forEach(targetRow => {
         if (targetRow === row) return;
         const targetInput = $(".result-value", targetRow);
-        targetInput.value = formatValue(convertValue(parsed, Number(targetRow.dataset.base)), Number(targetRow.dataset.base));
+        targetInput.value = formatValue(convertValue(parsed, Number(targetRow.dataset.base)), Number(targetRow.dataset.base), groupDigits.checked);
         targetInput.classList.remove("is-error");
         $('[data-action="copy"]', targetRow).disabled = false;
       });
@@ -182,7 +182,7 @@ const init = () => {
     const input = event.target;
     if (!input.matches(".result-value") || !input.value) return;
     const base = Number(input.closest(".result-row").dataset.base);
-    input.value = formatValue(input.value.replace(/\s+/g, ""), base);
+    input.value = formatValue(input.value.replace(/\s+/g, ""), base, groupDigits.checked);
     updateFrom(input);
   }, {signal});
 
