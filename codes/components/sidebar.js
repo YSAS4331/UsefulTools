@@ -398,7 +398,7 @@ class Side extends HTMLElement {
         let link = nodes.get(id);
         if (!link) {
           link = document.createElement('a');
-          const icon = document.createElement('i');
+          const icon = document.createElement('span');
           icon.className = 'sidebar-item-icon';
           icon.setAttribute('aria-hidden', 'true');
           const title = document.createElement('span');
@@ -417,14 +417,12 @@ class Side extends HTMLElement {
         if (link.title !== description) link.title = description;
         if (titleElement.textContent !== title) titleElement.textContent = title;
 
-        const iconName = typeof item.icon === 'string' ? item.icon.trim() : '';
-        if (iconName) {
-          if (icon.getAttribute('data-lucide') !== iconName) {
-            icon.setAttribute('data-lucide', iconName);
-          }
+        const iconMarkup = typeof item.icon === 'string' ? item.icon.trim() : '';
+        if (iconMarkup) {
+          if (icon.innerHTML !== iconMarkup) icon.innerHTML = iconMarkup;
           icon.hidden = false;
         } else {
-          icon.removeAttribute('data-lucide');
+          icon.replaceChildren();
           icon.hidden = true;
         }
 
@@ -589,6 +587,7 @@ class Side extends HTMLElement {
         title: tool.title,
         description: tool.description,
         url: tool.url,
+        icon: tool.icon,
         visitedAt: Date.now()
       });
 
