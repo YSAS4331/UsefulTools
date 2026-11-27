@@ -19,9 +19,9 @@ class UIModal extends HTMLElement {
     if (!this.shadowRoot.hasChildNodes()) {
       this.shadowRoot.innerHTML = `
         <style>
-          :host { display: contents; color: var(--text-primary); }
+          :host { --sheet-height: 70dvh; --dialog-width: 48rem; --dialog-height: 85dvh; --dialog-min-height: 0px; display: contents; color: var(--text-primary); }
           .backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1.5rem; background: color-mix(in srgb, var(--bg) 45%, transparent); opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s ease; }
-          .dialog { --sheet-height: 70dvh; --dialog-width: 48rem; --dialog-height: 85dvh; --dialog-min-height: 0px; display: flex; flex-direction: column; width: min(100%, var(--dialog-width)); max-height: var(--dialog-height); min-height: var(--dialog-min-height); overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-2); color: var(--text-primary); box-shadow: var(--glass-inner-shadow); transform: translateY(10px) scale(.985); transition: transform .22s ease; }
+          .dialog { display: flex; flex-direction: column; width: min(100%, var(--dialog-width)); max-height: var(--dialog-height); min-height: var(--dialog-min-height); overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-2); color: var(--text-primary); box-shadow: var(--glass-inner-shadow); transform: translateY(10px) scale(.985); transition: transform .22s ease; }
           :host([open]) .backdrop { opacity: 1; visibility: visible; }
           :host([open]) .dialog { transform: translateY(0) scale(1); }
           .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.5rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border-color); background: var(--bg-2); }
