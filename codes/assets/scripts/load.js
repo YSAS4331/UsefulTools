@@ -1,9 +1,9 @@
-import "/components/header.js";
 import "/components/collapse.js";
 import "/components/modal.js";
 import "/components/search.js";
 import { Modals } from "/managers/modals.js";
 import "/components/sidebar.js";
+import "/components/header.js";
 import {
   createIcons, Menu, Settings, Star, Folders, Blocks, Info, Hash, Share2,
   Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
@@ -59,7 +59,6 @@ if (!setupCommonStorage()) {
   window.addEventListener("spa:router", (e) => {
     if (e.detail?.type === "setup-ok") {
       setupCommonStorage();
-      setupIcons();
     }
     if (e.detail?.type === "after") setupIcons();
   });
