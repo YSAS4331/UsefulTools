@@ -31,6 +31,11 @@ function collectHtmlFiles(directory) {
       continue;
     }
 
+    // Error pages are not useful search results.
+    if (entry.name.toLowerCase() === "404.html") {
+      continue;
+    }
+
     // Google Search Console verification files are not public content pages.
     if (/^google.*\.html$/i.test(entry.name)) {
       continue;
