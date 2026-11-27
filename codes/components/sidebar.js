@@ -20,6 +20,31 @@ class Side extends HTMLElement {
   padding: 0 16px 16px;
 }
 
+.sidebar-flyout {
+  position: fixed;
+  z-index: 1100;
+  width: 260px;
+  max-width: calc(100vw - 84px);
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-2);
+  color: var(--text-primary);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+}
+
+.sidebar-flyout-title {
+  margin: 2px 8px 8px;
+  color: var(--text-primary);
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.sidebar-flyout .sidebar-section-list {
+  max-height: none;
+}
 
 @media (min-width: 601px) {
   app-sidebar.collapsed .sidebar-search,
@@ -33,7 +58,6 @@ class Side extends HTMLElement {
 
   app-sidebar.collapsed .sidebar {
     padding: 24px 0;
-    overflow: visible;
   }
 
   app-sidebar.collapsed .sidebar-section {
@@ -187,6 +211,8 @@ class Side extends HTMLElement {
     this.historyList = this.querySelector('.sidebar-history-list');
 
     this.sidebarAside = this.querySelector('.sidebar');
+    this.flyout = null;
+    this.flyoutTimer = null;
     this.handleRailClick = (event) => {
       if (!this.matches('.collapsed') || this.mediaQuery?.matches) return;
       if (event.target.closest('ui-collapse')) return;
@@ -195,17 +221,17 @@ class Side extends HTMLElement {
     this.sidebarAside.addEventListener('click', this.handleRailClick);
 
     this.collapses = [...this.querySelectorAll('ui-collapse')];
+    this.handleCollapseEnter = (event) => this.showFlyout(event.currentTarget);
+    this.handleCollapseLeave = () => this.scheduleFlyoutClose();
     this.handleCollapsedIconClick = (event) => {
-      if (this.mediaQuery?.matches || !this.classList.contains('collapsed')) return;
-      const clickedToggle = event.composedPath().some((node) =>
-        node instanceof Element && node.classList.contains('toggle')
-      );
-      if (clickedToggle) {
+      if (!this.mediaQuery?.matches && this.classList.contains('collapsed')) {
         event.preventDefault();
         event.stopPropagation();
       }
     };
     this.collapses.forEach((collapse) => {
+      collapse.addEventListener('mouseenter', this.handleCollapseEnter);
+      collapse.addEventListener('mouseleave', this.handleCollapseLeave);
       collapse.addEventListener('click', this.handleCollapsedIconClick, true);
     });
     this.favoriteInitToken = 0;
@@ -247,6 +273,13 @@ class Side extends HTMLElement {
     this.setupHistory();
 
     this.mediaQuery = window.matchMedia('(max-width: 600px)');
+    this.sidebarStateObserver = new MutationObserver(() => {
+      const closed = this.mediaQuery.matches
+        ? !this.classList.contains('open')
+        : this.classList.contains('collapsed');
+      if (closed) this.closeAccordions();
+    });
+    this.sidebarStateObserver.observe(this, { attributes: true, attributeFilter: ['class'] });
 
     this.width = 0;
     this.startX = 0;
@@ -268,6 +301,70 @@ class Side extends HTMLElement {
     window.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
   }
 
+  showFlyout(collapse) {
+    if (this.mediaQuery.matches || !this.classList.contains('collapsed')) return;
+
+    clearTimeout(this.flyoutTimer);
+    this.hideFlyout();
+
+    const section = collapse.closest('.sidebar-section');
+    const sourceList = section?.querySelector('.sidebar-section-list');
+    if (!section || !sourceList) return;
+
+    const rect = collapse.getBoundingClientRect();
+    const flyout = document.createElement('div');
+    flyout.className = 'sidebar-flyout';
+    flyout.setAttribute('role', 'region');
+    flyout.setAttribute('aria-label', section.getAttribute('aria-label') || 'サイドバー');
+    flyout.innerHTML = '<div class="sidebar-flyout-title"></div>';
+    flyout.querySelector('.sidebar-flyout-title').textContent =
+      section.getAttribute('aria-label') || 'メニュー';
+
+    const list = sourceList.cloneNode(true);
+    list.classList.remove('sidebar-favorite-list', 'sidebar-history-list');
+    flyout.append(list);
+
+    const storage = window.spaRouter?.commonStorage;
+    const createIcons = storage?.get('createIcons');
+    const icons = storage?.get('lucideIcons');
+    if (createIcons && icons) createIcons({ icons, root: flyout });
+
+    flyout.addEventListener('mouseenter', () => clearTimeout(this.flyoutTimer));
+    flyout.addEventListener('mouseleave', () => this.scheduleFlyoutClose());
+    flyout.addEventListener('click', () => {
+      this.scheduleFlyoutClose(80);
+    });
+
+    document.body.append(flyout);
+    const width = flyout.offsetWidth;
+    const height = flyout.offsetHeight;
+    const left = Math.min(rect.right + 8, window.innerWidth - width - 8);
+    const top = Math.max(12, Math.min(rect.top, window.innerHeight - height - 12));
+    Object.assign(flyout.style, {
+      left: `${Math.max(8, left)}px`,
+      top: `${top}px`
+    });
+
+    this.flyout = flyout;
+  }
+
+  scheduleFlyoutClose(delay = 140) {
+    clearTimeout(this.flyoutTimer);
+    this.flyoutTimer = setTimeout(() => this.hideFlyout(), delay);
+  }
+
+  hideFlyout() {
+    clearTimeout(this.flyoutTimer);
+    this.flyoutTimer = null;
+    this.flyout?.remove();
+    this.flyout = null;
+  }
+
+  closeAccordions() {
+    this.collapses?.forEach((collapse) => {
+      collapse.isOpen = false;
+    });
+  }
 
   updateActiveLinks(path = location.pathname) {
     const currentPath = new URL(path, location.origin).pathname.replace(/\/+$/, '') || '/';
@@ -643,6 +740,7 @@ class Side extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this.sidebarStateObserver?.disconnect();
     this.favoriteInitToken++;
     this.historyInitToken++;
     this.favoriteUnsubscribe?.();
@@ -653,8 +751,11 @@ class Side extends HTMLElement {
     this.renderHistory = null;
     this.sidebarAside?.removeEventListener('click', this.handleRailClick);
     this.collapses?.forEach((collapse) => {
+      collapse.removeEventListener('mouseenter', this.handleCollapseEnter);
+      collapse.removeEventListener('mouseleave', this.handleCollapseLeave);
       collapse.removeEventListener('click', this.handleCollapsedIconClick, true);
     });
+    this.hideFlyout();
     this.removeEventListener('click', this.handleActiveLinkClick);
     window.removeEventListener('spa:router', this.handleRouterEvent);
     window.removeEventListener('spa:storage', this.handleStorageEvent);
