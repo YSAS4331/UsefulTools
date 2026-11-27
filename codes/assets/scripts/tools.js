@@ -161,6 +161,7 @@ const initFavorites = async (button, storage, token) => {
             title: tool.title,
             description: tool.description,
             url: tool.url,
+            icon: tool.icon,
             addedAt: Date.now()
           });
         }
