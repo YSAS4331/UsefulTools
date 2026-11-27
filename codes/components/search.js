@@ -165,7 +165,7 @@ class ToolSearch extends HTMLElement {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
         <input type="search" autocomplete="off" placeholder="ツール名や機能で検索..." aria-label="ツール名や機能で検索">
       </label>
-      <p class="search-status" role="status" aria-live="polite">ツール名や説明に含まれる言葉で検索できます。</p>
+      <p class="search-status" role="status" aria-live="polite">ツール名・説明・キーワードで検索できます。</p>
       <div class="search-results"></div>
     `;
 
@@ -207,7 +207,8 @@ class ToolSearch extends HTMLElement {
       .map((tool) => {
         const title = String(tool.title || "");
         const description = String(tool.description || "");
-        const searchable = [tool.key, title, description].join(" ").toLocaleLowerCase();
+        const keywords = Array.isArray(tool.keywords) ? tool.keywords : [];
+        const searchable = [tool.key, title, description, ...keywords].join(" ").toLocaleLowerCase();
         if (!terms.every((term) => searchable.includes(term))) return null;
 
         const lowerTitle = title.toLocaleLowerCase();
