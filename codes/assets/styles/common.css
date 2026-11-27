@@ -46,7 +46,7 @@ button:not(.nostyle) {
   padding: 12px 24px;
   border-radius: var(--radius);
   background: var(--bg-2);
-  border: 1px solid var(--border-color);
+  border: 0;
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -61,7 +61,6 @@ button:not(.nostyle) {
 }
 
 button:not(.nostyle):hover {
-  border-color: var(--accent-border-strong);
   background: color-mix(in srgb, var(--accent) 10%, var(--bg-2));
   color: var(--accent-strong);
   box-shadow: none
