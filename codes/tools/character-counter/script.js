@@ -41,7 +41,6 @@ const init = () => {
   const update = () => {
     const value = input.value;
     const withoutWhitespace = value.replace(/[\s\uFEFF\u200B]+/gu, "");
-    const nonEmptyLines = value.split(/\r\n|\r|\n/u).filter(line => line.trim().length > 0);
     const paragraphs = value.trim()
       ? value.trim().split(/(?:\r\n|\r|\n)[\t \u3000]*(?:\r\n|\r|\n)+/u).filter(Boolean).length
       : 0;
