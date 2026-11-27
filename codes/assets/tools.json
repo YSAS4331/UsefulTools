@@ -6,6 +6,13 @@
     "url": "/tools/base-converter/",
     "icon": "hash"
   },
+  "character-counter": {
+    "id": "b3fbbf7e-c19a-4fb4-bf5e-fba6c2a3d870",
+    "title": "文字数カウンター",
+    "description": "文章の文字数・単語数・行数・バイト数などをリアルタイムで確認できます。",
+    "url": "/tools/character-counter/",
+    "icon": "file-text"
+  },
   "media-player": {
     "id": "4e47d96e-bce6-445c-aee0-97d602a93c77",
     "title": "メディアプレイヤー",
