@@ -2,6 +2,7 @@ const $ = (selector, root = document) => root.querySelector(selector);
 let cleanup = null;
 const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const FRACTION_DIGITS = 16;
+const BASE_PREFIXES = new Map([[2, "0B"], [8, "0O"], [10, "0D"], [16, "0X"]]);
 
 const parseValue = (input, base) => {
   let value = input.trim().replace(/\s+/g, "").replaceAll("_", "").toUpperCase();
@@ -11,6 +12,8 @@ const parseValue = (input, base) => {
     if (value[0] === "-") sign = -1n;
     value = value.slice(1);
   }
+  const prefix = BASE_PREFIXES.get(base);
+  if (prefix && value.startsWith(prefix)) value = value.slice(prefix.length);
   const parts = value.split(".");
   if (!value || parts.length > 2 || parts.some(part => !part)) {
     throw new Error("数値または小数点の位置を確認してください。");
@@ -120,7 +123,7 @@ const init = () => {
   };
 
   const isAllowedValue = (value, base) => {
-    let normalized = value.replace(/\\s+/g, "").replaceAll("_", "").toUpperCase();
+    let normalized = value.replace(/\s+/g, "").replaceAll("_", "").toUpperCase();
     if (normalized[0] === "+" || normalized[0] === "-") normalized = normalized.slice(1);
     const prefix = BASE_PREFIXES.get(base);
     if (prefix && prefix.startsWith(normalized) && normalized.length <= prefix.length) return true;
@@ -128,17 +131,12 @@ const init = () => {
     let decimalPoint = false;
     for (let index = 0; index < normalized.length; index++) {
       const char = normalized[index];
-      if (char === "+" || char === "-") {
-        if (index !== 0) return false;
-        continue;
-      }
       if (char === ".") {
         if (decimalPoint) return false;
         decimalPoint = true;
         continue;
       }
-      if (char === "_" || /\\s/.test(char)) continue;
-      const digit = DIGITS.indexOf(char.toUpperCase());
+      const digit = DIGITS.indexOf(char);
       if (digit < 0 || digit >= base) return false;
     }
     return true;
