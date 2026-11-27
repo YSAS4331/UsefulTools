@@ -36,7 +36,11 @@ jobs:
           npm install -g html-minifier-terser terser clean-css-cli
 
       - name: Build
+        env:
+          SITE_URL: https://ysas4331.pages.dev
         run: |
+          node .github/scripts/generate-sitemap.js
+
           mkdir build
           cp -r codes/* build/
 
