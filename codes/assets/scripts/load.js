@@ -72,7 +72,13 @@ const setupCommonStorage = () => {
   cs.set("toolsPromise", toolsPromise);
 
   let currentTheme = "system";
+  let currentAccentColor = "green";
   let systemThemeQuery;
+  const applyAccentColor = (value) => {
+    const colors = ["green", "blue", "red", "purple", "orange", "pink"];
+    const root = document.documentElement;
+    colors.forEach((color) => root.classList.toggle(color, color === value));
+  };
   const applyTheme = (value) => {
     const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
     document.documentElement.classList.toggle("dark", value === "dark" || (value === "system" && prefersDark));
@@ -87,13 +93,19 @@ const setupCommonStorage = () => {
     .then(async (db) => {
       const settings = db.store("settings");
       const saved = await settings.get("theme");
+      const accent = await settings.get("accentColor");
       currentTheme = saved?.value || "system";
+      currentAccentColor = accent?.value || "green";
       applyTheme(currentTheme);
+      applyAccentColor(currentAccentColor);
       db.on("change", async (event) => {
         if (!event.stores?.includes("settings")) return;
         const record = await settings.get("theme");
+        const accent = await settings.get("accentColor");
         currentTheme = record?.value || "system";
+        currentAccentColor = accent?.value || "green";
         applyTheme(currentTheme);
+        applyAccentColor(currentAccentColor);
       });
     })
     .catch((error) => console.error("[theme] テーマ設定の読み込みに失敗しました。", error));
