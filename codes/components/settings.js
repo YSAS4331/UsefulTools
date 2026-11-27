@@ -33,78 +33,78 @@ class UISettings extends HTMLElement {
       <style>
         :host { display:block; color:var(--text-primary); }
         .tabs {
-          position:sticky; top:-1.25rem; z-index:5;
-          display:flex; gap:.2rem; margin:0 -1.25rem;
-          padding:0 1.25rem; border-bottom:1px solid var(--border-color);
+          position:sticky; top:-20px; z-index:5;
+          display:flex; gap:3.2px; margin:0 -20px;
+          padding:0 20px; border-bottom:1px solid var(--border-color);
           background:var(--bg-2); overflow-x:auto; overflow-y:hidden;
         }
         .tab {
-          position:relative; flex:none; padding:.65rem .8rem; border:0;
+          position:relative; flex:none; padding:10.4px 12.8px; border:0;
           background:transparent; color:var(--text-secondary);
-          font:inherit; font-size:.86rem; font-weight:600; cursor:pointer;
+          font:inherit; font-size:13.76px; font-weight:600; cursor:pointer;
         }
         .tab[aria-selected="true"] { color:var(--text-primary); }
         .tab[aria-selected="true"]::after {
-          content:""; position:absolute; right:.55rem; bottom:-1px; left:.55rem;
+          content:""; position:absolute; right:8.8px; bottom:-1px; left:8.8px;
           height:2px; border-radius:2px 2px 0 0; background:var(--accent);
         }
         .tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
           outline:2px solid var(--accent); outline-offset:2px;
         }
-        .tab-panel { padding-top:.85rem; }
+        .tab-panel { padding-top:13.6px; }
         .tab-panel[hidden] { display:none; }
-        .setting { display:grid; gap:.4rem; padding:.55rem 0 .8rem; }
-        p { margin:0; color:var(--text-secondary); font-size:.8rem; line-height:1.5; }
-        .choices { display:grid; gap:.1rem; }
+        .setting { display:grid; gap:6.4px; padding:8.8px 0 12.8px; }
+        p { margin:0; color:var(--text-secondary); font-size:12.8px; line-height:1.5; }
+        .choices { display:grid; gap:1.6px; }
         .choice {
-          display:flex; align-items:center; gap:.65rem; min-height:1.9rem;
-          padding:.2rem .5rem; border-radius:7px; color:var(--text-primary);
-          font-size:.86rem; font-weight:500; cursor:pointer;
+          display:flex; align-items:center; gap:10.4px; min-height:30.4px;
+          padding:3.2px 8px; border-radius:7px; color:var(--text-primary);
+          font-size:13.76px; font-weight:500; cursor:pointer;
         }
         .choice:hover { background:var(--bg-hover); }
-        .choice input { width:1rem; height:1rem; margin:0; accent-color:var(--accent); }
+        .choice input { width:16px; height:16px; margin:0; accent-color:var(--accent); }
         .choices:has(input:disabled) { opacity:.6; }
         .section {
-          display:grid; gap:.55rem; padding:.8rem 0;
+          display:grid; gap:8.8px; padding:12.8px 0;
           border-bottom:1px solid var(--border-color);
         }
         .section:first-child { padding-top:0; }
         .section:last-child { border-bottom:0; }
-        .section-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-        .section-heading h3, .section h3 { margin:0; font-size:.9rem; font-weight:650; }
-        .muted { color:var(--text-tertiary); font-size:.76rem; }
+        .section-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+        .section-heading h3, .section h3 { margin:0; font-size:14.4px; font-weight:650; }
+        .muted { color:var(--text-tertiary); font-size:12.16px; }
         .action {
-          justify-self:start; padding:.45rem .7rem; border:1px solid var(--border-color);
+          justify-self:start; padding:7.2px 11.2px; border:1px solid var(--border-color);
           border-radius:7px; background:var(--bg); color:var(--text-primary);
-          font:inherit; font-size:.8rem; cursor:pointer;
+          font:inherit; font-size:12.8px; cursor:pointer;
         }
         .action:hover { background:var(--bg-hover); }
         .action:disabled { opacity:.45; cursor:default; }
         .action.danger { color:var(--danger, #dc4545); }
         .history-list {
-          display:grid; gap:.25rem; max-height:10rem; overflow:auto;
+          display:grid; gap:4px; max-height:160px; overflow:auto;
           padding:0; overscroll-behavior:contain;
         }
         .history-item {
-          display:flex; align-items:center; justify-content:space-between; gap:.7rem;
-          padding:.4rem .5rem; border-bottom:1px solid var(--border-color);
+          display:flex; align-items:center; justify-content:space-between; gap:11.2px;
+          padding:6.4px 8px; border-bottom:1px solid var(--border-color);
         }
-        .history-copy { display:grid; gap:.15rem; min-width:0; }
-        .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.82rem; }
-        .history-copy small { color:var(--text-tertiary); font-size:.7rem; }
-        .history-item .action { flex:none; padding:.3rem .5rem; font-size:.74rem; }
-        .empty { padding:.5rem 0; color:var(--text-tertiary); font-size:.8rem; }
-        .backup-actions { display:flex; flex-wrap:wrap; gap:.4rem; }
-        .status { min-height:1.1em; color:var(--text-secondary); font-size:.78rem; }
+        .history-copy { display:grid; gap:2.4px; min-width:0; }
+        .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13.12px; }
+        .history-copy small { color:var(--text-tertiary); font-size:11.2px; }
+        .history-item .action { flex:none; padding:4.8px 8px; font-size:11.84px; }
+        .empty { padding:8px 0; color:var(--text-tertiary); font-size:12.8px; }
+        .backup-actions { display:flex; flex-wrap:wrap; gap:6.4px; }
+        .status { min-height:1.1em; color:var(--text-secondary); font-size:12.48px; }
         .warning {
-          padding:.55rem .7rem; border-left:2px solid var(--danger, #dc4545);
+          padding:8.8px 11.2px; border-left:2px solid var(--danger, #dc4545);
           background:color-mix(in srgb, var(--danger, #dc4545) 6%, transparent);
-          color:var(--text-secondary); font-size:.76rem; line-height:1.5;
+          color:var(--text-secondary); font-size:12.16px; line-height:1.5;
         }
         .file-input { display:none; }
         @media (max-width:480px) {
-          .tabs { margin:0 -1rem; padding:0 1rem; }
-          .tab { padding:.65rem .7rem; font-size:.82rem; }
+          .tabs { margin:0 -16px; padding:0 16px; }
+          .tab { padding:10.4px 11.2px; font-size:13.12px; }
         }
       </style>
       <nav class="tabs" role="tablist" aria-label="設定カテゴリ">
@@ -112,7 +112,7 @@ class UISettings extends HTMLElement {
         <button class="tab" id="data-tab" type="button" role="tab" aria-selected="false" aria-controls="data-panel">データ管理</button>
       </nav>
       <section class="tab-panel" id="appearance-panel" role="tabpanel" aria-labelledby="appearance-tab">
-        <div class="appearance-settings" style="display:grid; gap:.65rem;">
+        <div class="appearance-settings" style="display:grid; gap:10.4px;">
         <ui-collapse label="テーマ" group="appearance">
           <div class="setting">
             <div class="choices" id="theme" role="radiogroup" aria-label="テーマ">
@@ -139,7 +139,7 @@ class UISettings extends HTMLElement {
         </div>
       </section>
       <section class="tab-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab" hidden>
-        <div class="data-settings" style="display:grid; gap:.65rem;">
+        <div class="data-settings" style="display:grid; gap:10.4px;">
         <ui-collapse label="閲覧履歴" group="data">
           <div class="section">
           <div class="section-heading"><h3>閲覧履歴</h3><span class="muted" id="history-count">読み込み中...</span></div>
@@ -483,8 +483,8 @@ class UISettings extends HTMLElement {
     this.openWhenReady = false;
     const modal = modals.create("settings", {
       title: "設定",
-      dialogWidth: "48rem",
-      dialogHeight: "36rem",
+      dialogWidth: "768px",
+      dialogHeight: "576px",
       sheetHeight: "90dvh",
       content: this
     });
