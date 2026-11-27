@@ -111,6 +111,42 @@ class UICollapse extends HTMLElement {
             transition: grid-template-rows var(--collapse-duration, 240ms) var(--collapse-easing, ease);
           }
 
+          @media (min-width: 601px) {
+            :host-context(app-sidebar.collapsed)[flyout] .panel {
+              position: fixed;
+              z-index: 1100;
+              left: var(--flyout-left, 72px);
+              top: var(--flyout-top, 12px);
+              width: 260px;
+              max-width: calc(100vw - 84px);
+              box-sizing: border-box;
+              grid-template-rows: 1fr;
+              padding: 12px;
+              border: 1px solid var(--border-color);
+              border-radius: 10px;
+              background: var(--bg-2);
+              color: var(--text-primary);
+              box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+            }
+
+            :host-context(app-sidebar.collapsed)[flyout] .panel-inner {
+              max-height: calc(100dvh - 48px);
+              overflow: auto;
+              scrollbar-width: thin;
+            }
+
+            :host-context(app-sidebar.collapsed)[flyout] .content {
+              margin: 0;
+              padding: 0;
+              border: 0;
+            }
+
+            :host-context(app-sidebar.collapsed)[flyout] .content ::slotted(.sidebar-section-list) {
+              max-height: none;
+              overflow: visible;
+            }
+          }
+
           :host([open]) .panel {
             grid-template-rows: 1fr;
           }
@@ -147,9 +183,47 @@ class UICollapse extends HTMLElement {
       `;
       this.shadowRoot.querySelector('.toggle').addEventListener('click', this.onToggleClick);
       this.shadowRoot.querySelector('slot[name="label"]').addEventListener('slotchange', () => this.sync());
+
+      this.flyoutPanel = this.shadowRoot.querySelector('.panel');
+      this.flyoutTimer = null;
+      this.handleFlyoutEnter = () => this.showFlyout();
+      this.handleFlyoutLeave = () => this.scheduleFlyoutClose();
+      this.flyoutPanel.addEventListener('pointerenter', () => clearTimeout(this.flyoutTimer));
+      this.flyoutPanel.addEventListener('pointerleave', this.handleFlyoutLeave);
+      this.addEventListener('pointerenter', this.handleFlyoutEnter);
+      this.addEventListener('pointerleave', this.handleFlyoutLeave);
     }
 
     this.sync();
+  }
+
+  showFlyout() {
+    if (window.matchMedia('(max-width: 600px)').matches ||
+        !this.closest('app-sidebar.collapsed')) return;
+
+    clearTimeout(this.flyoutTimer);
+    this.setAttribute('flyout', '');
+    const rect = this.getBoundingClientRect();
+    const panel = this.flyoutPanel;
+
+    this.style.setProperty('--flyout-left', String(Math.max(8, rect.right + 8)) + 'px');
+    this.style.setProperty('--flyout-top', String(Math.max(12, rect.top)) + 'px');
+
+    requestAnimationFrame(() => {
+      if (!this.hasAttribute('flyout')) return;
+      const panelRect = panel.getBoundingClientRect();
+      const left = Math.min(rect.right + 8, window.innerWidth - panelRect.width - 8);
+      const top = Math.max(12, Math.min(rect.top, window.innerHeight - panelRect.height - 12));
+      this.style.setProperty('--flyout-left', String(Math.max(8, left)) + 'px');
+      this.style.setProperty('--flyout-top', String(top) + 'px');
+    });
+  }
+
+  scheduleFlyoutClose() {
+    clearTimeout(this.flyoutTimer);
+    this.flyoutTimer = setTimeout(() => {
+      this.removeAttribute('flyout');
+    }, 140);
   }
 
   attributeChangedCallback() {
@@ -171,6 +245,10 @@ class UICollapse extends HTMLElement {
       composed: true,
       detail: { open: this.isOpen }
     }));
+  }
+
+  disconnectedCallback() {
+    clearTimeout(this.flyoutTimer);
   }
 
   sync() {
