@@ -68,6 +68,20 @@ const convertValue = (parsed, targetBase) => {
   return (sign < 0n ? "-" : "") + whole + (fraction ? "." + fraction : "") + (remainder !== 0n ? "…" : "");
 };
 
+const formatValue = (value, base) => {
+  if (!value || !groupDigits?.checked) return value;
+  const sign = /^[+-]/.test(value) ? value[0] : "";
+  let body = sign ? value.slice(1) : value;
+  const prefix = getBasePrefix(base);
+  const hasPrefix = prefix && body.toUpperCase().startsWith(prefix);
+  const head = hasPrefix ? body.slice(0, prefix.length) : "";
+  if (hasPrefix) body = body.slice(prefix.length);
+  const [integer, fraction] = body.split(".");
+  const groupedInteger = integer.replace(/\B(?=(\w{4})+(?!\w))/g, " ");
+  const groupedFraction = fraction === undefined ? "" : "." + fraction.replace(/(.{4})/g, "$1 ").trim();
+  return sign + head + groupedInteger + groupedFraction;
+};
+
 const init = () => {
   cleanup?.();
   const root = $("#tool.base-converter");
@@ -76,6 +90,7 @@ const init = () => {
   const message = $("#conversion-message", root);
   const addSelect = $("#add-base-select", root);
   const addButton = $("#add-base-button", root);
+  const groupDigits = $("#group-digits", root);
   const controller = new AbortController();
   const {signal} = controller;
   const bases = [2, 3, 8, 10, 16, 36];
@@ -109,7 +124,7 @@ const init = () => {
       results.querySelectorAll(".result-row").forEach(targetRow => {
         if (targetRow === row) return;
         const targetInput = $(".result-value", targetRow);
-        targetInput.value = convertValue(parsed, Number(targetRow.dataset.base));
+        targetInput.value = formatValue(convertValue(parsed, Number(targetRow.dataset.base)), Number(targetRow.dataset.base));
         targetInput.classList.remove("is-error");
         $('[data-action="copy"]', targetRow).disabled = false;
       });
@@ -161,6 +176,19 @@ const init = () => {
     if (!isAllowedValue(nextValue, Number(input.closest(".result-row").dataset.base))) {
       event.preventDefault();
     }
+  }, {signal});
+
+  results.addEventListener("focusout", event => {
+    const input = event.target;
+    if (!input.matches(".result-value") || !input.value) return;
+    const base = Number(input.closest(".result-row").dataset.base);
+    input.value = formatValue(input.value.replace(/\s+/g, ""), base);
+    updateFrom(input);
+  }, {signal});
+
+  groupDigits.addEventListener("change", () => {
+    const source = [...results.querySelectorAll(".result-row")].find(row => $(".result-value", row).value.trim());
+    if (source) updateFrom($(".result-value", source));
   }, {signal});
 
   results.addEventListener("input", event => {
