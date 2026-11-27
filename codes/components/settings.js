@@ -57,11 +57,25 @@ class UISettings extends HTMLElement {
             <p>UsefulToolsの配色を設定します。</p>
             <span class="status" role="status" aria-live="polite">設定を読み込み中...</span>
           </section>
+          <section class="setting">
+            <label for="accent-color">テーマカラー</label>
+            <select id="accent-color" disabled>
+              <option value="green">グリーン（デフォルト）</option>
+              <option value="blue">ブルー</option>
+              <option value="red">レッド</option>
+              <option value="purple">パープル</option>
+              <option value="orange">オレンジ</option>
+              <option value="pink">ピンク</option>
+            </select>
+            <p>アクセントカラーを変更します。</p>
+          </section>
         </section>
       `;
       this.themeSelect = this.shadowRoot.querySelector("#theme");
       this.status = this.shadowRoot.querySelector(".status");
+      this.accentSelect = this.shadowRoot.querySelector("#accent-color");
       this.themeSelect.addEventListener("change", () => this.saveTheme());
+      this.accentSelect.addEventListener("change", () => this.saveAccentColor());
     }
     window.addEventListener("spa:storage", this.handleStorage);
     this.loadTheme();
@@ -80,17 +94,39 @@ class UISettings extends HTMLElement {
       const db = await getDatabase();
       const record = await db.store("settings").get("theme");
       this.themeSelect.value = record?.value || "system";
+      const accent = await db.store("settings").get("accentColor");
+      this.accentSelect.value = accent?.value || "green";
       this.themeSelect.disabled = false;
+      this.accentSelect.disabled = false;
       this.status.textContent = "";
       this.unsubscribe?.();
       this.unsubscribe = db.on("change", async (event) => {
         if (!event.stores?.includes("settings")) return;
         const saved = await db.store("settings").get("theme");
         if (saved) this.themeSelect.value = saved.value;
+        const accent = await db.store("settings").get("accentColor");
+        this.accentSelect.value = accent?.value || "green";
       });
     } catch (error) {
       this.status.textContent = "設定を読み込めませんでした";
       console.error("[settings] テーマ設定の読み込みに失敗しました。", error);
+    }
+  }
+
+  async saveAccentColor() {
+    const value = this.accentSelect.value;
+    this.accentSelect.disabled = true;
+    this.status.textContent = "保存中...";
+    try {
+      const getDatabase = window.spaRouter.commonStorage.get("getDatabase");
+      const db = await getDatabase();
+      await db.store("settings").put({ key: "accentColor", value });
+      this.status.textContent = "保存しました";
+    } catch (error) {
+      this.status.textContent = "保存に失敗しました";
+      console.error("[settings] テーマカラーの保存に失敗しました。", error);
+    } finally {
+      this.accentSelect.disabled = false;
     }
   }
 
