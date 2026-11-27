@@ -46,7 +46,7 @@ button:not(.nostyle) {
   padding: 12px 24px;
   border-radius: var(--radius);
   background: var(--bg-2);
-  border: 0;
+  border: 1px solid var(--border-color);
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
