@@ -26,6 +26,10 @@ class Side extends HTMLElement {
     display: none;
   }
 
+  :host(.collapsed) .sidebar-sections {
+    overflow: visible;
+  }
+
   :host(.collapsed) .sidebar {
     padding: 24px 0;
   }
