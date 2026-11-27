@@ -420,7 +420,7 @@ class Side extends HTMLElement {
         let iconName = '';
         if (typeof item.icon === 'string') {
           const value = item.icon.trim();
-          const match = value.match(/^<i\\s+data-lucide=["']([^"']+)["']\\s*><\\/i>$/);
+          const match = value.match(/^<i[ ]+data-lucide=["']([^"']+)["'][ ]*><\\/i>$/);
           iconName = match ? match[1] : value;
         }
 
