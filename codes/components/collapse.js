@@ -70,7 +70,8 @@ class UICollapse extends HTMLElement {
               padding: .5rem 0;
             }
 
-            :host-context(app-sidebar.collapsed) .chevron {
+            :host-context(app-sidebar.collapsed) .chevron,
+            :host-context(app-sidebar.collapsed) .toggle::before {
               display: none;
             }
 
