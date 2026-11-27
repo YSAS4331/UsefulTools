@@ -86,18 +86,8 @@ class header extends HTMLElement {
     });
 
     this.querySelector("#settings-button").addEventListener("click", () => {
-      const modals = window.spaRouter?.commonStorage?.get("Modals");
-      if (!modals) return;
-
-      const content = document.createElement("div");
-      content.textContent = "設定項目はまだありません。";
-
-      const modal = modals.create("settings", {
-        title: "設定",
-        dialogWidth: "36rem",
-        content
-      });
-      modal.open();
+      const settings = document.createElement("ui-settings");
+      settings.open();
     });
   }
 }
