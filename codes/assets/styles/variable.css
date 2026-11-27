@@ -75,3 +75,53 @@ html.dark {
   --glass-border-1: rgba(255, 255, 255, 0.10);
   --glass-border-2: rgba(255, 255, 255, 0.16);
 }
+
+html.blue {
+  --accent: #60a5fa;
+  --accent-strong: #3b82f6;
+  --accent-border: rgba(96, 165, 250, 0.4);
+  --accent-border-strong: rgba(59, 130, 246, 0.6);
+  --accent-glow: 0 0 12px rgba(59, 130, 246, 0.16);
+  --button-primary-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  --button-primary-shadow-hover: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+
+html.red {
+  --accent: #f87171;
+  --accent-strong: #ef4444;
+  --accent-border: rgba(248, 113, 113, 0.4);
+  --accent-border-strong: rgba(239, 68, 68, 0.6);
+  --accent-glow: 0 0 12px rgba(239, 68, 68, 0.16);
+  --button-primary-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  --button-primary-shadow-hover: 0 6px 16px rgba(239, 68, 68, 0.3);
+}
+
+html.purple {
+  --accent: #c084fc;
+  --accent-strong: #a855f7;
+  --accent-border: rgba(192, 132, 252, 0.4);
+  --accent-border-strong: rgba(168, 85, 247, 0.6);
+  --accent-glow: 0 0 12px rgba(168, 85, 247, 0.16);
+  --button-primary-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+  --button-primary-shadow-hover: 0 6px 16px rgba(168, 85, 247, 0.3);
+}
+
+html.orange {
+  --accent: #fb923c;
+  --accent-strong: #f97316;
+  --accent-border: rgba(251, 146, 60, 0.4);
+  --accent-border-strong: rgba(249, 115, 22, 0.6);
+  --accent-glow: 0 0 12px rgba(249, 115, 22, 0.16);
+  --button-primary-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+  --button-primary-shadow-hover: 0 6px 16px rgba(249, 115, 22, 0.3);
+}
+
+html.pink {
+  --accent: #f472b6;
+  --accent-strong: #ec4899;
+  --accent-border: rgba(244, 114, 182, 0.4);
+  --accent-border-strong: rgba(236, 72, 153, 0.6);
+  --accent-glow: 0 0 12px rgba(236, 72, 153, 0.16);
+  --button-primary-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+  --button-primary-shadow-hover: 0 6px 16px rgba(236, 72, 153, 0.3);
+}
