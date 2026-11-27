@@ -227,6 +227,22 @@ const init = () => {
     initFavorites(favoriteBtn, window.spaRouter.commonStorage, token);
   }
 
+  const storage = window.spaRouter?.commonStorage;
+  const toolIcon = $(".tool-icon");
+  if (toolIcon && storage?.get("toolsPromise")) {
+    storage.get("toolsPromise").then((registry) => {
+      if (token !== lifecycle || !toolIcon.isConnected) return;
+      const tool = findCurrentTool(registry);
+      if (!tool?.icon) return;
+      toolIcon.setAttribute("data-lucide", tool.icon);
+      const create = storage.get("createIcons");
+      const icons = storage.get("lucideIcons");
+      if (create && icons) create({ icons, root: toolIcon.parentElement });
+    }).catch((error) => {
+      console.error("[tools] ツールアイコンの読み込みに失敗しました。", error);
+    });
+  }
+
   const setting = $("#page-settings");
 
   if (setting) {
