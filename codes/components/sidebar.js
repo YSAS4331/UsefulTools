@@ -359,8 +359,9 @@ class Side extends HTMLElement {
     });
   }
 
-  createSectionRenderer({ list, store, emptyClass, emptyText, timestampKey }) {
+  createSectionRenderer({ list, store, registry, emptyClass, emptyText, timestampKey }) {
     const nodes = new Map();
+    const metadataById = new Map(Object.values(registry || {}).map((tool) => [String(tool.id), tool]));
     let emptyMessage = list.querySelector('.' + emptyClass);
 
     return async (path = location.pathname) => {
@@ -393,7 +394,12 @@ class Side extends HTMLElement {
       emptyMessage?.remove();
       emptyMessage = null;
 
-      saved.forEach((item, index) => {
+      saved.forEach((savedItem, index) => {
+        const metadata = metadataById.get(String(savedItem.id)) || {};
+        const item = { ...metadata, ...savedItem };
+        for (const key of ['key', 'title', 'description', 'url', 'icon']) {
+          if (!item[key] && metadata[key]) item[key] = metadata[key];
+        }
         const id = String(item.id);
         let link = nodes.get(id);
         if (!link) {
@@ -484,10 +490,16 @@ class Side extends HTMLElement {
       const db = await dbPromise;
       if (token !== this.favoriteInitToken || !this.isConnected) return;
 
-      const favorites = db.store('favorite');
+      const [favorites, registry] = await Promise.all([
+        Promise.resolve(db.store('favorite')),
+        storage.get('toolsPromise')
+      ]);
+      if (token !== this.favoriteInitToken || !this.isConnected) return;
+
       const render = this.createSectionRenderer({
         list: this.favoriteList,
         store: favorites,
+        registry,
         emptyClass: 'sidebar-favorite-empty',
         emptyText: 'お気に入りはまだありません。\n気に入ったツールを追加すると、ここに表示されます。',
         timestampKey: 'addedAt'
@@ -547,6 +559,7 @@ class Side extends HTMLElement {
       const render = this.createSectionRenderer({
         list: this.historyList,
         store: history,
+        registry,
         emptyClass: 'sidebar-history-empty',
         emptyText: '履歴はまだありません。\nツールを開くと、ここに表示されます。',
         timestampKey: 'visitedAt'
