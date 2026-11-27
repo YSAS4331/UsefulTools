@@ -14,8 +14,23 @@ class UISettings extends HTMLElement {
       this.shadowRoot.innerHTML = `
         <style>
           :host { display: block; color: var(--text-primary); }
-          .setting { display: grid; gap: .55rem; padding: 1.25rem 0; }
-          .setting + .setting { border-top: 1px solid var(--border-color); }
+          .tabs {
+            display: flex; gap: .35rem; margin: 0 -1.25rem;
+            padding: 0 1.25rem; border-bottom: 1px solid var(--border-color);
+          }
+          .tab {
+            position: relative; padding: .8rem .9rem; border: 0;
+            background: transparent; color: var(--text-secondary);
+            font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer;
+          }
+          .tab[aria-selected="true"] { color: var(--text-primary); }
+          .tab[aria-selected="true"]::after {
+            content: ""; position: absolute; right: .65rem; bottom: -1px; left: .65rem;
+            height: 2px; border-radius: 2px 2px 0 0; background: var(--accent);
+          }
+          .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 6px; }
+          .tab-panel { padding-top: 1.25rem; }
+          .setting { display: grid; gap: .55rem; padding: .5rem 0; }
           label { font-size: .92rem; font-weight: 600; }
           p { margin: 0; color: var(--text-secondary); font-size: .82rem; line-height: 1.5; }
           select {
@@ -26,15 +41,22 @@ class UISettings extends HTMLElement {
           select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
           .status { min-height: 1.2em; color: var(--text-tertiary); font-size: .78rem; }
         </style>
-        <section class="setting">
-          <label for="theme">テーマ</label>
-          <select id="theme" disabled>
-            <option value="system">システム設定に合わせる</option>
-            <option value="light">ライト</option>
-            <option value="dark">ダーク</option>
-          </select>
-          <p>UsefulToolsの配色を設定します。</p>
-          <span class="status" role="status" aria-live="polite">設定を読み込み中...</span>
+        <nav class="tabs" role="tablist" aria-label="設定カテゴリ">
+          <button class="tab" id="appearance-tab" type="button" role="tab"
+            aria-selected="true" aria-controls="appearance-panel">見た目</button>
+        </nav>
+        <section class="tab-panel" id="appearance-panel" role="tabpanel"
+          aria-labelledby="appearance-tab">
+          <section class="setting">
+            <label for="theme">テーマ</label>
+            <select id="theme" disabled>
+              <option value="system">システム設定に合わせる</option>
+              <option value="light">ライト</option>
+              <option value="dark">ダーク</option>
+            </select>
+            <p>UsefulToolsの配色を設定します。</p>
+            <span class="status" role="status" aria-live="polite">設定を読み込み中...</span>
+          </section>
         </section>
       `;
       this.themeSelect = this.shadowRoot.querySelector("#theme");
@@ -99,7 +121,7 @@ class UISettings extends HTMLElement {
     const modal = modals.create("settings", {
       title: "設定",
       dialogWidth: "36rem",
-      sheetHeight: "75dvh",
+      sheetHeight: "90dvh",
       content: this
     });
     modal.open();
