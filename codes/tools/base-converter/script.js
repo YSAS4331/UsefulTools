@@ -120,9 +120,14 @@ const init = () => {
   };
 
   const isAllowedValue = (value, base) => {
+    let normalized = value.replace(/\\s+/g, "").replaceAll("_", "").toUpperCase();
+    if (normalized[0] === "+" || normalized[0] === "-") normalized = normalized.slice(1);
+    const prefix = BASE_PREFIXES.get(base);
+    if (prefix && prefix.startsWith(normalized) && normalized.length <= prefix.length) return true;
+    if (prefix && normalized.startsWith(prefix)) normalized = normalized.slice(prefix.length);
     let decimalPoint = false;
-    for (let index = 0; index < value.length; index++) {
-      const char = value[index];
+    for (let index = 0; index < normalized.length; index++) {
+      const char = normalized[index];
       if (char === "+" || char === "-") {
         if (index !== 0) return false;
         continue;
@@ -196,7 +201,19 @@ const init = () => {
     const value = $(".result-value", row).value;
     if (!value) return;
     try {
-      await navigator.clipboard.writeText(value);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+      } else {
+        const copyInput = document.createElement("textarea");
+        copyInput.value = value;
+        copyInput.style.position = "fixed";
+        copyInput.style.opacity = "0";
+        document.body.append(copyInput);
+        copyInput.select();
+        const copied = document.execCommand("copy");
+        copyInput.remove();
+        if (!copied) throw new Error("copy failed");
+      }
       button.innerHTML = makeIcon("check");
       button.classList.add("is-copied");
       refreshIcons();
