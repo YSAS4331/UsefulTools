@@ -33,9 +33,10 @@ class UISettings extends HTMLElement {
       <style>
         :host { display:block; color:var(--text-primary); }
         .tabs {
+          position:sticky; top:-1.25rem; z-index:5;
           display:flex; gap:.2rem; margin:0 -1.25rem;
           padding:0 1.25rem; border-bottom:1px solid var(--border-color);
-          overflow-x:auto;
+          background:var(--bg-2); overflow-x:auto; overflow-y:hidden;
         }
         .tab {
           position:relative; flex:none; padding:.65rem .8rem; border:0;
