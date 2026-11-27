@@ -92,6 +92,7 @@ class UISettings extends HTMLElement {
     const modal = modals.create("settings", {
       title: "設定",
       dialogWidth: "36rem",
+      sheetHeight: "75dvh",
       content: this
     });
 
