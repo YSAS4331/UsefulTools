@@ -494,24 +494,10 @@ class Side extends HTMLElement {
     const token = ++this.favoriteInitToken;
 
     try {
-      const LibDB = storage.get('LibDB');
-      if (!LibDB) return;
+      const getDatabase = storage.get('getDatabase');
+      if (!getDatabase) return;
 
-      let dbPromise = storage.get('favoriteDBPromise');
-      if (!dbPromise) {
-        const db = new LibDB('UsefulTools', 'auto', {
-          favorite: { keyPath: 'id' },
-          history: { keyPath: 'id' }
-        });
-        dbPromise = db.ready.then(() => db).catch((error) => {
-          storage.delete('favoriteDBPromise');
-          db.close();
-          throw error;
-        });
-        storage.set('favoriteDBPromise', dbPromise);
-      }
-
-      const db = await dbPromise;
+      const db = await getDatabase();
       if (token !== this.favoriteInitToken || !this.isConnected) return;
 
       const [favorites, registry] = await Promise.all([
@@ -558,23 +544,11 @@ class Side extends HTMLElement {
     const token = ++this.historyInitToken;
 
     try {
-      const LibDB = storage.get('LibDB');
-      let dbPromise = storage.get('favoriteDBPromise');
-      if (!dbPromise) {
-        const db = new LibDB('UsefulTools', 'auto', {
-          favorite: { keyPath: 'id' },
-          history: { keyPath: 'id' }
-        });
-        dbPromise = db.ready.then(() => db).catch((error) => {
-          storage.delete('favoriteDBPromise');
-          db.close();
-          throw error;
-        });
-        storage.set('favoriteDBPromise', dbPromise);
-      }
+      const getDatabase = storage.get('getDatabase');
+      if (!getDatabase) return;
 
       const [db, registry] = await Promise.all([
-        dbPromise,
+        getDatabase(),
         storage.get('toolsPromise')
       ]);
       if (token !== this.historyInitToken || !this.isConnected) return;
@@ -618,7 +592,7 @@ class Side extends HTMLElement {
     try {
       const [registry, db] = await Promise.all([
         suppliedRegistry ? Promise.resolve(suppliedRegistry) : storage.get('toolsPromise'),
-        suppliedDb ? Promise.resolve(suppliedDb) : storage.get('favoriteDBPromise')
+        suppliedDb ? Promise.resolve(suppliedDb) : storage.get('getDatabase')()
       ]);
       const pathname = new URL(path, location.origin).pathname.replace(/\/+$/, '') || '/';
       const tool = Object.entries(registry || {}).map(([key, item]) => ({ key, ...item }))
