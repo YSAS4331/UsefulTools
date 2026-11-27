@@ -61,10 +61,10 @@ class header extends HTMLElement {
 <header id="global-header">
   <a href="/">UsefulTools</a>
   <div class="header-actions">
-    <button class="header-action" id="settings-button" type="button" aria-label="設定" title="設定">
+    <button class="header-action nostyle" id="settings-button" type="button" aria-label="設定" title="設定">
       <i data-lucide="settings"></i>
     </button>
-    <button class="header-action" id="hamburger" type="button" aria-label="メニュー" title="メニュー">
+    <button class="header-action nostyle" id="hamburger" type="button" aria-label="メニュー" title="メニュー">
       <i data-lucide="menu"></i>
     </button>
   </div>
