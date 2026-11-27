@@ -88,7 +88,9 @@ class Side extends HTMLElement {
 }
 
 .sidebar-section-list a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
   overflow: hidden;
   padding: .35rem .65rem;
   border-radius: 6px;
@@ -98,6 +100,22 @@ class Side extends HTMLElement {
   white-space: nowrap;
   text-decoration: none;
   transition: background-color .18s ease, color .18s ease;
+}
+
+.sidebar-item-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+}
+
+.sidebar-item-icon[hidden] {
+  display: none;
+}
+
+.sidebar-item-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-section-list a:hover {
@@ -194,9 +212,16 @@ class Side extends HTMLElement {
     this.collapses = [...this.querySelectorAll('ui-collapse')];
     this.handleCollapseEnter = (event) => this.showFlyout(event.currentTarget);
     this.handleCollapseLeave = () => this.scheduleFlyoutClose();
+    this.handleCollapsedIconClick = (event) => {
+      if (!this.mediaQuery?.matches && this.classList.contains('collapsed')) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
     this.collapses.forEach((collapse) => {
       collapse.addEventListener('mouseenter', this.handleCollapseEnter);
       collapse.addEventListener('mouseleave', this.handleCollapseLeave);
+      collapse.addEventListener('click', this.handleCollapsedIconClick, true);
     });
     this.favoriteInitToken = 0;
     this.historyInitToken = 0;
@@ -280,6 +305,11 @@ class Side extends HTMLElement {
     const list = sourceList.cloneNode(true);
     list.classList.remove('sidebar-favorite-list', 'sidebar-history-list');
     flyout.append(list);
+
+    const storage = window.spaRouter?.commonStorage;
+    const createIcons = storage?.get('createIcons');
+    const icons = storage?.get('lucideIcons');
+    if (createIcons && icons) createIcons({ icons, root: flyout });
 
     flyout.addEventListener('mouseenter', () => clearTimeout(this.flyoutTimer));
     flyout.addEventListener('mouseleave', () => this.scheduleFlyoutClose());
@@ -368,18 +398,34 @@ class Side extends HTMLElement {
         let link = nodes.get(id);
         if (!link) {
           link = document.createElement('a');
-          link.append(document.createElement('span'));
+          const icon = document.createElement('i');
+          icon.className = 'sidebar-item-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          const title = document.createElement('span');
+          title.className = 'sidebar-item-title';
+          link.append(icon, title);
           nodes.set(id, link);
         }
 
         const itemPath = new URL(item.url, location.origin).pathname.replace(/\/+$/, '') || '/';
         const title = item.title || item.key || '名称未設定';
         const description = item.description || title;
+        const icon = link.querySelector('.sidebar-item-icon');
+        const titleElement = link.querySelector('.sidebar-item-title');
 
         if (link.getAttribute('href') !== item.url) link.href = item.url;
         if (link.title !== description) link.title = description;
-        if (link.firstElementChild.textContent !== title) {
-          link.firstElementChild.textContent = title;
+        if (titleElement.textContent !== title) titleElement.textContent = title;
+
+        const iconName = typeof item.icon === 'string' ? item.icon.trim() : '';
+        if (iconName) {
+          if (icon.getAttribute('data-lucide') !== iconName) {
+            icon.setAttribute('data-lucide', iconName);
+          }
+          icon.hidden = false;
+        } else {
+          icon.removeAttribute('data-lucide');
+          icon.hidden = true;
         }
 
         if (itemPath === currentPath) {
@@ -395,6 +441,11 @@ class Side extends HTMLElement {
         const current = list.children[index];
         if (current !== link) list.insertBefore(link, current || null);
       });
+
+      const storage = window.spaRouter?.commonStorage;
+      const createIcons = storage?.get('createIcons');
+      const icons = storage?.get('lucideIcons');
+      if (createIcons && icons) createIcons({ icons, root: list });
     };
   }
 
@@ -657,6 +708,7 @@ class Side extends HTMLElement {
     this.collapses?.forEach((collapse) => {
       collapse.removeEventListener('mouseenter', this.handleCollapseEnter);
       collapse.removeEventListener('mouseleave', this.handleCollapseLeave);
+      collapse.removeEventListener('click', this.handleCollapsedIconClick, true);
     });
     this.hideFlyout();
     this.removeEventListener('click', this.handleActiveLinkClick);
