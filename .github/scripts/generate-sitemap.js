@@ -63,7 +63,7 @@ function getLastModified(filePath) {
       { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
     ).trim();
 
-    return date && !Number.isNaN(Date.parse(date)) ? date : null;
+    return date && !Number.isNaN(Date.parse(date)) ? date.slice(0, 10) : null;
   } catch {
     return null;
   }
