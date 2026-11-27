@@ -119,7 +119,7 @@ const init = () => {
       currentResult = convertValue(parsed, to);
       resultValue.textContent = currentResult;
       resultValue.classList.remove("is-error");
-      message.textContent = "変換しました";
+      message.textContent = "";
       message.classList.remove("is-error");
       copyButton.disabled = false;
     } catch (error) {
