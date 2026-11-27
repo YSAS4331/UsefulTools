@@ -112,6 +112,7 @@ class UISettings extends HTMLElement {
         <button class="tab" id="data-tab" type="button" role="tab" aria-selected="false" aria-controls="data-panel">データ管理</button>
       </nav>
       <section class="tab-panel" id="appearance-panel" role="tabpanel" aria-labelledby="appearance-tab">
+        <div class="appearance-settings" style="display:grid; gap:.65rem;">
         <ui-collapse label="テーマ" group="appearance">
           <div class="setting">
             <div class="choices" id="theme" role="radiogroup" aria-label="テーマ">
@@ -135,6 +136,7 @@ class UISettings extends HTMLElement {
             <p>アクセントカラーを変更します。</p>
           </div>
         </ui-collapse>
+        </div>
       </section>
       <section class="tab-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab" hidden>
         <section class="section">
