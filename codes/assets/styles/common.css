@@ -85,7 +85,7 @@ app-sidebar {
 
 @media (min-width: 601px) {
   app-sidebar.collapsed {
-    width: 0;
+    width: 64px;
   }
 }
 
