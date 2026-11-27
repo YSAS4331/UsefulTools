@@ -103,9 +103,20 @@ class Side extends HTMLElement {
 }
 
 .sidebar-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 1rem;
   height: 1rem;
   flex: 0 0 1rem;
+  line-height: 0;
+}
+
+.sidebar-item-icon svg {
+  display: block;
+  width: .9rem;
+  height: .9rem;
+  flex: none;
 }
 
 .sidebar-item-icon[hidden] {
