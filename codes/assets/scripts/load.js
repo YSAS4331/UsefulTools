@@ -30,8 +30,29 @@ const setupCommonStorage = () => {
   const cs = window.spaRouter?.commonStorage;
   if (!cs) return false;
 
+  const getDatabase = () => {
+    let promise = cs.get("databasePromise");
+    if (!promise) {
+      const db = new LibDB("UsefulTools", "auto", {
+        favorite: { keyPath: "id" },
+        history: { keyPath: "id" },
+        settings: { keyPath: "key" }
+      });
+      promise = db.ready.then(() => db).catch((error) => {
+        cs.delete("databasePromise");
+        cs.delete("favoriteDBPromise");
+        db.close();
+        throw error;
+      });
+      cs.set("databasePromise", promise);
+      cs.set("favoriteDBPromise", promise);
+    }
+    return promise;
+  };
+
   cs.set("createIcons", createIcons);
   cs.set("lucideIcons", icons);
+  cs.set("getDatabase", getDatabase);
   cs.set("LibDB", LibDB);
   cs.set("LibDBError", LibDBError);
   cs.set("Modals", modals);
@@ -49,6 +70,34 @@ const setupCommonStorage = () => {
     });
 
   cs.set("toolsPromise", toolsPromise);
+
+  let currentTheme = "system";
+  let systemThemeQuery;
+  const applyTheme = (value) => {
+    const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+    document.documentElement.classList.toggle("dark", value === "dark" || (value === "system" && prefersDark));
+  };
+  const onSystemThemeChange = () => {
+    if (currentTheme === "system") applyTheme("system");
+  };
+  systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+  systemThemeQuery?.addEventListener?.("change", onSystemThemeChange);
+
+  getDatabase()
+    .then(async (db) => {
+      const settings = db.store("settings");
+      const saved = await settings.get("theme");
+      currentTheme = saved?.value || "system";
+      applyTheme(currentTheme);
+      db.on("change", async (event) => {
+        if (!event.stores?.includes("settings")) return;
+        const record = await settings.get("theme");
+        currentTheme = record?.value || "system";
+        applyTheme(currentTheme);
+      });
+    })
+    .catch((error) => console.error("[theme] テーマ設定の読み込みに失敗しました。", error));
+
   toolsPromise.catch((error) => {
     console.error("[tools] ツール一覧の読み込みに失敗しました。", error);
   });
