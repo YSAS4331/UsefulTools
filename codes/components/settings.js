@@ -54,14 +54,16 @@ class UISettings extends HTMLElement {
         .tab-panel { padding-top:.85rem; }
         .tab-panel[hidden] { display:none; }
         .setting { display:grid; gap:.4rem; padding:.55rem 0 .8rem; }
-        label,.setting-title { font-size:.9rem; font-weight:600; }
         p { margin:0; color:var(--text-secondary); font-size:.8rem; line-height:1.5; }
-        select {
-          width:100%; box-sizing:border-box; padding:.55rem .7rem;
-          border:1px solid var(--border-color); border-radius:8px;
-          background:var(--bg); color:var(--text-primary); font:inherit;
+        .choices { display:grid; gap:.1rem; }
+        .choice {
+          display:flex; align-items:center; gap:.65rem; min-height:2.35rem;
+          padding:.35rem .5rem; border-radius:7px; color:var(--text-primary);
+          font-size:.86rem; font-weight:500; cursor:pointer;
         }
-        select:disabled { opacity:.6; }
+        .choice:hover { background:var(--bg-hover); }
+        .choice input { width:1rem; height:1rem; margin:0; accent-color:var(--accent); }
+        .choices:has(input:disabled) { opacity:.6; }
         .section {
           display:grid; gap:.55rem; padding:.8rem 0;
           border-bottom:1px solid var(--border-color);
@@ -112,24 +114,24 @@ class UISettings extends HTMLElement {
       <section class="tab-panel" id="appearance-panel" role="tabpanel" aria-labelledby="appearance-tab">
         <ui-collapse label="テーマ" group="appearance">
           <div class="setting">
-            <select id="theme" disabled aria-label="テーマ">
-              <option value="system">システム設定に合わせる</option>
-              <option value="light">ライト</option>
-              <option value="dark">ダーク</option>
-            </select>
+            <div class="choices" id="theme" role="radiogroup" aria-label="テーマ">
+              <label class="choice"><input type="radio" name="theme" value="system" disabled>システム設定に合わせる</label>
+              <label class="choice"><input type="radio" name="theme" value="light" disabled>ライト</label>
+              <label class="choice"><input type="radio" name="theme" value="dark" disabled>ダーク</label>
+            </div>
             <p>UsefulToolsの配色を設定します。</p>
           </div>
         </ui-collapse>
         <ui-collapse label="テーマカラー" group="appearance">
           <div class="setting">
-            <select id="accent-color" disabled aria-label="テーマカラー">
-              <option value="green">グリーン（デフォルト）</option>
-              <option value="blue">ブルー</option>
-              <option value="red">レッド</option>
-              <option value="purple">パープル</option>
-              <option value="orange">オレンジ</option>
-              <option value="pink">ピンク</option>
-            </select>
+            <div class="choices" id="accent-color" role="radiogroup" aria-label="テーマカラー">
+              <label class="choice"><input type="radio" name="accent-color" value="green" disabled>グリーン（デフォルト）</label>
+              <label class="choice"><input type="radio" name="accent-color" value="blue" disabled>ブルー</label>
+              <label class="choice"><input type="radio" name="accent-color" value="red" disabled>レッド</label>
+              <label class="choice"><input type="radio" name="accent-color" value="purple" disabled>パープル</label>
+              <label class="choice"><input type="radio" name="accent-color" value="orange" disabled>オレンジ</label>
+              <label class="choice"><input type="radio" name="accent-color" value="pink" disabled>ピンク</label>
+            </div>
             <p>アクセントカラーを変更します。</p>
           </div>
         </ui-collapse>
@@ -212,17 +214,25 @@ class UISettings extends HTMLElement {
       const db = await this.getDB();
       const record = await db.store("settings").get("theme");
       const accent = await db.store("settings").get("accentColor");
-      this.themeSelect.value = record?.value || "system";
-      this.accentSelect.value = accent?.value || "green";
-      this.themeSelect.disabled = false;
-      this.accentSelect.disabled = false;
+      this.themeSelect.querySelectorAll('input').forEach((input) => {
+        input.checked = input.value === (record?.value || "system");
+        input.disabled = false;
+      });
+      this.accentSelect.querySelectorAll('input').forEach((input) => {
+        input.checked = input.value === (accent?.value || "green");
+        input.disabled = false;
+      });
       this.unsubscribe?.();
       this.unsubscribe = db.on("change", async (event) => {
         if (!event.stores?.includes("settings") || !this.isConnected) return;
         const saved = await db.store("settings").get("theme");
         const savedAccent = await db.store("settings").get("accentColor");
-        this.themeSelect.value = saved?.value || "system";
-        this.accentSelect.value = savedAccent?.value || "green";
+        this.themeSelect.querySelectorAll('input').forEach((input) => {
+          input.checked = input.value === (saved?.value || "system");
+        });
+        this.accentSelect.querySelectorAll('input').forEach((input) => {
+          input.checked = input.value === (savedAccent?.value || "green");
+        });
       });
     } catch (error) {
       console.error("[settings] 設定の読み込みに失敗しました。", error);
@@ -230,26 +240,30 @@ class UISettings extends HTMLElement {
   }
 
   async saveAccentColor() {
-    this.accentSelect.disabled = true;
+    const inputs = [...this.accentSelect.querySelectorAll('input')];
+    inputs.forEach((input) => input.disabled = true);
     try {
       const db = await this.getDB();
-      await db.store("settings").put({ key: "accentColor", value: this.accentSelect.value });
+      const value = this.accentSelect.querySelector('input:checked')?.value || "green";
+      await db.store("settings").put({ key: "accentColor", value });
     } catch (error) {
       console.error("[settings] テーマカラーの保存に失敗しました。", error);
     } finally {
-      this.accentSelect.disabled = false;
+      inputs.forEach((input) => input.disabled = false);
     }
   }
 
   async saveTheme() {
-    this.themeSelect.disabled = true;
+    const inputs = [...this.themeSelect.querySelectorAll('input')];
+    inputs.forEach((input) => input.disabled = true);
     try {
       const db = await this.getDB();
-      await db.store("settings").put({ key: "theme", value: this.themeSelect.value });
+      const value = this.themeSelect.querySelector('input:checked')?.value || "system";
+      await db.store("settings").put({ key: "theme", value });
     } catch (error) {
       console.error("[settings] テーマ設定の保存に失敗しました。", error);
     } finally {
-      this.themeSelect.disabled = false;
+      inputs.forEach((input) => input.disabled = false);
     }
   }
 
