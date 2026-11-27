@@ -391,7 +391,13 @@ class UISettings extends HTMLElement {
         format: "UsefulTools-backup",
         version: 1,
         exportedAt: new Date().toISOString(),
-        data: { settings, favorites, history }
+        data: {
+          settings,
+          favorites: favorites.map(({ id }) => ({ id })),
+          history: history
+            .sort((a, b) => (b.visitedAt || 0) - (a.visitedAt || 0))
+            .map(({ id }) => ({ id }))
+        }
       };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
