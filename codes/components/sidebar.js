@@ -33,6 +33,7 @@ class Side extends HTMLElement {
 
   app-sidebar.collapsed .sidebar {
     padding: 24px 0;
+    overflow: visible;
   }
 
   app-sidebar.collapsed .sidebar-section {
