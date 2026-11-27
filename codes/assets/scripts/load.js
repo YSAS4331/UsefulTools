@@ -8,7 +8,7 @@ import "/components/sidebar.js";
 import "/components/header.js";
 import {
   createIcons, Menu, Settings, Star, Folders, Blocks, Info, Hash, Share2,
-  Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
+  Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, FileText, Maximize2, Minimize2, Upload,
   Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus,
   Copy, X, Check,
   ChevronDown, ChevronUp, ArrowLeft, FileAudio, ImagePlus, History
@@ -19,7 +19,7 @@ const modals = new Modals();
 
 const icons = {
   Menu, Settings, Star, Folders, Blocks, Info, Hash, Share2,
-  Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
+  Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, FileText, Maximize2, Minimize2, Upload,
   Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus,
   Copy, X, Check,
   ChevronDown, ChevronUp, ArrowLeft, FileAudio, ImagePlus, History
