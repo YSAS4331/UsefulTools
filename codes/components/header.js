@@ -1,5 +1,3 @@
-import { createIcons, Menu, Settings } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
-
 class header extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -23,7 +21,7 @@ class header extends HTMLElement {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .header-action {
@@ -32,17 +30,16 @@ class header extends HTMLElement {
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 1px solid transparent;
+  border: 0;
   border-radius: 10px;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+  transition: color .18s ease, background-color .18s ease;
 }
 
 .header-action:hover {
   background: var(--bg-hover);
-  border-color: var(--border-color);
   color: var(--text-primary);
 }
 
@@ -52,8 +49,8 @@ class header extends HTMLElement {
 }
 
 .header-action svg {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
 }
 
 @media (max-width: 600px) {
@@ -74,9 +71,9 @@ class header extends HTMLElement {
 </header>
     `;
 
-    const icons = window.spaRouter?.commonStorage?.get("createIcons");
-    if (icons) icons({ icons: { Menu, Settings }, attrs: { "stroke-width": 2 } });
-    else createIcons({ icons: { Menu, Settings } });
+    const createIcons = window.spaRouter?.commonStorage?.get("createIcons");
+    const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
+    if (createIcons && icons) createIcons({ icons });
 
     this.querySelector("#hamburger").addEventListener("click", () => {
       const sidebar = document.querySelector("app-sidebar");
@@ -89,7 +86,6 @@ class header extends HTMLElement {
       if (!modals) return;
 
       const content = document.createElement("div");
-      content.className = "settings-content";
       content.textContent = "設定項目はまだありません。";
 
       const modal = modals.create("settings", {
