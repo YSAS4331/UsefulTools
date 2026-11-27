@@ -77,8 +77,16 @@ button:not(.nostyle):focus-visible {
 
 app-sidebar {
   width: var(--sidebar-width);
+  min-width: 0;
   flex-shrink: 0;
-  transition: transform .25s ease
+  overflow: hidden;
+  transition: width .25s ease, transform .25s ease
+}
+
+@media (min-width: 601px) {
+  app-sidebar.collapsed {
+    width: 0;
+  }
 }
 
 .text-gradient {
