@@ -46,12 +46,7 @@ const parseValue = (input, base) => {
 
   let denominator = 1n;
   for (let i = 0; i < parts[1].length; i++) denominator *= BigInt(base);
-  return {
-    sign,
-    integer,
-    numerator: parseDigits(parts[1]),
-    denominator
-  };
+  return { sign, integer, numerator: parseDigits(parts[1]), denominator };
 };
 
 const integerToBase = (value, base) => {
@@ -82,8 +77,8 @@ const convertValue = (parsed, targetBase) => {
   }
 
   fraction = fraction.replace(/0+$/, "");
-  const prefix = sign < 0n ? "-" : "";
-  return prefix + whole + (fraction ? "." + fraction : "") + (remainder !== 0n ? "…" : "");
+  return (sign < 0n ? "-" : "") + whole +
+    (fraction ? "." + fraction : "") + (remainder !== 0n ? "…" : "");
 };
 
 const init = () => {
@@ -96,78 +91,103 @@ const init = () => {
   const sourceCustom = $("#source-custom-base", root);
   const targetCustom = $("#target-custom-base", root);
   const sourceValue = $("#source-value", root);
-  const resultValue = $("#result-value", root);
+  const targetValue = $("#target-value", root);
   const message = $("#conversion-message", root);
   const copyButton = $("#copy-result", root);
   const swapButton = $("#swap-bases", root);
   const controller = new AbortController();
   const { signal } = controller;
-  let currentResult = "";
+  let activeSide = "source";
+  let generatedValue = "";
+
+  const sides = {
+    source: { base: sourceBase, custom: sourceCustom, value: sourceValue },
+    target: { base: targetBase, custom: targetCustom, value: targetValue }
+  };
 
   const updateCustomInput = (select, input) => {
     input.hidden = select.value !== "custom";
   };
 
   const convert = () => {
+    const from = sides[activeSide];
+    const to = sides[activeSide === "source" ? "target" : "source"];
     updateCustomInput(sourceBase, sourceCustom);
     updateCustomInput(targetBase, targetCustom);
 
     try {
-      const from = parseBase(sourceBase, sourceCustom);
-      const to = parseBase(targetBase, targetCustom);
-      const parsed = parseValue(sourceValue.value, from);
-      currentResult = convertValue(parsed, to);
-      resultValue.textContent = currentResult;
-      resultValue.classList.remove("is-error");
+      const parsed = parseValue(from.value.value, parseBase(from.base, from.custom));
+      generatedValue = convertValue(parsed, parseBase(to.base, to.custom));
+      to.value.value = generatedValue;
+      to.value.classList.remove("is-error");
       message.textContent = "";
       message.classList.remove("is-error");
       copyButton.disabled = false;
     } catch (error) {
-      currentResult = "";
-      resultValue.textContent = "—";
-      resultValue.classList.add("is-error");
+      generatedValue = "";
+      to.value.value = "";
+      to.value.classList.add("is-error");
       message.textContent = error.message;
       message.classList.add("is-error");
       copyButton.disabled = true;
     }
   };
 
-  [sourceBase, targetBase, sourceCustom, targetCustom, sourceValue].forEach(element => {
-    element.addEventListener("input", convert, { signal });
-    element.addEventListener("change", convert, { signal });
+  sourceValue.addEventListener("input", () => {
+    activeSide = "source";
+    convert();
+  }, { signal });
+  targetValue.addEventListener("input", () => {
+    activeSide = "target";
+    convert();
+  }, { signal });
+
+  [sourceBase, sourceCustom].forEach(element => {
+    element.addEventListener("input", () => {
+      activeSide = "source";
+      convert();
+    }, { signal });
+    element.addEventListener("change", () => {
+      activeSide = "source";
+      convert();
+    }, { signal });
+  });
+  [targetBase, targetCustom].forEach(element => {
+    element.addEventListener("input", () => {
+      activeSide = "target";
+      convert();
+    }, { signal });
+    element.addEventListener("change", () => {
+      activeSide = "target";
+      convert();
+    }, { signal });
   });
 
   swapButton.addEventListener("click", () => {
-    const previousSource = sourceBase.value;
-    sourceBase.value = targetBase.value;
-    targetBase.value = previousSource;
-
-    const previousCustom = sourceCustom.value;
-    sourceCustom.value = targetCustom.value;
-    targetCustom.value = previousCustom;
-
-    sourceValue.value = currentResult.replace(/…$/, "");
+    [sourceBase.value, targetBase.value] = [targetBase.value, sourceBase.value];
+    [sourceCustom.value, targetCustom.value] = [targetCustom.value, sourceCustom.value];
+    [sourceValue.value, targetValue.value] = [targetValue.value, sourceValue.value];
+    activeSide = activeSide === "source" ? "target" : "source";
     convert();
-    sourceValue.focus();
   }, { signal });
 
   copyButton.addEventListener("click", async () => {
-    if (!currentResult) return;
+    if (!generatedValue) return;
     try {
-      await navigator.clipboard.writeText(currentResult);
-      copyButton.innerHTML = '<i data-lucide="check"></i>コピーしました';
+      await navigator.clipboard.writeText(generatedValue);
+      copyButton.innerHTML = '<i data-lucide="check"></i>';
       window.spaRouter?.commonStorage?.get("createIcons")?.({
         icons: window.spaRouter?.commonStorage?.get("lucideIcons")
       });
       setTimeout(() => {
         if (!copyButton.isConnected) return;
-        copyButton.innerHTML = '<i data-lucide="copy"></i>コピー';
+        copyButton.innerHTML = '<i data-lucide="copy"></i>';
         window.spaRouter?.commonStorage?.get("createIcons")?.({
           icons: window.spaRouter?.commonStorage?.get("lucideIcons")
         });
       }, 1400);
     } catch {
-      message.textContent = "コピーできませんでした。結果を選択してコピーしてください。";
+      message.textContent = "コピーできませんでした。入力欄からコピーしてください。";
       message.classList.add("is-error");
     }
   }, { signal });
