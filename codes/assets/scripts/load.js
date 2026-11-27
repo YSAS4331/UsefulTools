@@ -21,9 +21,25 @@ const icons = {
   ChevronDown, ChevronUp, ArrowLeft, FileAudio, ImagePlus, History
 };
 
-const setupIcons = () => {
-  createIcons({ icons });
+const setupIcons = (root = document.body) => {
+  createIcons({ icons, root });
 };
+
+const iconObserver = new MutationObserver((records) => {
+  const hasNewIcons = records.some(({ addedNodes }) =>
+    [...addedNodes].some((node) =>
+      node.nodeType === Node.ELEMENT_NODE &&
+      (node.matches("[data-lucide]") || node.querySelector("[data-lucide]"))
+    )
+  );
+
+  if (hasNewIcons) setupIcons();
+});
+
+iconObserver.observe(document.body, {
+  childList: true,
+  subtree: true
+});
 
 const setupCommonStorage = () => {
   const cs = window.spaRouter?.commonStorage;
