@@ -56,6 +56,7 @@
 }
 
 .base-field select,
+.converter-panel > select,
 .custom-base,
 .number-input {
   width: 100%;
@@ -68,7 +69,8 @@
   font: inherit;
 }
 
-.base-field select {
+.base-field select,
+.converter-panel > select {
   cursor: pointer;
 }
 
