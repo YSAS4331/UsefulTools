@@ -1,6 +1,8 @@
 class UICollapse extends HTMLElement {
+  static openList = new Set();
+
   static get observedAttributes() {
-    return ['label', 'duration', 'easing', 'open'];
+    return ['label', 'duration', 'easing', 'open', 'group'];
   }
 
   constructor() {
@@ -150,10 +152,22 @@ class UICollapse extends HTMLElement {
     }
 
     this.sync();
+    if (this.isOpen) this.registerOpen();
   }
 
-  attributeChangedCallback() {
-    if (this.isConnected) this.sync();
+  disconnectedCallback() {
+    this.constructor.openList.delete(this);
+  }
+
+  attributeChangedCallback(name) {
+    if (!this.isConnected) return;
+
+    if (name === 'open' || name === 'group') {
+      if (this.isOpen) this.registerOpen();
+      else this.constructor.openList.delete(this);
+    }
+
+    this.sync();
   }
 
   get isOpen() {
@@ -162,6 +176,21 @@ class UICollapse extends HTMLElement {
 
   set isOpen(value) {
     this.toggleAttribute('open', Boolean(value));
+  }
+
+  registerOpen() {
+    const openList = this.constructor.openList;
+    const group = this.getAttribute('group');
+
+    if (group) {
+      for (const item of openList) {
+        if (item !== this && item.isConnected && item.getAttribute('group') === group) {
+          item.isOpen = false;
+        }
+      }
+    }
+
+    openList.add(this);
   }
 
   onToggleClick() {
