@@ -33,28 +33,33 @@ class UISettings extends HTMLElement {
       <style>
         :host { display:block; color:var(--text-primary); }
         .tabs {
-          display:flex; gap:.35rem; margin:0 -1.25rem;
-          padding:0 1.25rem; border-bottom:1px solid var(--border-color);
-          overflow-x:auto;
+          display:flex; gap:.35rem; margin:0 0 1.25rem; padding:.3rem;
+          border:1px solid var(--border-color); border-radius:12px;
+          background:var(--bg); overflow-x:auto;
         }
         .tab {
-          position:relative; flex:none; padding:.8rem .9rem; border:0;
+          flex:1 0 auto; padding:.65rem 1rem; border:0; border-radius:9px;
           background:transparent; color:var(--text-secondary);
-          font:inherit; font-size:.9rem; font-weight:600; cursor:pointer;
+          font:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
+          transition:background-color .16s ease, color .16s ease;
         }
-        .tab[aria-selected="true"] { color:var(--text-primary); }
-        .tab[aria-selected="true"]::after {
-          content:""; position:absolute; right:.65rem; bottom:-1px; left:.65rem;
-          height:2px; border-radius:2px 2px 0 0; background:var(--accent);
+        .tab:hover { background:var(--bg-hover); color:var(--text-primary); }
+        .tab[aria-selected="true"] {
+          background:var(--bg-2); color:var(--text-primary);
+          box-shadow:0 1px 3px color-mix(in srgb, var(--text-primary) 12%, transparent);
         }
         .tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
           outline:2px solid var(--accent); outline-offset:2px;
         }
-        .tab-panel { padding-top:1.25rem; }
+        .tab-panel { display:grid; align-content:start; gap:1rem; }
         .tab-panel[hidden] { display:none; }
-        .setting { display:grid; gap:.55rem; padding:.5rem 0; }
-        label,.setting-title { font-size:.92rem; font-weight:600; }
-        p { margin:0; color:var(--text-secondary); font-size:.82rem; line-height:1.5; }
+        .setting {
+          display:grid; gap:.6rem; padding:1rem 1.1rem;
+          border:1px solid var(--border-color); border-radius:12px;
+          background:var(--bg);
+        }
+        label,.setting-title { font-size:.9rem; font-weight:650; }
+        p { margin:0; color:var(--text-secondary); font-size:.8rem; line-height:1.55; }
         select {
           width:100%; box-sizing:border-box; padding:.7rem .8rem;
           border:1px solid var(--border-color); border-radius:9px;
@@ -62,26 +67,30 @@ class UISettings extends HTMLElement {
         }
         select:disabled { opacity:.6; }
         .section {
-          display:grid; gap:.65rem; padding:1rem 0;
-          border-bottom:1px solid var(--border-color);
+          display:grid; gap:.7rem; padding:1rem 1.1rem;
+          border:1px solid var(--border-color); border-radius:12px;
+          background:var(--bg);
         }
-        .section:first-child { padding-top:0; }
-        .section:last-child { border-bottom:0; }
         .section-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-        .section-heading h3 { margin:0; font-size:.95rem; }
+        .section-heading h3, .section h3 { margin:0; font-size:.9rem; font-weight:650; }
         .muted { color:var(--text-tertiary); font-size:.78rem; }
         .action {
-          justify-self:start; padding:.55rem .8rem; border:1px solid var(--border-color);
-          border-radius:8px; background:var(--bg); color:var(--text-primary);
-          font:inherit; font-size:.84rem; cursor:pointer;
+          justify-self:start; padding:.55rem .85rem; border:1px solid var(--border-color);
+          border-radius:9px; background:var(--bg-2); color:var(--text-primary);
+          font:inherit; font-size:.82rem; font-weight:600; cursor:pointer;
+          transition:background-color .16s ease, border-color .16s ease;
         }
-        .action:hover { background:var(--bg-hover); }
+        .action:hover { background:var(--bg-hover); border-color:color-mix(in srgb, var(--accent) 35%, var(--border-color)); }
         .action:disabled { opacity:.45; cursor:default; }
         .action.danger { color:var(--danger, #dc4545); }
-        .history-list { display:grid; gap:.35rem; }
+        .history-list {
+          display:grid; gap:.35rem; max-height:11rem; overflow:auto;
+          padding:.15rem; border-radius:9px; overscroll-behavior:contain;
+        }
         .history-item {
           display:flex; align-items:center; justify-content:space-between; gap:.75rem;
-          padding:.55rem .65rem; border:1px solid var(--border-color); border-radius:8px;
+          padding:.55rem .65rem; border:1px solid var(--border-color);
+          border-radius:9px; background:var(--bg-2);
         }
         .history-copy { display:grid; gap:.2rem; min-width:0; }
         .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.84rem; }
@@ -91,14 +100,15 @@ class UISettings extends HTMLElement {
         .backup-actions { display:flex; flex-wrap:wrap; gap:.5rem; }
         .status { min-height:1.2em; color:var(--text-secondary); font-size:.8rem; }
         .warning {
-          padding:.75rem; border-radius:8px;
-          background:color-mix(in srgb, var(--danger, #dc4545) 8%, transparent);
-          color:var(--text-secondary); font-size:.8rem; line-height:1.55;
+          padding:.75rem .85rem; border:1px solid color-mix(in srgb, var(--danger, #dc4545) 22%, transparent);
+          border-radius:9px; background:color-mix(in srgb, var(--danger, #dc4545) 7%, var(--bg));
+          color:var(--text-secondary); font-size:.78rem; line-height:1.55;
         }
         .file-input { display:none; }
         @media (max-width:480px) {
-          .tabs { margin:0 -1rem; padding:0 1rem; }
-          .tab { padding:.75rem .7rem; font-size:.84rem; }
+          .tabs { margin-bottom:.9rem; }
+          .tab { padding:.65rem .7rem; font-size:.82rem; }
+          .setting, .section { padding:.9rem; }
         }
       </style>
       <nav class="tabs" role="tablist" aria-label="設定カテゴリ">
@@ -448,6 +458,7 @@ class UISettings extends HTMLElement {
     const modal = modals.create("settings", {
       title: "設定",
       dialogWidth: "48rem",
+      dialogMinHeight: "36rem",
       sheetHeight: "90dvh",
       content: this
     });
