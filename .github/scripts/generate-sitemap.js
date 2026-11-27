@@ -2,6 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
 
 const ROOT = path.resolve(__dirname, "../../codes");
 const OUTPUT = path.join(ROOT, "sitemap.xml");
@@ -52,6 +53,22 @@ function collectHtmlFiles(directory) {
   return files;
 }
 
+function getLastModified(filePath) {
+  const relativePath = path.relative(path.resolve(__dirname, "../.."), filePath);
+
+  try {
+    const date = execFileSync(
+      "git",
+      ["log", "-1", "--format=%cI", "--", relativePath],
+      { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim();
+
+    return date && !Number.isNaN(Date.parse(date)) ? date : null;
+  } catch {
+    return null;
+  }
+}
+
 function toPublicUrl(filePath) {
   const relativePath = path.relative(ROOT, filePath).split(path.sep);
   const fileName = relativePath.pop();
@@ -70,16 +87,24 @@ if (!fs.existsSync(ROOT)) {
 }
 
 const urls = collectHtmlFiles(ROOT)
-  .map(toPublicUrl)
-  .sort((a, b) => a.localeCompare(b));
+  .map((filePath) => ({
+    loc: toPublicUrl(filePath),
+    lastmod: getLastModified(filePath),
+  }))
+  .sort((a, b) => a.loc.localeCompare(b.loc));
 
 const xml = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-  ...urls.map((url) => `  <url><loc>${escapeXml(url)}</loc></url>`),
+  ...urls.map(({ loc, lastmod }) => [
+    "  <url>",
+    `    <loc>${escapeXml(loc)}</loc>`,
+    ...(lastmod ? [`    <lastmod>${escapeXml(lastmod)}</lastmod>`] : []),
+    "  </url>",
+  ].join("\n")),
   "</urlset>",
   "",
 ].join("\n");
 
 fs.writeFileSync(OUTPUT, xml, "utf8");
-console.log(`Generated ${path.relative(process.cwd(), OUTPUT)} with ${urls.length} URLs.`);
+console.log(`Generated ${path.relative(process.cwd(), OUTPUT)} with ${urls.length} URLs (${urls.filter(({ lastmod }) => lastmod).length} lastmod values).`);
