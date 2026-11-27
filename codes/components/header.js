@@ -70,21 +70,6 @@ class header extends HTMLElement {
   </div>
 </header>
     `;
-
-    const renderIcons = () => {
-      const createIcons = window.spaRouter?.commonStorage?.get("createIcons");
-      const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
-      if (!createIcons || !icons) return false;
-      createIcons({ icons, root: this });
-      return true;
-    };
-
-    if (!renderIcons()) {
-      window.addEventListener("spa:router", (event) => {
-        if (event.detail?.type === "setup-ok") renderIcons();
-      }, { once: true });
-    }
-
     this.querySelector("#hamburger").addEventListener("click", () => {
       const sidebar = document.querySelector("app-sidebar");
       if (!sidebar) return;
