@@ -9,6 +9,8 @@ import {
   createIcons, Menu, Settings, Star, Folders, Blocks, Info, Hash, Share2,
   Heart, HeartPlus, HeartMinus, BookOpen, Lightbulb, AudioLines, Maximize2, Minimize2, Upload,
   Trash, Music2, Play, Pause, SkipBack, SkipForward, Shuffle, Repeat1, Volume2, Plus,
+  Copy, X, Check,
+  Copy, X, Check,
   ChevronDown, ChevronUp, ArrowLeft, FileAudio, ImagePlus, History
 } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
 import { LibDB, LibDBError } from "https://cdn.jsdelivr.net/gh/YSAS4331/LibDB@main/libdb.min.js";
