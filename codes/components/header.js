@@ -1,3 +1,5 @@
+import { createIcons, Menu, Settings } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
+
 class header extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -18,49 +20,86 @@ class header extends HTMLElement {
   z-index: 20;
 }
 
-#hamburger {
-  display: none;
-  width: 32px;
-  height: 32px;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-#hamburger span {
-  display: block;
-  width: 100%;
-  height: 3px;
-  background: var(--accent-border);
-  border-radius: 4px;
+.header-action {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.header-action:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.header-action:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.header-action svg {
+  width: 21px;
+  height: 21px;
 }
 
 @media (max-width: 600px) {
-  #hamburger {
-    display: flex;
-  }
+  #global-header { padding: 0 16px; }
 }
 </style>
 
 <header id="global-header">
   <a href="/">UsefulTools</a>
-  <div id="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
+  <div class="header-actions">
+    <button class="header-action" id="settings-button" type="button" aria-label="設定" title="設定">
+      <i data-lucide="settings"></i>
+    </button>
+    <button class="header-action" id="hamburger" type="button" aria-label="メニュー" title="メニュー">
+      <i data-lucide="menu"></i>
+    </button>
   </div>
 </header>
     `;
 
-    const btn = this.querySelector("#hamburger");
+    const icons = window.spaRouter?.commonStorage?.get("createIcons");
+    if (icons) icons({ icons: { Menu, Settings }, attrs: { "stroke-width": 2 } });
+    else createIcons({ icons: { Menu, Settings } });
 
-    btn.addEventListener("click", () => {
+    this.querySelector("#hamburger").addEventListener("click", () => {
       const sidebar = document.querySelector("app-sidebar");
       if (!sidebar) return;
       sidebar.classList.toggle("open");
     });
+
+    this.querySelector("#settings-button").addEventListener("click", () => {
+      const modals = window.spaRouter?.commonStorage?.get("Modals");
+      if (!modals) return;
+
+      const content = document.createElement("div");
+      content.className = "settings-content";
+      content.textContent = "設定項目はまだありません。";
+
+      const modal = modals.create("settings", {
+        title: "設定",
+        dialogWidth: "36rem",
+        content
+      });
+      modal.open();
+    });
   }
 }
 
-customElements.define('app-header', header);
+customElements.define("app-header", header);
