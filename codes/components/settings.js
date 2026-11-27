@@ -110,27 +110,29 @@ class UISettings extends HTMLElement {
         <button class="tab" id="data-tab" type="button" role="tab" aria-selected="false" aria-controls="data-panel">データ管理</button>
       </nav>
       <section class="tab-panel" id="appearance-panel" role="tabpanel" aria-labelledby="appearance-tab">
-        <section class="setting">
-          <label for="theme">テーマ</label>
-          <select id="theme" disabled>
-            <option value="system">システム設定に合わせる</option>
-            <option value="light">ライト</option>
-            <option value="dark">ダーク</option>
-          </select>
-          <p>UsefulToolsの配色を設定します。</p>
-        </section>
-        <section class="setting">
-          <label for="accent-color">テーマカラー</label>
-          <select id="accent-color" disabled>
-            <option value="green">グリーン（デフォルト）</option>
-            <option value="blue">ブルー</option>
-            <option value="red">レッド</option>
-            <option value="purple">パープル</option>
-            <option value="orange">オレンジ</option>
-            <option value="pink">ピンク</option>
-          </select>
-          <p>アクセントカラーを変更します。</p>
-        </section>
+        <ui-collapse label="テーマ" group="appearance">
+          <div class="setting">
+            <select id="theme" disabled aria-label="テーマ">
+              <option value="system">システム設定に合わせる</option>
+              <option value="light">ライト</option>
+              <option value="dark">ダーク</option>
+            </select>
+            <p>UsefulToolsの配色を設定します。</p>
+          </div>
+        </ui-collapse>
+        <ui-collapse label="テーマカラー" group="appearance">
+          <div class="setting">
+            <select id="accent-color" disabled aria-label="テーマカラー">
+              <option value="green">グリーン（デフォルト）</option>
+              <option value="blue">ブルー</option>
+              <option value="red">レッド</option>
+              <option value="purple">パープル</option>
+              <option value="orange">オレンジ</option>
+              <option value="pink">ピンク</option>
+            </select>
+            <p>アクセントカラーを変更します。</p>
+          </div>
+        </ui-collapse>
       </section>
       <section class="tab-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab" hidden>
         <section class="section">
