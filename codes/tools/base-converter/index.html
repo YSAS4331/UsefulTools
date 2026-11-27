@@ -21,9 +21,7 @@
     <app-sidebar></app-sidebar>
     <main>
       <script type="application/json" id="page-settings">
-{
-  "tool-fullscreen": false
-}
+{ "tool-fullscreen": false }
       </script>
       <article class="tool-container">
         <header class="tool-header">
@@ -34,38 +32,21 @@
             <button class="tool-favorite"><i data-lucide="heart-plus"></i>お気に入り</button>
           </div>
         </header>
-
         <div id="tool" class="base-converter">
           <div class="converter-card">
             <section class="converter-section">
-              <div class="section-heading"><h3>変換元</h3><span class="base-label">INPUT</span></div>
+              <div class="section-heading"><h3>変換元</h3><span class="base-label">FROM</span></div>
               <div class="input-row">
-                <select id="source-base" aria-label="変換元の進数">
-                  <option value="2">2進数</option>
-                  <option value="8">8進数</option>
-                  <option value="10" selected>10進数</option>
-                  <option value="16">16進数</option>
-                  <option value="custom">任意</option>
-                </select>
+                <select id="source-base" aria-label="変換元の進数"><option value="2">2進数</option><option value="8">8進数</option><option value="10" selected>10進数</option><option value="16">16進数</option><option value="custom">任意</option></select>
                 <input id="source-custom-base" class="custom-base" type="number" min="2" max="36" value="3" aria-label="変換元の基数" hidden>
                 <input id="source-value" class="number-input" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="数値を入力" value="255" aria-label="変換する数値">
               </div>
             </section>
-
-            <div class="converter-actions">
-              <button id="swap-bases" class="swap-button" type="button" aria-label="変換元と変換先を入れ替え" title="変換元と変換先を入れ替え"><i data-lucide="arrow-down-up"></i></button>
-            </div>
-
+            <div class="converter-actions"><button id="swap-bases" class="swap-button" type="button" aria-label="変換元と変換先を入れ替え" title="入れ替え"><i data-lucide="arrow-left-right"></i></button></div>
             <section class="converter-section result-section">
-              <div class="section-heading"><h3>変換結果</h3><span class="base-label">OUTPUT</span></div>
+              <div class="section-heading"><h3>変換先</h3><span class="base-label">TO</span></div>
               <div class="input-row">
-                <select id="target-base" aria-label="変換先の進数">
-                  <option value="2">2進数</option>
-                  <option value="8">8進数</option>
-                  <option value="10">10進数</option>
-                  <option value="16" selected>16進数</option>
-                  <option value="custom">任意</option>
-                </select>
+                <select id="target-base" aria-label="変換先の進数"><option value="2">2進数</option><option value="8">8進数</option><option value="10">10進数</option><option value="16" selected>16進数</option><option value="custom">任意</option></select>
                 <input id="target-custom-base" class="custom-base" type="number" min="2" max="36" value="3" aria-label="変換先の基数" hidden>
                 <input id="target-value" class="number-input result-value" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="変換結果" value="FF" aria-label="変換先の数値">
                 <button id="copy-result" class="copy-button" type="button" disabled aria-label="結果をコピー" title="コピー"><i data-lucide="copy"></i></button>
@@ -75,23 +56,10 @@
           </div>
           <p class="converter-hint">使用できる数字は 0～9、A～Z です。大文字・小文字はどちらも使用できます。小数にも対応しています。</p>
         </div>
-
         <footer class="tool-details">
-          <section>
-            <h2><i data-lucide="info"></i>このツールについて</h2>
-            <p>2進数・8進数・10進数・16進数をはじめ、2進数から36進数までの数値を相互に変換できます。</p>
-            <p>整数だけでなく小数にも対応しています。計算はブラウザ内で行われ、入力した数値がサーバーへ送信されることはありません。</p>
-          </section>
-          <section>
-            <h2><i data-lucide="book-open"></i>進数（基数）とは？</h2>
-            <p>進数は、数を表現するときに何種類の数字を使うかを表す方式です。普段使う10進数は0～9の10種類、2進数は0と1の2種類を使います。</p>
-            <p>16進数では0～9に加えてA～Fを使います。2進数・16進数はコンピューターやプログラミングでよく利用されます。</p>
-          </section>
-          <section>
-            <h2><i data-lucide="lightbulb"></i>使い方</h2>
-            <p>変換元の進数と変換先の進数を選び、数値を入力すると自動で変換されます。「任意の進数」を選ぶと、2～36の範囲で基数を指定できます。</p>
-            <p>小数はピリオド（.）で区切って入力してください。変換結果の小数部分は最大16桁まで表示されます。</p>
-          </section>
+          <section><h2><i data-lucide="info"></i>このツールについて</h2><p>2進数・8進数・10進数・16進数をはじめ、2進数から36進数までの数値を相互に変換できます。</p><p>整数だけでなく小数にも対応しています。計算はブラウザ内で行われ、入力した数値がサーバーへ送信されることはありません。</p></section>
+          <section><h2><i data-lucide="book-open"></i>進数（基数）とは？</h2><p>進数は、数を表現するときに何種類の数字を使うかを表す方式です。普段使う10進数は0～9の10種類、2進数は0と1の2種類を使います。</p><p>16進数では0～9に加えてA～Fを使います。2進数・16進数はコンピューターやプログラミングでよく利用されます。</p></section>
+          <section><h2><i data-lucide="lightbulb"></i>使い方</h2><p>左右の進数を選び、どちらかの数値を入力すると反対側が自動で変換されます。「任意」を選ぶと2～36の範囲で基数を指定できます。</p><p>小数はピリオド（.）で区切って入力してください。変換結果の小数部分は最大16桁まで表示されます。</p></section>
         </footer>
       </article>
     </main>
