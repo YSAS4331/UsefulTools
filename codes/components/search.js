@@ -44,6 +44,20 @@ class ToolSearch extends HTMLElement {
     this.button = this.shadowRoot.querySelector("button");
     this.button.addEventListener("click", () => this.open());
 
+    this.handleGlobalKeydown = (event) => {
+      if (
+        event.repeat ||
+        event.altKey ||
+        event.shiftKey ||
+        !(event.ctrlKey || event.metaKey) ||
+        event.key.toLowerCase() !== "k"
+      ) return;
+
+      event.preventDefault();
+      this.open();
+    };
+    document.addEventListener("keydown", this.handleGlobalKeydown);
+
     this.handleStorage = (event) => {
       if (["Modals", "toolsPromise"].includes(event.detail?.key)) {
         this.initializeModal();
@@ -55,6 +69,7 @@ class ToolSearch extends HTMLElement {
 
   disconnectedCallback() {
     window.removeEventListener("spa:storage", this.handleStorage);
+    document.removeEventListener("keydown", this.handleGlobalKeydown);
   }
 
   async initializeModal() {
