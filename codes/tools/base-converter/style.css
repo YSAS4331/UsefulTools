@@ -63,6 +63,20 @@
 }
 .copy-button:disabled { opacity:.3; cursor:default; }
 .copy-button.is-copied { color:var(--accent-strong)!important; }
+.grouping-option {
+  display:flex;
+  align-items:center;
+  gap:.5em;
+  width:max-content;
+  max-width:100%;
+  margin-top:.7em;
+  color:var(--text-secondary);
+  font-size:.85em;
+  cursor:pointer;
+}
+.grouping-option input {
+  accent-color:var(--accent-strong);
+}
 .add-base-row {
   display:flex;
   align-items:center;
