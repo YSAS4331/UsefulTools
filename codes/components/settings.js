@@ -139,18 +139,26 @@ class UISettings extends HTMLElement {
         </div>
       </section>
       <section class="tab-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab" hidden>
-        <section class="section">
+        <div class="data-settings" style="display:grid; gap:.65rem;">
+        <ui-collapse label="閲覧履歴" group="data">
+          <div class="section">
           <div class="section-heading"><h3>閲覧履歴</h3><span class="muted" id="history-count">読み込み中...</span></div>
           <p>履歴を個別に削除したり、すべて削除できます。</p>
           <div class="history-list" id="history-list"><div class="empty">履歴を読み込み中...</div></div>
           <button class="action danger" id="clear-history" type="button">履歴をすべて削除</button>
-        </section>
-        <section class="section">
+        
+          </div>
+        </ui-collapse>
+        <ui-collapse label="お気に入り" group="data">
+          <div class="section">
           <div class="section-heading"><h3>お気に入り</h3><span class="muted" id="favorite-count">読み込み中...</span></div>
           <p>登録したお気に入りをすべて解除します。</p>
           <button class="action danger" id="clear-favorites" type="button">お気に入りをリセット</button>
-        </section>
-        <section class="section">
+        
+          </div>
+        </ui-collapse>
+        <ui-collapse label="バックアップ" group="data">
+          <div class="section">
           <h3>バックアップ</h3>
           <p>設定・お気に入り・閲覧履歴をJSONファイルに保存、またはバックアップから復元できます。</p>
           <div class="backup-actions">
@@ -160,13 +168,19 @@ class UISettings extends HTMLElement {
           </div>
           <p class="muted">インポートすると、現在の設定・お気に入り・履歴はバックアップの内容に置き換わります。</p>
           <p class="status" id="backup-status" role="status" aria-live="polite"></p>
-        </section>
-        <section class="section">
+        
+          </div>
+        </ui-collapse>
+        <ui-collapse label="すべて初期化" group="data">
+          <div class="section">
           <h3>すべて初期化</h3>
           <p>設定・お気に入り・閲覧履歴をすべて削除し、テーマなどを初期状態に戻します。</p>
           <div class="warning">この操作は取り消せません。必要なデータは先にエクスポートしてください。</div>
           <button class="action danger" id="reset-all" type="button">すべてのデータを初期化</button>
-        </section>
+        
+          </div>
+        </ui-collapse>
+        </div>
       </section>
     `;
 
