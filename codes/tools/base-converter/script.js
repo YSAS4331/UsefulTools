@@ -54,12 +54,11 @@ const init = () => {
   const addButton = $("#add-base-button", root), count = $("#result-count", root);
   const controller = new AbortController(), {signal} = controller;
   const bases = [2, 3, 8, 10, 16, 36];
-  const labelFor = base => BASE_NAMES[base] || "BASE " + base;
   const makeIcon = name => '<i data-lucide="' + name + '"></i>';
   const refreshIcons = () => window.spaRouter?.commonStorage?.get("createIcons")?.({icons:window.spaRouter?.commonStorage?.get("lucideIcons")});
   const renderRows = () => {
-    results.innerHTML = bases.map(base => '<div class="result-row" data-base="' + base + '"><div class="result-base"><strong>' + base + '</strong><span>' + labelFor(base) + '</span></div><output class="result-value" aria-label="' + base + '進数の変換結果">—</output><button class="copy-button" type="button" data-action="copy" aria-label="' + base + '進数をコピー" title="コピー" disabled>' + makeIcon("copy") + '</button><button class="remove-button" type="button" data-action="remove" aria-label="' + base + '進数を削除" title="削除">' + makeIcon("x") + '</button></div>').join("");
-    count.textContent = bases.length + "種類";
+    results.innerHTML = bases.map(base => '<div class="result-row" data-base="' + base + '"><span class="result-base">' + base + '進数</span><output class="result-value" aria-label="' + base + '進数の変換結果">—</output><button class="copy-button" type="button" data-action="copy" aria-label="' + base + '進数をコピー" title="コピー" disabled>' + makeIcon("copy") + '</button><button class="remove-button" type="button" data-action="remove" aria-label="' + base + '進数を削除" title="削除">' + makeIcon("x") + '</button></div>').join("");
+    if (count) count.textContent = bases.length + "種類";
     [...addSelect.options].forEach(option => { option.disabled = bases.includes(Number(option.value)); });
     addButton.disabled = addSelect.selectedOptions[0]?.disabled ?? true;
     refreshIcons();
