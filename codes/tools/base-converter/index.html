@@ -37,8 +37,9 @@
 
         <div id="tool" class="base-converter">
           <div class="converter-card">
-            <div class="base-field">
-              <label for="source-base">変換元の進数</label>
+            <div class="converter-grid">
+            <section class="converter-panel source-panel">
+              <div class="panel-heading"><span class="panel-kicker">INPUT</span><label for="source-base">変換元</label></div>
               <select id="source-base">
                 <option value="2">2進数</option>
                 <option value="8">8進数</option>
@@ -49,15 +50,17 @@
               <input id="source-custom-base" class="custom-base" type="number" min="2" max="36" value="3" aria-label="変換元の基数" hidden>
             </div>
 
-            <label class="value-label" for="source-value">変換する数値</label>
-            <input id="source-value" class="number-input" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="数値を入力" value="255">
+            <input id="source-value" class="number-input" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="数値を入力" value="255" aria-label="変換する数値">
+            </section>
 
             <div class="converter-actions">
-              <button id="swap-bases" class="swap-button" type="button" aria-label="変換元と変換先を入れ替え"><i data-lucide="arrow-down-up"></i>入れ替え</button>
+              <button id="swap-bases" class="swap-button" type="button" aria-label="変換元と変換先を入れ替え" title="変換元と変換先を入れ替え"><i data-lucide="arrow-left-right"></i></button>
             </div>
 
-            <div class="base-field">
-              <label for="target-base">変換先の進数</label>
+            <section class="converter-panel result-panel">
+
+            <div class="panel-heading"><span class="panel-kicker">OUTPUT</span><label for="target-base">変換先</label></div>
+              <div class="base-field">
               <select id="target-base">
                 <option value="2">2進数</option>
                 <option value="8">8進数</option>
@@ -69,11 +72,13 @@
             </div>
 
             <div class="result-heading">
-              <label for="result-value">変換結果</label>
-              <button id="copy-result" class="copy-button" type="button" disabled><i data-lucide="copy"></i>コピー</button>
+                <span>変換結果</span>
+                <button id="copy-result" class="copy-button" type="button" disabled><i data-lucide="copy"></i>コピー</button>
+              </div>
+              <output id="result-value" class="result-value" aria-live="polite">FF</output>
+              <p id="conversion-message" class="conversion-message" role="status"></p>
+            </section>
             </div>
-            <output id="result-value" class="result-value" aria-live="polite">FF</output>
-            <p id="conversion-message" class="conversion-message" role="status">変換しました</p>
           </div>
           <p class="converter-hint">使用できる数字は 0～9、A～Z です。大文字・小文字はどちらも使用できます。小数にも対応しています。</p>
         </div>
