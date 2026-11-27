@@ -71,10 +71,18 @@ class header extends HTMLElement {
   </div>
 </header>
     `;
-    this.querySelector("#hamburger").addEventListener("click", () => {
+    const menuButton = this.querySelector("#hamburger");
+    menuButton.addEventListener("click", () => {
       const sidebar = document.querySelector("app-sidebar");
       if (!sidebar) return;
-      sidebar.classList.toggle("open");
+
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
+      const stateClass = isMobile ? "open" : "collapsed";
+      sidebar.classList.toggle(stateClass);
+      const isOpen = isMobile
+        ? sidebar.classList.contains("open")
+        : !sidebar.classList.contains("collapsed");
+      menuButton.setAttribute("aria-expanded", String(isOpen));
     });
 
     this.querySelector("#settings-button").addEventListener("click", () => {
