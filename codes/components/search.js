@@ -79,8 +79,9 @@ class ToolSearch extends HTMLElement {
       this.modal = modals.create("tool-search", {
         title: "ツールを検索",
         dialogWidth: "42rem",
-        dialogHeight: "85dvh",
-        sheetHeight: "85dvh"
+        dialogHeight: "90dvh",
+        dialogMinHeight: "72dvh",
+        sheetHeight: "92dvh"
       });
 
       this.createSearchPanel();
