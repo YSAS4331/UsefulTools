@@ -1,3 +1,5 @@
+import { createIcons, Menu, Settings } from "https://cdn.jsdelivr.net/npm/lucide@1.25.0/+esm";
+
 class header extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -71,9 +73,10 @@ class header extends HTMLElement {
 </header>
     `;
 
-    const createIcons = window.spaRouter?.commonStorage?.get("createIcons");
-    const icons = window.spaRouter?.commonStorage?.get("lucideIcons");
-    if (createIcons && icons) createIcons({ icons });
+    createIcons({
+      icons: { menu: Menu, settings: Settings },
+      root: this
+    });
 
     this.querySelector("#hamburger").addEventListener("click", () => {
       const sidebar = document.querySelector("app-sidebar");
