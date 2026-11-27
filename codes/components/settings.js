@@ -33,82 +33,75 @@ class UISettings extends HTMLElement {
       <style>
         :host { display:block; color:var(--text-primary); }
         .tabs {
-          display:flex; gap:.35rem; margin:0 0 1.25rem; padding:.3rem;
-          border:1px solid var(--border-color); border-radius:12px;
-          background:var(--bg); overflow-x:auto;
+          display:flex; gap:.2rem; margin:0 -1.25rem;
+          padding:0 1.25rem; border-bottom:1px solid var(--border-color);
+          overflow-x:auto;
         }
         .tab {
-          flex:1 0 auto; padding:.65rem 1rem; border:0; border-radius:9px;
+          position:relative; flex:none; padding:.65rem .8rem; border:0;
           background:transparent; color:var(--text-secondary);
-          font:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
-          transition:background-color .16s ease, color .16s ease;
+          font:inherit; font-size:.86rem; font-weight:600; cursor:pointer;
         }
-        .tab:hover { background:var(--bg-hover); color:var(--text-primary); }
-        .tab[aria-selected="true"] {
-          background:var(--bg-2); color:var(--text-primary);
-          box-shadow:0 1px 3px color-mix(in srgb, var(--text-primary) 12%, transparent);
+        .tab[aria-selected="true"] { color:var(--text-primary); }
+        .tab[aria-selected="true"]::after {
+          content:""; position:absolute; right:.55rem; bottom:-1px; left:.55rem;
+          height:2px; border-radius:2px 2px 0 0; background:var(--accent);
         }
         .tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
           outline:2px solid var(--accent); outline-offset:2px;
         }
-        .tab-panel { display:grid; align-content:start; gap:1rem; }
+        .tab-panel { padding-top:.85rem; }
         .tab-panel[hidden] { display:none; }
-        .setting {
-          display:grid; gap:.6rem; padding:1rem 1.1rem;
-          border:1px solid var(--border-color); border-radius:12px;
-          background:var(--bg);
-        }
-        label,.setting-title { font-size:.9rem; font-weight:650; }
-        p { margin:0; color:var(--text-secondary); font-size:.8rem; line-height:1.55; }
+        .setting { display:grid; gap:.4rem; padding:.55rem 0 .8rem; }
+        label,.setting-title { font-size:.9rem; font-weight:600; }
+        p { margin:0; color:var(--text-secondary); font-size:.8rem; line-height:1.5; }
         select {
-          width:100%; box-sizing:border-box; padding:.7rem .8rem;
-          border:1px solid var(--border-color); border-radius:9px;
+          width:100%; box-sizing:border-box; padding:.55rem .7rem;
+          border:1px solid var(--border-color); border-radius:8px;
           background:var(--bg); color:var(--text-primary); font:inherit;
         }
         select:disabled { opacity:.6; }
         .section {
-          display:grid; gap:.7rem; padding:1rem 1.1rem;
-          border:1px solid var(--border-color); border-radius:12px;
-          background:var(--bg);
+          display:grid; gap:.55rem; padding:.8rem 0;
+          border-bottom:1px solid var(--border-color);
         }
+        .section:first-child { padding-top:0; }
+        .section:last-child { border-bottom:0; }
         .section-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
         .section-heading h3, .section h3 { margin:0; font-size:.9rem; font-weight:650; }
-        .muted { color:var(--text-tertiary); font-size:.78rem; }
+        .muted { color:var(--text-tertiary); font-size:.76rem; }
         .action {
-          justify-self:start; padding:.55rem .85rem; border:1px solid var(--border-color);
-          border-radius:9px; background:var(--bg-2); color:var(--text-primary);
-          font:inherit; font-size:.82rem; font-weight:600; cursor:pointer;
-          transition:background-color .16s ease, border-color .16s ease;
+          justify-self:start; padding:.45rem .7rem; border:1px solid var(--border-color);
+          border-radius:7px; background:var(--bg); color:var(--text-primary);
+          font:inherit; font-size:.8rem; cursor:pointer;
         }
-        .action:hover { background:var(--bg-hover); border-color:color-mix(in srgb, var(--accent) 35%, var(--border-color)); }
+        .action:hover { background:var(--bg-hover); }
         .action:disabled { opacity:.45; cursor:default; }
         .action.danger { color:var(--danger, #dc4545); }
         .history-list {
-          display:grid; gap:.35rem; max-height:11rem; overflow:auto;
-          padding:.15rem; border-radius:9px; overscroll-behavior:contain;
+          display:grid; gap:.25rem; max-height:10rem; overflow:auto;
+          padding:0; overscroll-behavior:contain;
         }
         .history-item {
-          display:flex; align-items:center; justify-content:space-between; gap:.75rem;
-          padding:.55rem .65rem; border:1px solid var(--border-color);
-          border-radius:9px; background:var(--bg-2);
+          display:flex; align-items:center; justify-content:space-between; gap:.7rem;
+          padding:.4rem .5rem; border-bottom:1px solid var(--border-color);
         }
-        .history-copy { display:grid; gap:.2rem; min-width:0; }
-        .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.84rem; }
-        .history-copy small { color:var(--text-tertiary); font-size:.72rem; }
-        .history-item .action { flex:none; padding:.4rem .6rem; font-size:.76rem; }
-        .empty { padding:.75rem; color:var(--text-tertiary); font-size:.82rem; }
-        .backup-actions { display:flex; flex-wrap:wrap; gap:.5rem; }
-        .status { min-height:1.2em; color:var(--text-secondary); font-size:.8rem; }
+        .history-copy { display:grid; gap:.15rem; min-width:0; }
+        .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.82rem; }
+        .history-copy small { color:var(--text-tertiary); font-size:.7rem; }
+        .history-item .action { flex:none; padding:.3rem .5rem; font-size:.74rem; }
+        .empty { padding:.5rem 0; color:var(--text-tertiary); font-size:.8rem; }
+        .backup-actions { display:flex; flex-wrap:wrap; gap:.4rem; }
+        .status { min-height:1.1em; color:var(--text-secondary); font-size:.78rem; }
         .warning {
-          padding:.75rem .85rem; border:1px solid color-mix(in srgb, var(--danger, #dc4545) 22%, transparent);
-          border-radius:9px; background:color-mix(in srgb, var(--danger, #dc4545) 7%, var(--bg));
-          color:var(--text-secondary); font-size:.78rem; line-height:1.55;
+          padding:.55rem .7rem; border-left:2px solid var(--danger, #dc4545);
+          background:color-mix(in srgb, var(--danger, #dc4545) 6%, transparent);
+          color:var(--text-secondary); font-size:.76rem; line-height:1.5;
         }
         .file-input { display:none; }
         @media (max-width:480px) {
-          .tabs { margin-bottom:.9rem; }
+          .tabs { margin:0 -1rem; padding:0 1rem; }
           .tab { padding:.65rem .7rem; font-size:.82rem; }
-          .setting, .section { padding:.9rem; }
         }
       </style>
       <nav class="tabs" role="tablist" aria-label="設定カテゴリ">
@@ -458,7 +451,7 @@ class UISettings extends HTMLElement {
     const modal = modals.create("settings", {
       title: "設定",
       dialogWidth: "48rem",
-      dialogMinHeight: "36rem",
+      dialogHeight: "36rem",
       sheetHeight: "90dvh",
       content: this
     });
