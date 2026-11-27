@@ -203,6 +203,8 @@ class UICollapse extends HTMLElement {
 
     clearTimeout(this.flyoutTimer);
     this.setAttribute('flyout', '');
+    this.flyoutPanel.inert = false;
+    this.flyoutPanel.setAttribute('aria-hidden', 'false');
     const rect = this.getBoundingClientRect();
     const panel = this.flyoutPanel;
 
@@ -223,6 +225,8 @@ class UICollapse extends HTMLElement {
     clearTimeout(this.flyoutTimer);
     this.flyoutTimer = setTimeout(() => {
       this.removeAttribute('flyout');
+      this.flyoutPanel.inert = !this.isOpen;
+      this.flyoutPanel.setAttribute('aria-hidden', String(!this.isOpen));
     }, 140);
   }
 
