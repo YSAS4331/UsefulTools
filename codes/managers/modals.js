@@ -17,6 +17,7 @@ class Modals {
     if (options.sheetHeight) modal.setAttribute("sheet-height", options.sheetHeight);
     if (options.dialogWidth) modal.setAttribute("dialog-width", options.dialogWidth);
     if (options.dialogHeight) modal.setAttribute("dialog-height", options.dialogHeight);
+    if (options.dialogMinHeight) modal.setAttribute("dialog-min-height", options.dialogMinHeight);
     if (options.content instanceof Node) modal.append(options.content);
 
     document.body.append(modal);
