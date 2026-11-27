@@ -166,12 +166,6 @@ const init = () => {
   results.addEventListener("input", event => {
     const input = event.target;
     if (!input.matches(".result-value")) return;
-    const normalized = input.value.toUpperCase();
-    if (normalized !== input.value) {
-      const position = input.selectionStart;
-      input.value = normalized;
-      input.setSelectionRange(position, position);
-    }
     updateFrom(input);
   }, {signal});
 
