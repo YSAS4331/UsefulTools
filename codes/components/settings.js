@@ -34,77 +34,77 @@ class UISettings extends HTMLElement {
         :host { display:block; color:var(--text-primary); }
         .tabs {
           position:sticky; top:-20px; z-index:5;
-          display:flex; gap:3.2px; margin:0 -20px;
-          padding:0 20px; border-bottom:1px solid var(--border-color);
+          display:flex; gap:0.2em; margin:0 -20px;
+          padding:0 1.25em; border-bottom:1px solid var(--border-color);
           background:var(--bg-2); overflow-x:auto; overflow-y:hidden;
         }
         .tab {
-          position:relative; flex:none; padding:10.4px 12.8px; border:0;
+          position:relative; flex:none; padding:0.65em 0.8em; border:0;
           background:transparent; color:var(--text-secondary);
-          font:inherit; font-size:13.76px; font-weight:600; cursor:pointer;
+          font:inherit; font-size:0.86em; font-weight:600; cursor:pointer;
         }
         .tab[aria-selected="true"] { color:var(--text-primary); }
         .tab[aria-selected="true"]::after {
-          content:""; position:absolute; right:8.8px; bottom:-1px; left:8.8px;
+          content:""; position:absolute; right:0.55em; bottom:-1px; left:0.55em;
           height:2px; border-radius:2px 2px 0 0; background:var(--accent);
         }
         .tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
           outline:2px solid var(--accent); outline-offset:2px;
         }
-        .tab-panel { padding-top:13.6px; }
+        .tab-panel { padding-top:0.85em; }
         .tab-panel[hidden] { display:none; }
-        .setting { display:grid; gap:6.4px; padding:8.8px 0 12.8px; }
-        p { margin:0; color:var(--text-secondary); font-size:12.8px; line-height:1.5; }
-        .choices { display:grid; gap:1.6px; }
+        .setting { display:grid; gap:0.4em; padding:0.55em 0 0.8em; }
+        p { margin:0; color:var(--text-secondary); font-size:0.8em; line-height:1.5; }
+        .choices { display:grid; gap:0.1em; }
         .choice {
-          display:flex; align-items:center; gap:10.4px; min-height:30.4px;
-          padding:3.2px 8px; border-radius:7px; color:var(--text-primary);
-          font-size:13.76px; font-weight:500; cursor:pointer;
+          display:flex; align-items:center; gap:0.65em; min-height:1.9em;
+          padding:0.2em 0.5em; border-radius:0.4375em; color:var(--text-primary);
+          font-size:0.86em; font-weight:500; cursor:pointer;
         }
         .choice:hover { background:var(--bg-hover); }
-        .choice input { width:16px; height:16px; margin:0; accent-color:var(--accent); }
+        .choice input { width:1em; height:1em; margin:0; accent-color:var(--accent); }
         .choices:has(input:disabled) { opacity:.6; }
         .section {
-          display:grid; gap:8.8px; padding:12.8px 0;
+          display:grid; gap:0.55em; padding:0.8em 0;
           border-bottom:1px solid var(--border-color);
         }
         .section:first-child { padding-top:0; }
         .section:last-child { border-bottom:0; }
-        .section-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; }
-        .section-heading h3, .section h3 { margin:0; font-size:14.4px; font-weight:650; }
-        .muted { color:var(--text-tertiary); font-size:12.16px; }
+        .section-heading { display:flex; align-items:center; justify-content:space-between; gap:1em; }
+        .section-heading h3, .section h3 { margin:0; font-size:0.9em; font-weight:650; }
+        .muted { color:var(--text-tertiary); font-size:0.76em; }
         .action {
-          justify-self:start; padding:7.2px 11.2px; border:1px solid var(--border-color);
-          border-radius:7px; background:var(--bg); color:var(--text-primary);
-          font:inherit; font-size:12.8px; cursor:pointer;
+          justify-self:start; padding:0.45em 0.7em; border:1px solid var(--border-color);
+          border-radius:0.4375em; background:var(--bg); color:var(--text-primary);
+          font:inherit; font-size:0.8em; cursor:pointer;
         }
         .action:hover { background:var(--bg-hover); }
         .action:disabled { opacity:.45; cursor:default; }
         .action.danger { color:var(--danger, #dc4545); }
         .history-list {
-          display:grid; gap:4px; max-height:160px; overflow:auto;
+          display:grid; gap:0.25em; max-height:10em; overflow:auto;
           padding:0; overscroll-behavior:contain;
         }
         .history-item {
-          display:flex; align-items:center; justify-content:space-between; gap:11.2px;
-          padding:6.4px 8px; border-bottom:1px solid var(--border-color);
+          display:flex; align-items:center; justify-content:space-between; gap:0.7em;
+          padding:0.4em 0.5em; border-bottom:1px solid var(--border-color);
         }
-        .history-copy { display:grid; gap:2.4px; min-width:0; }
-        .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13.12px; }
-        .history-copy small { color:var(--text-tertiary); font-size:11.2px; }
-        .history-item .action { flex:none; padding:4.8px 8px; font-size:11.84px; }
-        .empty { padding:8px 0; color:var(--text-tertiary); font-size:12.8px; }
-        .backup-actions { display:flex; flex-wrap:wrap; gap:6.4px; }
-        .status { min-height:1.1em; color:var(--text-secondary); font-size:12.48px; }
+        .history-copy { display:grid; gap:0.15em; min-width:0; }
+        .history-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.82em; }
+        .history-copy small { color:var(--text-tertiary); font-size:0.7em; }
+        .history-item .action { flex:none; padding:0.3em 0.5em; font-size:0.74em; }
+        .empty { padding:0.5em 0; color:var(--text-tertiary); font-size:0.8em; }
+        .backup-actions { display:flex; flex-wrap:wrap; gap:0.4em; }
+        .status { min-height:1.1em; color:var(--text-secondary); font-size:0.78em; }
         .warning {
-          padding:8.8px 11.2px; border-left:2px solid var(--danger, #dc4545);
+          padding:0.55em 0.7em; border-left:2px solid var(--danger, #dc4545);
           background:color-mix(in srgb, var(--danger, #dc4545) 6%, transparent);
-          color:var(--text-secondary); font-size:12.16px; line-height:1.5;
+          color:var(--text-secondary); font-size:0.76em; line-height:1.5;
         }
         .file-input { display:none; }
-        @media (max-width:480px) {
-          .tabs { margin:0 -16px; padding:0 16px; }
-          .tab { padding:10.4px 11.2px; font-size:13.12px; }
+        @media (max-width:30em) {
+          .tabs { margin:0 -16px; padding:0 1em; }
+          .tab { padding:0.65em 0.7em; font-size:0.82em; }
         }
       </style>
       <nav class="tabs" role="tablist" aria-label="設定カテゴリ">
@@ -112,7 +112,7 @@ class UISettings extends HTMLElement {
         <button class="tab" id="data-tab" type="button" role="tab" aria-selected="false" aria-controls="data-panel">データ管理</button>
       </nav>
       <section class="tab-panel" id="appearance-panel" role="tabpanel" aria-labelledby="appearance-tab">
-        <div class="appearance-settings" style="display:grid; gap:10.4px;">
+        <div class="appearance-settings" style="display:grid; gap:0.65em;">
         <ui-collapse label="テーマ" group="appearance">
           <div class="setting">
             <div class="choices" id="theme" role="radiogroup" aria-label="テーマ">
@@ -139,7 +139,7 @@ class UISettings extends HTMLElement {
         </div>
       </section>
       <section class="tab-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab" hidden>
-        <div class="data-settings" style="display:grid; gap:10.4px;">
+        <div class="data-settings" style="display:grid; gap:0.65em;">
         <ui-collapse label="閲覧履歴" group="data">
           <div class="section">
           <div class="section-heading"><h3>閲覧履歴</h3><span class="muted" id="history-count">読み込み中...</span></div>
@@ -483,8 +483,8 @@ class UISettings extends HTMLElement {
     this.openWhenReady = false;
     const modal = modals.create("settings", {
       title: "設定",
-      dialogWidth: "768px",
-      dialogHeight: "576px",
+      dialogWidth: "min(48em, 94vw)",
+      dialogHeight: "min(36em, 80dvh)",
       sheetHeight: "90dvh",
       content: this
     });
