@@ -64,18 +64,52 @@
 .copy-button:disabled { opacity:.3; cursor:default; }
 .copy-button.is-copied { color:var(--accent-strong)!important; }
 .grouping-option {
-  display:flex;
+  display:inline-flex;
   align-items:center;
-  gap:.5em;
+  gap:.7em;
   width:max-content;
   max-width:100%;
   margin-top:.7em;
   color:var(--text-secondary);
   font-size:.85em;
   cursor:pointer;
+  user-select:none;
 }
 .grouping-option input {
-  accent-color:var(--accent-strong);
+  appearance:none;
+  position:relative;
+  flex:0 0 auto;
+  width:2.5em;
+  height:1.45em;
+  margin:0;
+  border:1px solid var(--border-color);
+  border-radius:999px;
+  background:var(--bg-hover);
+  cursor:pointer;
+  transition:background-color .18s,border-color .18s;
+}
+.grouping-option input::before {
+  content:"";
+  position:absolute;
+  top:.16em;
+  left:.16em;
+  width:1.05em;
+  height:1.05em;
+  border-radius:50%;
+  background:var(--text-tertiary);
+  transition:transform .18s,background-color .18s;
+}
+.grouping-option input:checked {
+  border-color:var(--accent-strong);
+  background:var(--accent-strong);
+}
+.grouping-option input:checked::before {
+  transform:translateX(1.05em);
+  background:white;
+}
+.grouping-option input:focus-visible {
+  outline:2px solid var(--accent-strong);
+  outline-offset:2px;
 }
 .add-base-row {
   display:flex;
