@@ -57,7 +57,10 @@ const setupCommonStorage = () => {
 
 if (!setupCommonStorage()) {
   window.addEventListener("spa:router", (e) => {
-    if (e.detail?.type === "setup-ok") setupCommonStorage();
+    if (e.detail?.type === "setup-ok") {
+      setupCommonStorage();
+      setupIcons();
+    }
     if (e.detail?.type === "after") setupIcons();
   });
 } else {
