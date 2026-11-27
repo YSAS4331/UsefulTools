@@ -63,6 +63,22 @@ class UICollapse extends HTMLElement {
             gap: .4rem;
           }
 
+          @media (min-width: 601px) {
+            :host-context(app-sidebar.collapsed) .toggle {
+              justify-content: center;
+              padding: .5rem 0;
+            }
+
+            :host-context(app-sidebar.collapsed) .chevron,
+            :host-context(app-sidebar.collapsed) .label-text {
+              display: none;
+            }
+
+            :host-context(app-sidebar.collapsed) slot[name="label"]::slotted(*) {
+              justify-content: center;
+            }
+          }
+
           .toggle:focus-visible {
             outline: 2px solid var(--accent);
             outline-offset: 3px;
