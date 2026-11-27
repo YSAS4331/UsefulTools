@@ -21,20 +21,20 @@ class Side extends HTMLElement {
 }
 
 @media (min-width: 601px) {
-  :host(.collapsed) .sidebar-search,
-  :host(.collapsed) .sidebar footer {
+  app-sidebar.collapsed .sidebar-search,
+  app-sidebar.collapsed .sidebar footer {
     display: none;
   }
 
-  :host(.collapsed) .sidebar-sections {
+  app-sidebar.collapsed .sidebar-sections {
     overflow: visible;
   }
 
-  :host(.collapsed) .sidebar {
+  app-sidebar.collapsed .sidebar {
     padding: 24px 0;
   }
 
-  :host(.collapsed) .sidebar-section {
+  app-sidebar.collapsed .sidebar-section {
     padding: 4px 6px;
   }
 }
