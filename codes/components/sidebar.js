@@ -417,9 +417,14 @@ class Side extends HTMLElement {
         if (link.title !== description) link.title = description;
         if (titleElement.textContent !== title) titleElement.textContent = title;
 
-        const iconMarkup = typeof item.icon === 'string' ? item.icon.trim() : '';
-        if (iconMarkup) {
-          if (icon.innerHTML !== iconMarkup) icon.innerHTML = iconMarkup;
+        const iconName = typeof item.icon === 'string'
+          ? item.icon.trim().match(/^<i\\s+data-lucide=["']([^"']+)["']\\s*><\\/i>$/)?.[1] || item.icon.trim()
+          : '';
+
+        if (iconName) {
+          const iconElement = document.createElement('i');
+          iconElement.setAttribute('data-lucide', iconName);
+          icon.replaceChildren(iconElement);
           icon.hidden = false;
         } else {
           icon.replaceChildren();
