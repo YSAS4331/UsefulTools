@@ -30,7 +30,8 @@ class header extends HTMLElement {
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 0;
+  border: none;
+  box-shadow: none;
   border-radius: 10px;
   background: transparent;
   color: var(--text-secondary);
