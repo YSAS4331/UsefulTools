@@ -4,20 +4,63 @@
     "title": "進数・基数変換ツール",
     "description": "2進数・8進数・10進数・16進数など、様々な進数同士を簡単に変換できます。",
     "url": "/tools/base-converter/",
-    "icon": "hash"
+    "icon": "hash",
+    "keywords": [
+      "進数変換",
+      "基数変換",
+      "2進数",
+      "8進数",
+      "10進数",
+      "16進数",
+      "二進数",
+      "十進数",
+      "十六進数",
+      "binary",
+      "octal",
+      "decimal",
+      "hexadecimal",
+      "radix"
+    ]
   },
   "character-counter": {
     "id": "b3fbbf7e-c19a-4fb4-bf5e-fba6c2a3d870",
     "title": "文字数カウンター",
     "description": "文章の文字数・単語数・行数・バイト数などをリアルタイムで確認できます。",
     "url": "/tools/character-counter/",
-    "icon": "file-text"
+    "icon": "file-text",
+    "keywords": [
+      "文字数",
+      "文字数カウント",
+      "文字数計算",
+      "カウンター",
+      "単語数",
+      "行数",
+      "段落数",
+      "バイト数",
+      "UTF-8",
+      "文章",
+      "テキスト",
+      "文字数制限"
+    ]
   },
   "media-player": {
     "id": "4e47d96e-bce6-445c-aee0-97d602a93c77",
     "title": "メディアプレイヤー",
     "description": "パソコンやスマホにある音声・動画ファイルをアップロードして、Web上で再生できます。バックグラウンド再生に対応しています。",
     "url": "/tools/media-player/",
-    "icon": "audio-lines"
+    "icon": "audio-lines",
+    "keywords": [
+      "メディアプレイヤー",
+      "音声再生",
+      "動画再生",
+      "音楽再生",
+      "オーディオ",
+      "ビデオ",
+      "音声ファイル",
+      "動画ファイル",
+      "MP3",
+      "MP4",
+      "バックグラウンド再生"
+    ]
   }
 }
