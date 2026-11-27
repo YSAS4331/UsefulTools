@@ -55,6 +55,7 @@ class UICollapse extends HTMLElement {
             display: flex;
             align-items: center;
             min-width: 0;
+            gap: .4rem;
           }
 
           slot[name="label"]::slotted(*) {
@@ -69,12 +70,20 @@ class UICollapse extends HTMLElement {
               padding: .5rem 0;
             }
 
-            :host-context(app-sidebar.collapsed) .chevron,
-            :host-context(app-sidebar.collapsed) .label-text {
+            :host-context(app-sidebar.collapsed) .chevron {
               display: none;
             }
 
-            :host-context(app-sidebar.collapsed) slot[name="label"]::slotted(*) {
+            :host-context(app-sidebar.collapsed) .label {
+              width: 100%;
+              justify-content: center;
+            }
+
+            :host-context(app-sidebar.collapsed) slot[name="label"]::slotted(.label-text) {
+              display: none;
+            }
+
+            :host-context(app-sidebar.collapsed) slot[name="label"]::slotted(.label-icon) {
               justify-content: center;
             }
           }
