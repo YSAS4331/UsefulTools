@@ -20,6 +20,32 @@ class Side extends HTMLElement {
   padding: 0 16px 16px;
 }
 
+.sidebar-flyout {
+  position: fixed;
+  z-index: 1100;
+  width: 260px;
+  max-width: calc(100vw - 84px);
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-2);
+  color: var(--text-primary);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+}
+
+.sidebar-flyout-title {
+  margin: 2px 8px 8px;
+  color: var(--text-primary);
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.sidebar-flyout .sidebar-section-list {
+  max-height: none;
+}
+
 @media (min-width: 601px) {
   app-sidebar.collapsed .sidebar-search,
   app-sidebar.collapsed .sidebar footer {
@@ -154,6 +180,24 @@ class Side extends HTMLElement {
 
     this.favoriteList = this.querySelector('.sidebar-favorite-list');
     this.historyList = this.querySelector('.sidebar-history-list');
+
+    this.sidebarAside = this.querySelector('.sidebar');
+    this.flyout = null;
+    this.flyoutTimer = null;
+    this.handleRailClick = (event) => {
+      if (!this.matches('.collapsed') || this.mediaQuery?.matches) return;
+      if (event.target.closest('ui-collapse')) return;
+      this.classList.remove('collapsed');
+    };
+    this.sidebarAside.addEventListener('click', this.handleRailClick);
+
+    this.collapses = [...this.querySelectorAll('ui-collapse')];
+    this.handleCollapseEnter = (event) => this.showFlyout(event.currentTarget);
+    this.handleCollapseLeave = () => this.scheduleFlyoutClose();
+    this.collapses.forEach((collapse) => {
+      collapse.addEventListener('mouseenter', this.handleCollapseEnter);
+      collapse.addEventListener('mouseleave', this.handleCollapseLeave);
+    });
     this.favoriteInitToken = 0;
     this.historyInitToken = 0;
     this.favoriteUnsubscribe = null;
@@ -212,6 +256,60 @@ class Side extends HTMLElement {
     window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     window.addEventListener('touchend', this.handleTouchEnd, { passive: true });
     window.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
+  }
+
+  showFlyout(collapse) {
+    if (this.mediaQuery.matches || !this.classList.contains('collapsed')) return;
+
+    clearTimeout(this.flyoutTimer);
+    this.hideFlyout();
+
+    const section = collapse.closest('.sidebar-section');
+    const sourceList = section?.querySelector('.sidebar-section-list');
+    if (!section || !sourceList) return;
+
+    const rect = collapse.getBoundingClientRect();
+    const flyout = document.createElement('div');
+    flyout.className = 'sidebar-flyout';
+    flyout.setAttribute('role', 'region');
+    flyout.setAttribute('aria-label', section.getAttribute('aria-label') || 'サイドバー');
+    flyout.innerHTML = '<div class="sidebar-flyout-title"></div>';
+    flyout.querySelector('.sidebar-flyout-title').textContent =
+      section.getAttribute('aria-label') || 'メニュー';
+
+    const list = sourceList.cloneNode(true);
+    list.classList.remove('sidebar-favorite-list', 'sidebar-history-list');
+    flyout.append(list);
+
+    flyout.addEventListener('mouseenter', () => clearTimeout(this.flyoutTimer));
+    flyout.addEventListener('mouseleave', () => this.scheduleFlyoutClose());
+    flyout.addEventListener('click', () => {
+      this.scheduleFlyoutClose(80);
+    });
+
+    document.body.append(flyout);
+    const width = flyout.offsetWidth;
+    const height = flyout.offsetHeight;
+    const left = Math.min(rect.right + 8, window.innerWidth - width - 8);
+    const top = Math.max(12, Math.min(rect.top, window.innerHeight - height - 12));
+    Object.assign(flyout.style, {
+      left: `${Math.max(8, left)}px`,
+      top: `${top}px`
+    });
+
+    this.flyout = flyout;
+  }
+
+  scheduleFlyoutClose(delay = 140) {
+    clearTimeout(this.flyoutTimer);
+    this.flyoutTimer = setTimeout(() => this.hideFlyout(), delay);
+  }
+
+  hideFlyout() {
+    clearTimeout(this.flyoutTimer);
+    this.flyoutTimer = null;
+    this.flyout?.remove();
+    this.flyout = null;
   }
 
   updateActiveLinks(path = location.pathname) {
@@ -555,6 +653,12 @@ class Side extends HTMLElement {
     this.historyUnsubscribe = null;
     this.renderFavorites = null;
     this.renderHistory = null;
+    this.sidebarAside?.removeEventListener('click', this.handleRailClick);
+    this.collapses?.forEach((collapse) => {
+      collapse.removeEventListener('mouseenter', this.handleCollapseEnter);
+      collapse.removeEventListener('mouseleave', this.handleCollapseLeave);
+    });
+    this.hideFlyout();
     this.removeEventListener('click', this.handleActiveLinkClick);
     window.removeEventListener('spa:router', this.handleRouterEvent);
     window.removeEventListener('spa:storage', this.handleStorageEvent);
