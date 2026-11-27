@@ -57,8 +57,8 @@ class UISettings extends HTMLElement {
         p { margin:0; color:var(--text-secondary); font-size:.8rem; line-height:1.5; }
         .choices { display:grid; gap:.1rem; }
         .choice {
-          display:flex; align-items:center; gap:.65rem; min-height:2.35rem;
-          padding:.35rem .5rem; border-radius:7px; color:var(--text-primary);
+          display:flex; align-items:center; gap:.65rem; min-height:1.9rem;
+          padding:.2rem .5rem; border-radius:7px; color:var(--text-primary);
           font-size:.86rem; font-weight:500; cursor:pointer;
         }
         .choice:hover { background:var(--bg-hover); }
