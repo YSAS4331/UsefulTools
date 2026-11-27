@@ -1,6 +1,6 @@
 class UIModal extends HTMLElement {
   static get observedAttributes() {
-    return ["open", "title", "dismissible", "sheet-height", "dialog-width", "dialog-height"];
+    return ["open", "title", "dismissible", "sheet-height", "dialog-width", "dialog-height", "dialog-min-height"];
   }
 
   constructor() {
@@ -21,7 +21,7 @@ class UIModal extends HTMLElement {
         <style>
           :host { display: contents; color: var(--text-primary); }
           .backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1.5rem; background: color-mix(in srgb, var(--bg) 45%, transparent); opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s ease; }
-          .dialog { --sheet-height: 70dvh; --dialog-width: 48rem; --dialog-height: 85dvh; display: flex; flex-direction: column; width: min(100%, var(--dialog-width)); max-height: var(--dialog-height); overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-2); color: var(--text-primary); box-shadow: var(--glass-inner-shadow); transform: translateY(10px) scale(.985); transition: transform .22s ease; }
+          .dialog { --sheet-height: 70dvh; --dialog-width: 48rem; --dialog-height: 85dvh; --dialog-min-height: 0px; display: flex; flex-direction: column; width: min(100%, var(--dialog-width)); max-height: var(--dialog-height); min-height: var(--dialog-min-height); overflow: hidden; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-2); color: var(--text-primary); box-shadow: var(--glass-inner-shadow); transform: translateY(10px) scale(.985); transition: transform .22s ease; }
           :host([open]) .backdrop { opacity: 1; visibility: visible; }
           :host([open]) .dialog { transform: translateY(0) scale(1); }
           .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.5rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border-color); background: var(--bg-2); }
@@ -111,9 +111,11 @@ class UIModal extends HTMLElement {
 
     const width = (this.getAttribute("dialog-width") || "48rem").trim();
     const height = (this.getAttribute("dialog-height") || "85dvh").trim();
+    const minHeight = (this.getAttribute("dialog-min-height") || "0px").trim();
 
     this.style.setProperty("--dialog-width", validLength(width) ? width : "48rem");
     this.style.setProperty("--dialog-height", validLength(height) ? height : "85dvh");
+    this.style.setProperty("--dialog-min-height", validLength(minHeight) ? minHeight : "0px");
   }
 
   handlePointerDown(event) {
