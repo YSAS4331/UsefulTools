@@ -1,4 +1,5 @@
 import "/components/collapse.js";
+import "/components/switch.js";
 import "/components/modal.js";
 import "/components/search.js";
 import "/components/settings.js";
