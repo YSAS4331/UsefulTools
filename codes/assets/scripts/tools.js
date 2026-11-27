@@ -61,31 +61,9 @@ createUI.fullscreen = (buttons) => {
 };
 
 const getFavoriteDB = async (storage) => {
-  let dbPromise = storage.get("favoriteDBPromise");
-
-  if (!dbPromise) {
-    const LibDB = storage.get("LibDB");
-    if (!LibDB) {
-      throw new Error("LibDBがcommonStorageに登録されていません。");
-    }
-
-    const db = new LibDB("UsefulTools", "auto", {
-      favorite: { keyPath: "id" },
-      history: { keyPath: "id" }
-    });
-
-    dbPromise = db.ready
-      .then(() => db)
-      .catch((error) => {
-        storage.delete("favoriteDBPromise");
-        db.close();
-        throw error;
-      });
-
-    storage.set("favoriteDBPromise", dbPromise);
-  }
-
-  return dbPromise;
+  const getDatabase = storage.get("getDatabase");
+  if (!getDatabase) throw new Error("共通データベースの初期化処理が見つかりません。");
+  return getDatabase();
 };
 
 const normalizePath = (path) => path.replace(/\/+$/, "") || "/";
