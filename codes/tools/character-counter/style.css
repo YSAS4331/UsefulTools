@@ -48,7 +48,9 @@
   outline:none;
   background:var(--bg);
   color:var(--text-primary);
-  font:400 1rem/1.8 inherit;
+  font-family:inherit;
+  font-size:1rem;
+  font-weight:400;
   line-height:1.8;
   overflow-wrap:anywhere;
 }
