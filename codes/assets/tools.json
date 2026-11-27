@@ -6,20 +6,18 @@
     "url": "/tools/base-converter/",
     "icon": "hash",
     "keywords": [
-      "進数変換",
-      "基数変換",
-      "2進数",
-      "8進数",
-      "10進数",
-      "16進数",
-      "二進数",
-      "十進数",
-      "十六進数",
+      "base converter",
+      "number base",
+      "radix",
       "binary",
       "octal",
       "decimal",
       "hexadecimal",
-      "radix"
+      "hex",
+      "bin",
+      "oct",
+      "dec",
+      "number conversion"
     ]
   },
   "character-counter": {
@@ -29,18 +27,16 @@
     "url": "/tools/character-counter/",
     "icon": "file-text",
     "keywords": [
-      "文字数",
-      "文字数カウント",
-      "文字数計算",
-      "カウンター",
-      "単語数",
-      "行数",
-      "段落数",
-      "バイト数",
+      "character counter",
+      "character count",
+      "word count",
+      "text counter",
+      "letter count",
+      "line count",
+      "paragraph count",
+      "byte count",
       "UTF-8",
-      "文章",
-      "テキスト",
-      "文字数制限"
+      "text length"
     ]
   },
   "media-player": {
@@ -50,17 +46,16 @@
     "url": "/tools/media-player/",
     "icon": "audio-lines",
     "keywords": [
-      "メディアプレイヤー",
-      "音声再生",
-      "動画再生",
-      "音楽再生",
-      "オーディオ",
-      "ビデオ",
-      "音声ファイル",
-      "動画ファイル",
+      "media player",
+      "audio player",
+      "video player",
+      "music player",
+      "audio",
+      "video",
       "MP3",
       "MP4",
-      "バックグラウンド再生"
+      "background playback",
+      "media playback"
     ]
   }
 }
