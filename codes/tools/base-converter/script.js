@@ -2,7 +2,15 @@ const $ = (selector, root = document) => root.querySelector(selector);
 let cleanup = null;
 const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const FRACTION_DIGITS = 16;
-const BASE_PREFIXES = new Map([[2, "0B"], [8, "0O"], [10, "0D"], [16, "0X"]]);
+function getBasePrefix(base) {
+  switch (base) {
+    case 2: return "0B";
+    case 8: return "0O";
+    case 10: return "0D";
+    case 16: return "0X";
+    default: return "";
+  }
+}
 
 const parseValue = (input, base) => {
   let value = input.trim().replace(/\s+/g, "").replaceAll("_", "").toUpperCase();
@@ -12,7 +20,7 @@ const parseValue = (input, base) => {
     if (value[0] === "-") sign = -1n;
     value = value.slice(1);
   }
-  const prefix = BASE_PREFIXES.get(base);
+  const prefix = getBasePrefix(base);
   if (prefix && value.startsWith(prefix)) value = value.slice(prefix.length);
   const parts = value.split(".");
   if (!value || parts.length > 2 || parts.some(part => !part)) {
@@ -71,7 +79,11 @@ const init = () => {
   const controller = new AbortController();
   const {signal} = controller;
   const bases = [2, 3, 8, 10, 16, 36];
-  const makeIcon = name => '<i data-lucide="' + name + '"></i>';
+  const makeIcon = name => ({
+    copy: '<span aria-hidden="true">⧉</span>',
+    remove: '<span aria-hidden="true">×</span>',
+    check: '<span aria-hidden="true">✓</span>'
+  })[name] || "";
   const refreshIcons = () => window.spaRouter?.commonStorage?.get("createIcons")?.({
     icons: window.spaRouter?.commonStorage?.get("lucideIcons")
   });
@@ -82,7 +94,7 @@ const init = () => {
         '<label class="result-base" for="base-value-' + base + '">' + base + '進数</label>' +
         '<input class="result-value" id="base-value-' + base + '" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="数値を入力" aria-label="' + base + '進数の数値">' +
         '<button class="copy-button" type="button" data-action="copy" aria-label="' + base + '進数をコピー" title="コピー" disabled>' + makeIcon("copy") + '</button>' +
-        '<button class="remove-button" type="button" data-action="remove" aria-label="' + base + '進数を削除" title="削除">' + makeIcon("x") + '</button>' +
+        '<button class="remove-button" type="button" data-action="remove" aria-label="' + base + '進数を削除" title="削除">' + makeIcon("remove") + '</button>' +
       '</div>'
     ).join("");
     [...addSelect.options].forEach(option => {
@@ -125,7 +137,7 @@ const init = () => {
   const isAllowedValue = (value, base) => {
     let normalized = value.replace(/\s+/g, "").replaceAll("_", "").toUpperCase();
     if (normalized[0] === "+" || normalized[0] === "-") normalized = normalized.slice(1);
-    const prefix = BASE_PREFIXES.get(base);
+    const prefix = getBasePrefix(base);
     if (prefix && prefix.startsWith(normalized) && normalized.length <= prefix.length) return true;
     if (prefix && normalized.startsWith(prefix)) normalized = normalized.slice(prefix.length);
     let decimalPoint = false;
