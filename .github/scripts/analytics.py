@@ -237,8 +237,9 @@ def main():
     root = Path(__file__).resolve().parents[2]
     snapshot = root / "codes" / "assets" / "analytics.json"
     today_jst = datetime.now(ZoneInfo("Asia/Tokyo")).date()
+    force = os.getenv("FORCE_ANALYTICS", "").lower() in {"1", "true", "yes"}
 
-    if snapshot.exists():
+    if snapshot.exists() and not force:
         try:
             existing = json.loads(snapshot.read_text(encoding="utf-8"))
             generated_at = datetime.fromisoformat(existing["generated_at"])
@@ -247,6 +248,9 @@ def main():
                 return
         except (KeyError, TypeError, ValueError, json.JSONDecodeError):
             log("既存Analyticsの取得日時を確認できないため、新しく取得します")
+
+    if force:
+        log("手動実行のため、同日取得済みでも再取得します")
 
     log("Cloudflare Web Analytics を取得します")
     token, account_id = get_environment()
