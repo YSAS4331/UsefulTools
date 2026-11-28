@@ -148,12 +148,16 @@ article {
   }
 }
 
-
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(280px, 320px);
   gap: 1rem;
   padding: 1.25rem 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
 }
 
 .tool-card {
@@ -167,6 +171,7 @@ article {
   border-radius: var(--radius);
   background: var(--bg-2);
   transition: border-color 0.2s ease;
+  scroll-snap-align: start;
 }
 
 .tool-card:hover {
@@ -217,4 +222,10 @@ article {
 .tools-empty {
   padding: 1rem 0;
   color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .tool-grid {
+    grid-auto-columns: minmax(260px, 85%);
+  }
 }
