@@ -27,13 +27,11 @@ function loadJson(file) {
 function renderTool(tool) {
   return [
     '<article class="tool-card">',
-    '  <a class="tool-card-link" href="' + escapeHtml(tool.url) + '">',
-    '    <span class="tool-card-icon"><i data-lucide="' + escapeHtml(tool.icon) + '"></i></span>',
-    '    <span class="tool-card-content">',
-    '      <span class="tool-card-title">' + escapeHtml(tool.title) + '</span>',
-    '      <span class="tool-card-description">' + escapeHtml(tool.description) + '</span>',
-    '    </span>',
-    '  </a>',
+    '  <span class="tool-card-icon"><i data-lucide="' + escapeHtml(tool.icon) + '"></i></span>',
+    '  <div class="tool-card-content">',
+    '    <a class="tool-card-title" href="' + escapeHtml(tool.url) + '">' + escapeHtml(tool.title) + '</a>',
+    '    <p class="tool-card-description">' + escapeHtml(tool.description) + '</p>',
+    '  </div>',
     '</article>',
   ].join("\n");
 }
