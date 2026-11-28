@@ -25,14 +25,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Restore analytics snapshot
+        run: |
+          mkdir -p codes/assets
+          curl -fsSL https://raw.githubusercontent.com/YSAS4331/UsefulTools/main/assets/analytics.json -o codes/assets/analytics.json
+
       - name: Setup Python
-        if: github.event_name != 'push'
+        if: github.event_name == 'schedule'
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
       - name: Fetch analytics
-        if: github.event_name != 'push'
+        if: github.event_name == 'schedule'
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
@@ -53,6 +58,19 @@ jobs:
         run: |
           npm install -g html-minifier-terser terser clean-css-cli
 
+      - name: Generate homepage
+        run: node .github/scripts/generate-homepage.js
+
+      - name: Commit generated homepage
+        run: |
+          if ! git diff --quiet -- codes/index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add codes/index.html
+            git commit -m "Update generated homepage [skip ci]"
+            git push origin HEAD:dev
+          fi
+
       - name: Build
         env:
           SITE_URL: https://ysas4331.pages.dev
@@ -61,6 +79,7 @@ jobs:
 
           mkdir build
           cp -r codes/* build/
+          rm -f build/assets/analytics.json
 
           find build -type f -name "*.html" | while read file; do
             html-minifier-terser \
