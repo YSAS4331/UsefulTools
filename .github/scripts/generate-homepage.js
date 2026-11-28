@@ -26,13 +26,15 @@ function loadJson(file) {
 
 function renderTool(tool) {
   return [
-    '<a class="tool-card" href="' + escapeHtml(tool.url) + '">',
-    '  <span class="tool-card-icon"><i data-lucide="' + escapeHtml(tool.icon) + '"></i></span>',
-    '  <span class="tool-card-content">',
-    '    <span class="tool-card-title">' + escapeHtml(tool.title) + '</span>',
-    '    <span class="tool-card-description">' + escapeHtml(tool.description) + '</span>',
-    '  </span>',
-    '</a>',
+    '<article class="tool-card">',
+    '  <a class="tool-card-link" href="' + escapeHtml(tool.url) + '">',
+    '    <span class="tool-card-icon"><i data-lucide="' + escapeHtml(tool.icon) + '"></i></span>',
+    '    <span class="tool-card-content">',
+    '      <span class="tool-card-title">' + escapeHtml(tool.title) + '</span>',
+    '      <span class="tool-card-description">' + escapeHtml(tool.description) + '</span>',
+    '    </span>',
+    '  </a>',
+    '</article>',
   ].join("\n");
 }
 
