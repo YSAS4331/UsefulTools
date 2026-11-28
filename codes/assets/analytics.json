@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T13:41:24.460251+00:00",
+  "generated_at": "2026-11-28T14:46:55.336792+00:00",
   "period": {
     "start": "2026-11-22",
     "end": "2026-11-28",
@@ -7,34 +7,34 @@
   },
   "host": "ysas4331.pages.dev",
   "summary": {
-    "pageviews": 164,
-    "visits": 81,
+    "pageviews": 199,
+    "visits": 93,
     "sample_interval": 1
   },
   "pages": [
     {
       "path": "/",
-      "pageviews": 118,
-      "visits": 72
-    },
-    {
-      "path": "/tools/character-counter/",
-      "pageviews": 14,
-      "visits": 3
-    },
-    {
-      "path": "/tools/base-converter/",
-      "pageviews": 12,
-      "visits": 3
+      "pageviews": 137,
+      "visits": 81
     },
     {
       "path": "/tools/media-player/",
-      "pageviews": 12,
-      "visits": 0
+      "pageviews": 21,
+      "visits": 2
+    },
+    {
+      "path": "/tools/character-counter/",
+      "pageviews": 18,
+      "visits": 4
+    },
+    {
+      "path": "/tools/base-converter/",
+      "pageviews": 13,
+      "visits": 3
     },
     {
       "path": "/sitemap/",
-      "pageviews": 6,
+      "pageviews": 8,
       "visits": 2
     },
     {
@@ -51,8 +51,8 @@
     },
     {
       "date": "2026-11-28",
-      "pageviews": 137,
-      "visits": 75
+      "pageviews": 172,
+      "visits": 87
     }
   ]
 }
