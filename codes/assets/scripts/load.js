@@ -111,7 +111,16 @@ const setupCommonStorage = () => {
     });
   });
 
+  const loadingTimeout = setTimeout(() => {
+    const overlay = document.getElementById("app-loading");
+    if (!overlay) return;
+    overlay.classList.add("is-hidden");
+    setTimeout(() => overlay.remove(), 500);
+    console.error("[loading] 初期化がタイムアウトしました。");
+  }, 15000);
+
   Promise.allSettled([getDatabase(), toolsPromise, themePromise]).then(() => {
+    clearTimeout(loadingTimeout);
     const overlay = document.getElementById("app-loading");
     if (overlay) {
       overlay.classList.add("is-hidden");
@@ -121,13 +130,6 @@ const setupCommonStorage = () => {
     window.dispatchEvent(new Event("app:ready"));
   });
 
-  setTimeout(() => {
-    const overlay = document.getElementById("app-loading");
-    if (!overlay) return;
-    overlay.classList.add("is-hidden");
-    setTimeout(() => overlay.remove(), 500);
-    console.error("[loading] 初期化がタイムアウトしました。");
-  }, 15000);
 
   toolsPromise.catch((error) => {
     console.error("[tools] ツール一覧の読み込みに失敗しました。", error);
