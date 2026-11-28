@@ -63,15 +63,15 @@ jobs:
           cp -r codes/* build/
 
           find build -type f -name "*.html" | while read file; do
-            html-minifier-terser \\
-              --collapse-whitespace \\
-              --remove-comments \\
-              --remove-redundant-attributes \\
-              --remove-script-type-attributes \\
-              --remove-tag-whitespace \\
-              --use-short-doctype \\
-              --minify-css true \\
-              --minify-js true \\
+            html-minifier-terser \
+              --collapse-whitespace \
+              --remove-comments \
+              --remove-redundant-attributes \
+              --remove-script-type-attributes \
+              --remove-tag-whitespace \
+              --use-short-doctype \
+              --minify-css true \
+              --minify-js true \
               -o "$file" "$file"
           done
 
