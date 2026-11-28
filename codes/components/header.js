@@ -18,6 +18,21 @@ class header extends HTMLElement {
   z-index: 20;
 }
 
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.header-brand img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -60,7 +75,10 @@ class header extends HTMLElement {
 </style>
 
 <header id="global-header">
-  <a href="/">UsefulTools</a>
+  <a class="header-brand" href="/">
+    <img src="/assets/favicon.svg" alt="" width="32" height="32">
+    <span>UsefulTools</span>
+  </a>
   <div class="header-actions">
     <button class="header-action nostyle" id="settings-button" type="button" aria-label="設定" title="設定">
       <i data-lucide="settings"></i>
