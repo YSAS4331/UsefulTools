@@ -14,6 +14,7 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -233,6 +234,20 @@ def save_analytics(data):
 
 
 def main():
+    root = Path(__file__).resolve().parents[2]
+    snapshot = root / "codes" / "assets" / "analytics.json"
+    today_jst = datetime.now(ZoneInfo("Asia/Tokyo")).date()
+
+    if snapshot.exists():
+        try:
+            existing = json.loads(snapshot.read_text(encoding="utf-8"))
+            generated_at = datetime.fromisoformat(existing["generated_at"])
+            if generated_at.astimezone(ZoneInfo("Asia/Tokyo")).date() == today_jst:
+                log("本日分のAnalyticsは取得済みのため、API取得をスキップします")
+                return
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+            log("既存Analyticsの取得日時を確認できないため、新しく取得します")
+
     log("Cloudflare Web Analytics を取得します")
     token, account_id = get_environment()
 
