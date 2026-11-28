@@ -36,6 +36,7 @@ jobs:
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          FORCE_ANALYTICS: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: python .github/scripts/analytics.py
 
       - name: Setup Node.js
