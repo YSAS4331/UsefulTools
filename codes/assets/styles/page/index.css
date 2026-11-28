@@ -157,7 +157,12 @@ article {
 }
 
 .tool-card {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
   min-width: 0;
+  padding: 1.25rem;
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   background: var(--bg-2);
@@ -169,25 +174,9 @@ article {
   background: var(--bg-hover);
 }
 
-.tool-card-link {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  min-width: 0;
-  height: 100%;
-  padding: 1.25rem;
-  color: var(--text-primary);
-  text-decoration: none;
-}
-
-.tool-card-link:hover {
-  text-decoration: none;
-}
-
 .tool-card-icon {
   display: grid;
   place-items: center;
-  flex: 0 0 2.5rem;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: calc(var(--radius) * 0.75);
@@ -208,11 +197,19 @@ article {
 }
 
 .tool-card-title {
+  width: fit-content;
   color: var(--text-primary);
   font-size: 1rem;
+  text-decoration: none;
+}
+
+.tool-card-title:hover {
+  color: var(--accent-strong);
+  text-decoration: underline;
 }
 
 .tool-card-description {
+  margin: 0;
   color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
