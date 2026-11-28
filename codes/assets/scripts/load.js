@@ -92,26 +92,42 @@ const setupCommonStorage = () => {
   systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
   systemThemeQuery?.addEventListener?.("change", onSystemThemeChange);
 
-  getDatabase()
-    .then(async (db) => {
-      const settings = db.store("settings");
-      const saved = await settings.get("theme");
+  const themePromise = getDatabase().then(async (db) => {
+    const settings = db.store("settings");
+    const saved = await settings.get("theme");
+    const accent = await settings.get("accentColor");
+    currentTheme = saved?.value || "system";
+    currentAccentColor = accent?.value || "green";
+    applyTheme(currentTheme);
+    applyAccentColor(currentAccentColor);
+    db.on("change", async (event) => {
+      if (!event.stores?.includes("settings")) return;
+      const record = await settings.get("theme");
       const accent = await settings.get("accentColor");
-      currentTheme = saved?.value || "system";
+      currentTheme = record?.value || "system";
       currentAccentColor = accent?.value || "green";
       applyTheme(currentTheme);
       applyAccentColor(currentAccentColor);
-      db.on("change", async (event) => {
-        if (!event.stores?.includes("settings")) return;
-        const record = await settings.get("theme");
-        const accent = await settings.get("accentColor");
-        currentTheme = record?.value || "system";
-        currentAccentColor = accent?.value || "green";
-        applyTheme(currentTheme);
-        applyAccentColor(currentAccentColor);
-      });
-    })
-    .catch((error) => console.error("[theme] テーマ設定の読み込みに失敗しました。", error));
+    });
+  });
+
+  Promise.allSettled([getDatabase(), toolsPromise, themePromise]).then(() => {
+    const overlay = document.getElementById("app-loading");
+    if (overlay) {
+      overlay.classList.add("is-hidden");
+      overlay.addEventListener("transitionend", () => overlay.remove(), { once: true });
+      setTimeout(() => overlay.remove(), 500);
+    }
+    window.dispatchEvent(new Event("app:ready"));
+  });
+
+  setTimeout(() => {
+    const overlay = document.getElementById("app-loading");
+    if (!overlay) return;
+    overlay.classList.add("is-hidden");
+    setTimeout(() => overlay.remove(), 500);
+    console.error("[loading] 初期化がタイムアウトしました。");
+  }, 15000);
 
   toolsPromise.catch((error) => {
     console.error("[tools] ツール一覧の読み込みに失敗しました。", error);
